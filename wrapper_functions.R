@@ -86,6 +86,8 @@ calculateThreshold<- function(hist){
 
 
 
+#Sample per group
+
 sketch_wrapper <- function(channel=channel,
                           meta_data=NULL,
                           assay="FACS",
@@ -119,12 +121,12 @@ sketch_wrapper <- function(channel=channel,
   obj <- CreateSeuratObject(as(object=t(channel), Class="dgCMatrix"), "FACS")
   
   if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir)){
-    counts.mat <- open_matrix_dir(dir =  paste0(working_dir, "/counts"))
+    counts.mat <- open_matrix_dir(dir =  paste0(working_dir, "counts"))
   }else if(!is.null(BPcell_dir)){
     counts.mat <- open_matrix_dir(dir =  BPcell_dir)
   }else{
     write_matrix_dir(mat = obj[["FACS"]]$counts, 
-                     dir = paste0(working_dir, "/counts"))
+                     dir = paste0(working_dir, "/counts"), overwrite = TRUE)
     counts.mat <- open_matrix_dir(dir =  paste0(working_dir, "/counts"))
   }
   obj[["FACS"]]$counts <- counts.mat
@@ -202,7 +204,7 @@ wrapper_for_plots <- function(obj=obj,
   DefaultAssay(obj) <- assay
   # Feature Plots
   if(feature_plot){
-    Feature_Plot <- FeaturePlot(obj, features=rownames(obj@assays$FACS), combine=FALSE, raster =TRUE, reduction = reduction)
+    Feature_Plot <- FeaturePlot(obj, features=rownames(obj@assays$FACS), alpha = 0.1, combine=FALSE, raster =TRUE, reduction = reduction)
     
     for(i in 1:length(Feature_Plot)) suppressMessages({
       Feature_Plot[[i]] <- Feature_Plot[[i]] + 
@@ -223,7 +225,7 @@ wrapper_for_plots <- function(obj=obj,
       cluster_plots <- DimPlot(object = obj,
                                group.by = name,
                                cols = smooth_rainbow(max(discard(as.numeric(as.character(obj@meta.data[,name])), is.na))+1, 
-                                                     range = c(0.01, 0.99)), 
+                                                     range = c(0.01, 0.99)), alpha = 0.1, raster=TRUE,
                                label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
     })
     c_nrow <- round(length(grep("sketch_snn_res", colnames(obj@meta.data)))/3)
@@ -235,6 +237,7 @@ wrapper_for_plots <- function(obj=obj,
     ratio_plots <- DimPlot(object = obj,
                            group.by = "ratio_anno",
                            cols = ratio_plot_color, 
+                           alpha = 0.1, raster=TRUE,
                            label = TRUE, repel = TRUE, label.size = label_size, reduction = reduction)
   }
   
@@ -242,12 +245,13 @@ wrapper_for_plots <- function(obj=obj,
     meta_plots <-lapply(seq(1:length(meta_list)), function(i){
       name <- meta_list[[i]]
       if(is.numeric(obj@meta.data[,meta_list[[i]]])){
-        FeaturePlot(obj, features=name, combine=T, raster =TRUE, reduction = reduction)+scale_colour_gradientn(colours=feature_plot_colors) 
+        FeaturePlot(obj, features=name, combine=T, alpha = 0.1, raster =TRUE, reduction = reduction)+scale_colour_gradientn(colours=feature_plot_colors) 
       }else{
         if(length(unique(obj@meta.data[,meta_list[[i]]]))<=12){
           name <- meta_list[[i]]
           plot <- DimPlot(object = obj, group.by = name,
                           cols = pals::tol(12), 
+                          alpha = 0.1, raster=TRUE,
                           label = TRUE, label.box = label_box,
                           label.size = label_size, repel = FALSE, 
                           reduction = reduction, combine = F)
@@ -255,6 +259,7 @@ wrapper_for_plots <- function(obj=obj,
           name <- meta_list[[i]]
           plot <- DimPlot(object = obj, group.by = name,
                           cols = pals::tol.rainbow(25), 
+                          alpha = 0.1, raster=TRUE,
                           label = TRUE, label.box = label_box, 
                           label.size = label_size, repel = FALSE, 
                           reduction = reduction, combine = F)
@@ -266,6 +271,7 @@ wrapper_for_plots <- function(obj=obj,
                                                          range = c(0.01, 0.99)), 
                                    label = TRUE, label.box = label_box,
                                    label.size = label_size, repel = FALSE,
+                                   alpha = 0.1, raster=TRUE,
                                    reduction = reduction, combine = F)
           
         }
@@ -281,4 +287,17 @@ wrapper_for_plots <- function(obj=obj,
               ratio_plot=ratio_plots, 
               meta_plots_grid=cowplot::plot_grid(plotlist = meta_plots, nrow = m_nrow),
               meta_plot_list=meta_plots))
+}
+
+split_plot_sketch <- function(obj, 
+                              group_by="seurat_clusters", 
+                              split_by="ratio_anno"){
+  cells <- rownames(obj@meta.data)[!is.na(obj$sketch_snn_res.4)]
+  meta <- obj@meta.data[cells,]
+  meta <- cbind(meta, obj@reductions$umap@cell.embeddings[cells,])
+  meta %>% ggplot(aes(umap_1, umap_2, color=meta[[group_by]]))+geom_point(aes(alpha=0.1), size=0.3)+
+    facet_wrap(~meta[[split_by]])+
+    theme_classic()+
+    guides(alpha = "none")+
+    labs(color=group_by)
 }
