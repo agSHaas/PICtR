@@ -295,9 +295,10 @@ split_plot_sketch <- function(obj,
   cells <- rownames(obj@meta.data)[!is.na(obj$sketch_snn_res.4)]
   meta <- obj@meta.data[cells,]
   meta <- cbind(meta, obj@reductions$umap@cell.embeddings[cells,])
-  meta %>% ggplot(aes(umap_1, umap_2, color=meta[[group_by]]))+geom_point(aes(alpha=0.1), size=0.3)+
+  p <- meta %>% ggplot(aes(umap_1, umap_2, color=meta[[group_by]]))+geom_point(aes(alpha=0.1), size=0.3)+
     facet_wrap(~meta[[split_by]])+
     theme_classic()+
     guides(alpha = "none")+
     labs(color=group_by)
+  return(p)
 }
