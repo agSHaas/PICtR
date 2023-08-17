@@ -94,7 +94,7 @@ sketch_wrapper <- function(channel=channel,
                           FSC.A="FSC.A.x", 
                           FSC.H="FSC.H.y",
                           n_sketch_cells=50000,
-                          n_dims=dim(channel)[2], 
+                          n_dims, 
                           resolution=c(0.5,1,2,3,4),
                           obj_name="obj_sketched_non_projected",
                           group_by=NULL,
@@ -118,24 +118,38 @@ sketch_wrapper <- function(channel=channel,
   pkg <- c("Seurat", "tidyr","tidyverse", "dplyr", "BPCells", "readr")
   invisible(lapply(pkg, library, character.only = TRUE))
   
-  obj <- CreateSeuratObject(as(object=t(channel), Class="dgCMatrix"), "FACS")
-  
-  if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir)){
-    counts.mat <- open_matrix_dir(dir =  paste0(working_dir, "counts"))
-  }else if(!is.null(BPcell_dir)){
-    counts.mat <- open_matrix_dir(dir =  BPcell_dir)
+  if(!file.exists(paste0(working_dir, obj_name, ".rds"))){
+    obj <- CreateSeuratObject(as(object=t(channel), Class="dgCMatrix"), "FACS")
+    
+    if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir)){
+      counts.mat <- open_matrix_dir(dir =  paste0(working_dir, "counts"))
+    }else if(!is.null(BPcell_dir)){
+      counts.mat <- open_matrix_dir(dir =  BPcell_dir)
+    }else{
+      write_matrix_dir(mat = obj[["FACS"]]$counts, 
+                       dir = paste0(working_dir, "/counts"), overwrite = TRUE)
+      counts.mat <- open_matrix_dir(dir =  paste0(working_dir, "/counts"))
+    }
+    obj[["FACS"]]$counts <- counts.mat
+    
+    message("Your newly gerneated object will be saved", paste0(working_dir,obj_name, ".rds"))
+    SeuratObject::saveRDS(object = obj,
+                          file = paste0(obj_name, ".rds"),
+                          destdir = working_dir)
+    
   }else{
-    write_matrix_dir(mat = obj[["FACS"]]$counts, 
-                     dir = paste0(working_dir, "/counts"), overwrite = TRUE)
-    counts.mat <- open_matrix_dir(dir =  paste0(working_dir, "/counts"))
+    message("Your gerneated object saved under", paste0(working_dir,obj_name, ".rds"), " will be used")
+     obj <- readRDS(paste0(working_dir,obj_name, ".rds"))
   }
-  obj[["FACS"]]$counts <- counts.mat
+  
   
   if(!is.null(meta_data)){
     obj@meta.data <- cbind(obj@meta.data, meta_data)
   }else{
     message("Please not that there are not metadata are added to the object")
   }
+  
+  message("Calualtion of Ratio")
   obj$ratio <- obj@meta.data[,FSC.A]/obj@meta.data[,FSC.H]
   
   cutoff <- calculateThreshold(hist(obj$ratio, breaks = 2000, plot = FALSE))
@@ -157,6 +171,8 @@ sketch_wrapper <- function(channel=channel,
     obj$ratio_anno_group <- factor(obj$ratio_anno_group, levels = c("Ratio_low", "Ratio_high"))
    
   }
+  
+  message("Sketching is started")
   obj@assays$FACS$data <- obj@assays$FACS$counts
   obj <- FindVariableFeatures(obj, verbose=verbose)
   obj <- SketchData(
@@ -168,6 +184,7 @@ sketch_wrapper <- function(channel=channel,
   )
   
   DefaultAssay(obj) <- "sketch"
+  n_dims <- dim(channel)[2]
   obj <- obj %>% FindVariableFeatures(verbose=verbose) %>% 
     ScaleData(verbose=verbose) %>% 
     RunPCA(npcs=n_dims-1, verbose=verbose) %>%
@@ -175,12 +192,12 @@ sketch_wrapper <- function(channel=channel,
     FindClusters(resolution = resolution, verbose = verbose) %>% 
     RunUMAP(features = 1:n_dims-1, return.model = TRUE, verbose = verbose)
 
-  
+  message("Sketching is done")
+  message("The object will be updated and saved")
   SeuratObject::saveRDS(object = obj,
                         file = paste0(obj_name, ".rds"),
                         destdir = working_dir)
   #unlink(paste0(working_dir, "counts"), recursive = TRUE)
-  
   return(obj)
 }
 
@@ -191,7 +208,9 @@ wrapper_for_plots <- function(obj=obj,
                               feature_plot_colors=pals::parula(1000),
                               ratio_plot_color=c(Ratio_low="dodgerblue2", Ratio_high="gold2"),
                               reduction="umap", 
+                              alpha=1,
                               label_size=3,
+                              cluster_handel="sketch_snn_res",
                               label_box=FALSE,
                               assay="sketch"){
   
@@ -203,8 +222,9 @@ wrapper_for_plots <- function(obj=obj,
   smooth_rainbow <- colour("smooth rainbow")
   DefaultAssay(obj) <- assay
   # Feature Plots
+  
   if(feature_plot){
-    Feature_Plot <- FeaturePlot(obj, features=rownames(obj@assays$FACS), alpha = 0.1, combine=FALSE, raster =TRUE, reduction = reduction)
+    Feature_Plot <- FeaturePlot(obj, features=rownames(obj@assays$FACS), alpha = alpha, combine=FALSE, raster =TRUE, reduction = reduction)
     
     for(i in 1:length(Feature_Plot)) suppressMessages({
       Feature_Plot[[i]] <- Feature_Plot[[i]] + 
@@ -220,15 +240,15 @@ wrapper_for_plots <- function(obj=obj,
   }
   # Cluster Plots
   if(cluster_plot){
-    cluster_plots <- lapply(seq(1:length(grep("sketch_snn_res", colnames(obj@meta.data)))), function(i){
-      name <- grep("sketch_snn_res", colnames(obj@meta.data), value = T)[i]
+    cluster_plots <- lapply(seq(1:length(grep(cluster_handel, colnames(obj@meta.data)))), function(i){
+      name <- grep(cluster_handel, colnames(obj@meta.data), value = T)[i]
       cluster_plots <- DimPlot(object = obj,
                                group.by = name,
                                cols = smooth_rainbow(max(discard(as.numeric(as.character(obj@meta.data[,name])), is.na))+1, 
-                                                     range = c(0.01, 0.99)), alpha = 0.1, raster=TRUE,
+                                                     range = c(0.01, 0.99)), alpha = alpha, raster=TRUE,
                                label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
     })
-    c_nrow <- round(length(grep("sketch_snn_res", colnames(obj@meta.data)))/3)
+    c_nrow <- round(length(grep(cluster_handel, colnames(obj@meta.data)))/3)
   }else{
     cluster_plot <- "not caluculated"
   }
@@ -237,21 +257,22 @@ wrapper_for_plots <- function(obj=obj,
     ratio_plots <- DimPlot(object = obj,
                            group.by = "ratio_anno",
                            cols = ratio_plot_color, 
-                           alpha = 0.1, raster=TRUE,
+                           alpha = alpha, raster=TRUE,
                            label = TRUE, repel = TRUE, label.size = label_size, reduction = reduction)
   }
   
   if(length(meta_list) > 0){
     meta_plots <-lapply(seq(1:length(meta_list)), function(i){
       name <- meta_list[[i]]
+      print(name)
       if(is.numeric(obj@meta.data[,meta_list[[i]]])){
-        FeaturePlot(obj, features=name, combine=T, alpha = 0.1, raster =TRUE, reduction = reduction)+scale_colour_gradientn(colours=feature_plot_colors) 
+        FeaturePlot(obj, features=name, combine=T, alpha = alpha, raster =TRUE, reduction = reduction)+scale_colour_gradientn(colours=feature_plot_colors) 
       }else{
         if(length(unique(obj@meta.data[,meta_list[[i]]]))<=12){
           name <- meta_list[[i]]
           plot <- DimPlot(object = obj, group.by = name,
                           cols = pals::tol(12), 
-                          alpha = 0.1, raster=TRUE,
+                          alpha = alpha, raster=TRUE,
                           label = TRUE, label.box = label_box,
                           label.size = label_size, repel = FALSE, 
                           reduction = reduction, combine = F)
@@ -259,21 +280,30 @@ wrapper_for_plots <- function(obj=obj,
           name <- meta_list[[i]]
           plot <- DimPlot(object = obj, group.by = name,
                           cols = pals::tol.rainbow(25), 
-                          alpha = 0.1, raster=TRUE,
+                          alpha = alpha, raster=TRUE,
                           label = TRUE, label.box = label_box, 
                           label.size = label_size, repel = FALSE, 
                           reduction = reduction, combine = F)
-        }else{
+        }else if(is.factor(obj@meta.data[,name])){
           name <- meta_list[[i]]
-          cluster_plots <- DimPlot(object = obj,
+          plot <- DimPlot(object = obj,
                                    group.by = name,
                                    cols = smooth_rainbow(max(discard(as.numeric(as.character(obj@meta.data[,name])), is.na))+1, 
                                                          range = c(0.01, 0.99)), 
                                    label = TRUE, label.box = label_box,
                                    label.size = label_size, repel = FALSE,
-                                   alpha = 0.1, raster=TRUE,
+                                   alpha = alpha, raster=TRUE,
                                    reduction = reduction, combine = F)
           
+        }else{
+          index <- length(unique(obj@meta.data[,name]))
+          plot <- DimPlot(object = obj,
+                          group.by = name,
+                          cols = smooth_rainbow(index, range = c(0.01, 0.99)), 
+                          label = TRUE, label.box = label_box,
+                          label.size = label_size, repel = FALSE,
+                          alpha = alpha, raster=TRUE,
+                          reduction = reduction, combine = F)
         }
       }
     })
@@ -292,13 +322,58 @@ wrapper_for_plots <- function(obj=obj,
 split_plot_sketch <- function(obj, 
                               group_by="seurat_clusters", 
                               split_by="ratio_anno"){
+  install.packages(setdiff("ggrastr", rownames(installed.packages())))
   cells <- rownames(obj@meta.data)[!is.na(obj$sketch_snn_res.4)]
   meta <- obj@meta.data[cells,]
   meta <- cbind(meta, obj@reductions$umap@cell.embeddings[cells,])
-  p <- meta %>% ggplot(aes(umap_1, umap_2, color=meta[[group_by]]))+geom_point(aes(alpha=0.1), size=0.3)+
+  
+  pkg <- c("cowplot", "pals", "khroma")
+  invisible(lapply(pkg, library, character.only = TRUE))
+  smooth_rainbow <- colour("smooth rainbow")
+  p <- meta %>% ggplot(aes(umap_1, umap_2, color=meta[[group_by]]))+ggrastr::geom_point_rast(aes(alpha=0.1), size=0.3)+
     facet_wrap(~meta[[split_by]])+
     theme_classic()+
     guides(alpha = "none")+
-    labs(color=group_by)
+    labs(color=group_by)+
+    {if(length(unique(meta[[group_by]]))<=12){
+      scale_color_manual(values = pals::tol(12))}
+      else{
+      scale_color_manual(values = smooth_rainbow(max(discard(as.numeric(as.character(obj@meta.data[,group_by])), is.na))+1, 
+                       range = c(0.01, 0.99)))
+      }}
   return(p)
 }
+
+ratio_cluster_plot <- function(obj, 
+                               clusters="cluster_full", 
+                               ratio="ratio_anno",
+                               assay="FACS"){
+  pkg <- c("ggplot2")
+  invisible(lapply(pkg, library, character.only = TRUE))
+  DefaultAssay(obj) <- assay
+  max_i <- max(as.numeric(as.character(obj@meta.data[,clusters])))
+  original_warning <- options(warn = -1)
+  obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>% 
+    ggplot(aes(x = reorder(.data[[clusters]], as.numeric(.data[[clusters]]), FUN = max), y = n, fill = .data[[ratio]])) +
+    geom_bar(stat = "identity", position = "fill") +
+    scale_fill_manual(values = rev(c("orange2", "dodgerblue2"))) +
+    scale_x_discrete(limits = as.character(1:max_i)) +  # Reorder levels within the range of 1 to 40
+    xlab("Clusters") +
+    labs(y = "Count") +
+    ggtitle("Cluster Analysis") +
+    theme_minimal()
+}
+
+
+select_dbt <- function(obj,
+                       clusters="cluster_full", 
+                       ratio="ratio_anno",
+                       assay="FACS"){
+  dist <- obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>% ungroup() %>% 
+    group_by(.data[[clusters]]) %>% mutate(ratio_ratio = n/sum(n)) %>% filter(.data[[ratio]]=="Ratio_high") 
+
+  cutoff <- quantile(dist$ratio_ratio, probs = 80/100)
+  cluster_to_use <- as.vector(pull(dist[dist$ratio_ratio > cutoff,], .data[[clusters]]))
+  return(cluster_to_use)
+}
+
