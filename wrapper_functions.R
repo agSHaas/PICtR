@@ -264,7 +264,7 @@ wrapper_for_plots <- function(obj=obj,
   if(length(meta_list) > 0){
     meta_plots <-lapply(seq(1:length(meta_list)), function(i){
       name <- meta_list[[i]]
-      print(name)
+      #print(name)
       if(is.numeric(obj@meta.data[,meta_list[[i]]])){
         FeaturePlot(obj, features=name, combine=T, alpha = alpha, raster =TRUE, reduction = reduction)+scale_colour_gradientn(colours=feature_plot_colors) 
       }else{
@@ -377,3 +377,110 @@ select_dbt <- function(obj,
   return(cluster_to_use)
 }
 
+# Code is taken from here:https://psyteachr.github.io/msc-conv/visualisation.html
+GeomSplitViolin <- ggproto(
+  "GeomSplitViolin", 
+  GeomViolin, 
+  draw_group = function(self, data, ..., draw_quantiles = NULL) {
+    data <- transform(data, 
+                      xminv = x - violinwidth * (x - xmin), 
+                      xmaxv = x + violinwidth * (xmax - x))
+    grp <- data[1,'group']
+    newdata <- plyr::arrange(
+      transform(data, x = if(grp%%2==1) xminv else xmaxv), 
+      if(grp%%2==1) y else -y
+    )
+    newdata <- rbind(newdata[1, ], newdata, newdata[nrow(newdata), ], newdata[1, ])
+    newdata[c(1,nrow(newdata)-1,nrow(newdata)), 'x'] <- round(newdata[1, 'x']) 
+    if (length(draw_quantiles) > 0 & !scales::zero_range(range(data$y))) {
+      stopifnot(all(draw_quantiles >= 0), all(draw_quantiles <= 1))
+      quantiles <- ggplot2:::create_quantile_segment_frame(data, draw_quantiles)
+      aesthetics <- data[rep(1, nrow(quantiles)), setdiff(names(data), c("x", "y")), drop = FALSE]
+      aesthetics$alpha <- rep(1, nrow(quantiles))
+      both <- cbind(quantiles, aesthetics)
+      quantile_grob <- GeomPath$draw_panel(both, ...)
+      ggplot2:::ggname("geom_split_violin", 
+                       grid::grobTree(GeomPolygon$draw_panel(newdata, ...), quantile_grob))
+    } else {
+      ggplot2:::ggname("geom_split_violin", GeomPolygon$draw_panel(newdata, ...))
+    }
+  }
+)
+
+geom_split_violin <- function (mapping = NULL, 
+                               data = NULL, 
+                               stat = "ydensity", 
+                               position = "identity", ..., 
+                               draw_quantiles = NULL, 
+                               trim = TRUE, 
+                               scale = "area", 
+                               na.rm = FALSE, 
+                               show.legend = NA, 
+                               inherit.aes = TRUE) {
+  layer(data = data, 
+        mapping = mapping, 
+        stat = stat, 
+        geom = GeomSplitViolin, 
+        position = position, 
+        show.legend = show.legend, 
+        inherit.aes = inherit.aes, 
+        params = list(trim = trim, 
+                      scale = scale, 
+                      draw_quantiles = draw_quantiles, 
+                      na.rm = na.rm, ...)
+  )
+}
+
+
+ClusterMarker <- function(obj, 
+                          assay="FACS",
+                          cluster_handel="FACS_snn_res", 
+                          resolution=0.5, 
+                          sort=TRUE){
+  cluster_res <- paste0(cluster_handel, ".", resolution)
+  dat <- setDT(as.data.frame(obj[[assay]]$data), keep.rownames = "rowname")[] %>% 
+    pivot_longer(-rowname) %>% 
+    left_join(obj_dbt@meta.data %>% rownames_to_column() %>% dplyr::select(rowname, .data[[cluster_res]]), by=c("name"="rowname"))
+  
+  p_list <- lapply(seq(1: max(as.numeric(as.vector(obj@meta.data[,cluster_res]))+1)), function(i){
+    
+    dat$group <- ifelse(dat[,cluster_res]==i-1, "case", "control")
+    dat$col <- "dummy"
+    
+    dat <- dat %>% 
+      group_by(rowname) %>% 
+      mutate(mean_control=mean(value)) %>% 
+      ungroup() %>% 
+      group_by(rowname, .data[[cluster_res]]) %>% 
+      mutate(mean_case=mean(value)) 
+    
+    dat$col[dat$group=="control"]="gray80"
+    dat$col[dat[,cluster_res]==i-1 & dat$group=="case" & dat$mean_case >= dat$mean_control]="magenta4"
+    dat$col[dat[,cluster_res]==i-1 & dat$group=="case" & dat$mean_case <= dat$mean_control]="steelblue3"
+    
+    dat$rowname <- as.factor(dat$rowname)
+    if(sort==TRUE){
+      dat$diff <- dat$mean_control - dat$mean_case
+      dat_new <- dat %>% filter(.data[[cluster_res]]==i-1) %>% 
+        ungroup() %>% select(rowname, diff) %>% unique() %>% 
+        arrange(diff)
+  
+      newFactor <- factor(dat$rowname, levels = dat_new$rowname)
+      dat$rowname<-  newFactor 
+    }
+    
+    p <- ggplot(dat, aes(x=rowname, y=value, fill= col))+
+      geom_split_violin(trim = T, alpha = .4, scale = "width")+
+      geom_boxplot(width = .2, alpha = .8, outlier.shape  = NA,
+                   position = position_dodge(.25))+
+      scale_fill_identity(guide = 'legend', labels=c("control", "Clst_high", "Clst_low"))+
+      xlab("")+ylab("Normalized and transformed FMI")+
+      ggtitle(paste0("Cluster_", i-1))+
+      theme_classic()+
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+      guides(fill = guide_legend(reverse = T, title = ""))
+    
+    return(p)
+  })
+  
+}
