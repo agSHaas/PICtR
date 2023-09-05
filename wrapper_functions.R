@@ -366,11 +366,11 @@ ratio_cluster_plot <- function(obj,
 
 
 select_dbt <- function(obj,
-                       clusters="cluster_full", 
+                       clusters="seurat_clusters", 
                        ratio="ratio_anno",
                        assay="FACS"){
   dist <- obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>% ungroup() %>% 
-    group_by(.data[[clusters]]) %>% mutate(ratio_ratio = n/sum(n)) %>% filter(.data[[ratio]]=="Ratio_high") 
+    group_by(.data[[clusters]]) %>% mutate(ratio_ratio = n/sum(n)) %>% dplyr::filter(.data[[ratio]]=="Ratio_high") 
 
   cutoff <- quantile(dist$ratio_ratio, probs = 80/100)
   cluster_to_use <- as.vector(pull(dist[dist$ratio_ratio > cutoff,], .data[[clusters]]))
@@ -461,7 +461,7 @@ ClusterMarker <- function(obj,
     dat$rowname <- as.factor(dat$rowname)
     if(sort==TRUE){
       dat$diff <- dat$mean_control - dat$mean_case
-      dat_new <- dat %>% filter(.data[[cluster_res]]==i-1) %>% 
+      dat_new <- dat %>% dplyr::filter(.data[[cluster_res]]==i-1) %>% 
         ungroup() %>% select(rowname, diff) %>% unique() %>% 
         arrange(diff)
   
