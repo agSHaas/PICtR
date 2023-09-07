@@ -187,7 +187,7 @@ sketch_wrapper <- function(channel=channel,
   n_dims <- dim(channel)[2]
   obj <- obj %>% FindVariableFeatures(verbose=verbose) %>% 
     ScaleData(verbose=verbose) %>% 
-    RunPCA(npcs=n_dims-1, verbose=verbose) %>%
+    RunPCA(npcs=n_dims-1, approx=F, verbose=verbose) %>%
     FindNeighbors(dims = 1:n_dims-1, verbose=verbose) %>%
     FindClusters(resolution = resolution, verbose = verbose) %>% 
     RunUMAP(features = 1:n_dims-1, return.model = TRUE, verbose = verbose)
