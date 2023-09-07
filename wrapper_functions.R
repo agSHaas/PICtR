@@ -100,6 +100,7 @@ sketch_wrapper <- function(channel=channel,
                           group_by=NULL,
                           verbose=TRUE,
                           BPcell_dir=NULL,
+                          ratio=TRUE,
                           working_dir=getwd()){
   if(packageVersion("Seurat") < "4.9.9.9058"){
     stop("Please install Seurat V5. If you already have Seurat V5 please install the most recent version from git")
@@ -118,9 +119,16 @@ sketch_wrapper <- function(channel=channel,
   pkg <- c("Seurat", "tidyr","tidyverse", "dplyr", "BPCells", "readr")
   invisible(lapply(pkg, library, character.only = TRUE))
   
+  if(ratio){
+    message("Calualtion of Ratio")
+    channel["ratio"] <- channel[FSC.A]/channel[FSC.H]
+    channel$ratio <- as.numeric(channel$ratio)
+  }
+
+  
   if(!file.exists(paste0(working_dir, obj_name, ".rds"))){
     obj <- CreateSeuratObject(as(object=t(channel), Class="dgCMatrix"), "FACS")
-    
+
     if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir)){
       counts.mat <- open_matrix_dir(dir =  paste0(working_dir, "counts"))
     }else if(!is.null(BPcell_dir)){
@@ -145,31 +153,32 @@ sketch_wrapper <- function(channel=channel,
   
   if(!is.null(meta_data)){
     obj@meta.data <- cbind(obj@meta.data, meta_data)
+    obj$ratio <- channel$ratio
   }else{
     message("Please not that there are not metadata are added to the object")
   }
   
-  message("Calualtion of Ratio")
-  obj$ratio <- obj@meta.data[,FSC.A]/obj@meta.data[,FSC.H]
-  
-  cutoff <- calculateThreshold(hist(obj$ratio, breaks = 2000, plot = FALSE))
-  obj$ratio_anno <- ifelse(obj$ratio>=cutoff, "Ratio_high", "Ratio_low")
-  obj$ratio_anno <- factor(obj$ratio_anno, levels = c("Ratio_low", "Ratio_high"))
-  
-  if(!is.null(group_by)){
-    ratio_list <-  split(obj@meta.data, f=obj@meta.data[,group_by])  
-    ratio_anno <- lapply(ratio_list, function(list){
-     cutoff <- calculateThreshold(hist(list$ratio, breaks = 2000, plot = FALSE))
-     list$ratio_anno_group <- ifelse(list$ratio>=cutoff, "Ratio_high", "Ratio_low")
-     return(list)
-     })
-    names(ratio_anno) <- NULL
-    ratio.df <- do.call(rbind, ratio_anno)
+  if(ratio){
+    cutoff <- calculateThreshold(hist(obj$ratio, breaks = 2000, plot = FALSE))
+    obj$ratio_anno <- ifelse(obj$ratio>=cutoff, "Ratio_high", "Ratio_low")
+    obj$ratio_anno <- factor(obj$ratio_anno, levels = c("Ratio_low", "Ratio_high"))
+    
+    if(!is.null(group_by)){
+      ratio_list <-  split(obj@meta.data, f=obj@meta.data[,group_by])  
+      ratio_anno <- lapply(ratio_list, function(list){
+        cutoff <- calculateThreshold(hist(list$ratio, breaks = 2000, plot = FALSE))
+        list$ratio_anno_group <- ifelse(list$ratio>=cutoff, "Ratio_high", "Ratio_low")
+        return(list)
+      })
+      
+      names(ratio_anno) <- NULL
+      ratio.df <- do.call(rbind, ratio_anno)
+    }
+    
     obj@meta.data <- left_join(rownames_to_column(obj@meta.data), 
                                dplyr::select(rownames_to_column(ratio.df), rowname, ratio_anno_group), by=c("rowname"="rowname")) %>% 
       column_to_rownames()
     obj$ratio_anno_group <- factor(obj$ratio_anno_group, levels = c("Ratio_low", "Ratio_high"))
-   
   }
   
   message("Sketching is started")
