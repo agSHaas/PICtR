@@ -190,7 +190,7 @@ sketch_wrapper <- function(channel=channel,
     RunPCA(npcs=n_dims-1, approx=F, verbose=verbose) %>%
     FindNeighbors(dims = 1:n_dims-1, verbose=verbose) %>%
     FindClusters(resolution = resolution, verbose = verbose) %>% 
-    RunUMAP(features = 1:n_dims-1, return.model = TRUE, verbose = verbose)
+    RunUMAP(dims = 1:n_dims-1, return.model = TRUE, verbose = verbose)
 
   message("Sketching is done")
   message("The object will be updated and saved")
