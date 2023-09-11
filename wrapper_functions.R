@@ -122,7 +122,8 @@ sketch_wrapper <- function(channel=channel,
   if(ratio){
     message("Calualtion of Ratio")
     channel["ratio"] <- channel[FSC.A]/channel[FSC.H]
-    channel$ratio <- as.numeric(channel$ratio)
+    #channel$ratio <- as.numeric(channel$ratio)
+    channel$ratio <- scales::rescale(as.numeric(channel$ratio), to = c(0, 1023))
   }
 
   
@@ -175,9 +176,9 @@ sketch_wrapper <- function(channel=channel,
       ratio.df <- do.call(rbind, ratio_anno)
     }
     
-    obj@meta.data <- left_join(rownames_to_column(obj@meta.data), 
+    obj@meta.data <- dplyr::left_join(tibble::rownames_to_column(obj@meta.data), 
                                dplyr::select(rownames_to_column(ratio.df), rowname, ratio_anno_group), by=c("rowname"="rowname")) %>% 
-      column_to_rownames()
+      tibble::column_to_rownames()
     obj$ratio_anno_group <- factor(obj$ratio_anno_group, levels = c("Ratio_low", "Ratio_high"))
   }
   
@@ -228,6 +229,7 @@ wrapper_for_plots <- function(obj=obj,
   if(length(new.packages)) install.packages(new.packages)
   pkg <- c("cowplot", "pals", "khroma")
   invisible(lapply(pkg, library, character.only = TRUE))
+  
   smooth_rainbow <- colour("smooth rainbow")
   DefaultAssay(obj) <- assay
   # Feature Plots
@@ -249,11 +251,11 @@ wrapper_for_plots <- function(obj=obj,
   }
   # Cluster Plots
   if(cluster_plot){
-    cluster_plots <- lapply(seq(1:length(grep(cluster_handel, colnames(obj@meta.data)))), function(i){
+    cluster_plots <- lapply(seq(1:length(grep(paste("^",cluster_handel,"$", sep=""), colnames(obj@meta.data)))), function(i){
       name <- grep(cluster_handel, colnames(obj@meta.data), value = T)[i]
       cluster_plots <- DimPlot(object = obj,
                                group.by = name,
-                               cols = smooth_rainbow(max(discard(as.numeric(as.character(obj@meta.data[,name])), is.na))+1, 
+                               cols = smooth_rainbow(max(as.numeric(as.character(obj@meta.data[,name])), na.rm = T)+1, 
                                                      range = c(0.01, 0.99)), alpha = alpha, raster=TRUE,
                                label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
     })
@@ -265,9 +267,11 @@ wrapper_for_plots <- function(obj=obj,
   if(any(meta_list=="ratio_anno")){
     ratio_plots <- DimPlot(object = obj,
                            group.by = "ratio_anno",
-                           cols = ratio_plot_color, 
+                           cols = ratio_plot_color,
                            alpha = alpha, raster=TRUE,
-                           label = TRUE, repel = TRUE, label.size = label_size, reduction = reduction)
+                           label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
+  }else{
+    ratio_plots <- NULL
   }
   
   if(length(meta_list) > 0){
@@ -316,14 +320,14 @@ wrapper_for_plots <- function(obj=obj,
         }
       }
     })
-    m_nrow <-  round((length(meta_list)/3))
+    m_nrow <-  ifelse(round((length(meta_list)/3))==0,1,round((length(meta_list)/3)))
     names(meta_plots) <- meta_list
   }else{
     meta_plots <- "not caluculated"
   }
   return(list(feature_plots= cowplot::plot_grid(plotlist = Feature_Plot, nrow = f_nrow),
               cluster_plots=cowplot::plot_grid(plotlist = cluster_plots, nrow = c_nrow),
-              ratio_plot=ratio_plots, 
+              ratio_plots=ratio_plots, 
               meta_plots_grid=cowplot::plot_grid(plotlist = meta_plots, nrow = m_nrow),
               meta_plot_list=meta_plots))
 }
@@ -443,34 +447,34 @@ geom_split_violin <- function (mapping = NULL,
 
 ClusterMarker <- function(obj, 
                           assay="FACS",
-                          cluster_handel="FACS_snn_res", 
-                          resolution=0.5, 
+                          cluster_handel="cluster_full", 
+                          #resolution=0.5, 
                           sort=TRUE){
-  cluster_res <- paste0(cluster_handel, ".", resolution)
-  dat <- setDT(as.data.frame(obj[[assay]]$data), keep.rownames = "rowname")[] %>% 
+  #cluster_res <- paste0(cluster_handel, ".", resolution)
+  dat <- setDT(as.data.frame(BPCells::as.matrix(obj[[assay]]$counts)), keep.rownames = "rowname")[] %>% 
     pivot_longer(-rowname) %>% 
-    left_join(obj_dbt@meta.data %>% rownames_to_column() %>% dplyr::select(rowname, .data[[cluster_res]]), by=c("name"="rowname"))
+    left_join(obj@meta.data %>% rownames_to_column() %>% dplyr::select(rowname, .data[[cluster_handel]]), by=c("name"="rowname"))
   
-  p_list <- lapply(seq(1: max(as.numeric(as.vector(obj@meta.data[,cluster_res]))+1)), function(i){
+  p_list <- lapply(seq(1: max(as.numeric(as.vector(obj@meta.data[,cluster_handel]))+1)), function(i){
     
-    dat$group <- ifelse(dat[,cluster_res]==i-1, "case", "control")
+    dat$group <- ifelse(dat[,cluster_handel]==i-1, "case", "control")
     dat$col <- "dummy"
     
     dat <- dat %>% 
       group_by(rowname) %>% 
       mutate(mean_control=mean(value)) %>% 
       ungroup() %>% 
-      group_by(rowname, .data[[cluster_res]]) %>% 
+      group_by(rowname, .data[[cluster_handel]]) %>% 
       mutate(mean_case=mean(value)) 
     
     dat$col[dat$group=="control"]="gray80"
-    dat$col[dat[,cluster_res]==i-1 & dat$group=="case" & dat$mean_case >= dat$mean_control]="magenta4"
-    dat$col[dat[,cluster_res]==i-1 & dat$group=="case" & dat$mean_case <= dat$mean_control]="steelblue3"
+    dat$col[dat[,cluster_handel]==i-1 & dat$group=="case" & dat$mean_case >= dat$mean_control]="magenta4"
+    dat$col[dat[,cluster_handel]==i-1 & dat$group=="case" & dat$mean_case <= dat$mean_control]="steelblue3"
     
     dat$rowname <- as.factor(dat$rowname)
     if(sort==TRUE){
       dat$diff <- dat$mean_control - dat$mean_case
-      dat_new <- dat %>% dplyr::filter(.data[[cluster_res]]==i-1) %>% 
+      dat_new <- dat %>% dplyr::filter(.data[[cluster_handel]]==i-1) %>% 
         ungroup() %>% select(rowname, diff) %>% unique() %>% 
         arrange(diff)
   
