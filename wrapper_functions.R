@@ -174,12 +174,13 @@ sketch_wrapper <- function(channel=channel,
       
       names(ratio_anno) <- NULL
       ratio.df <- do.call(rbind, ratio_anno)
-    }
+    
     
     obj@meta.data <- dplyr::left_join(tibble::rownames_to_column(obj@meta.data), 
                                dplyr::select(rownames_to_column(ratio.df), rowname, ratio_anno_group), by=c("rowname"="rowname")) %>% 
       tibble::column_to_rownames()
     obj$ratio_anno_group <- factor(obj$ratio_anno_group, levels = c("Ratio_low", "Ratio_high"))
+    }
   }
   
   message("Sketching is started")
