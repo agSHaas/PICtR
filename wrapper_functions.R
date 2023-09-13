@@ -219,6 +219,7 @@ wrapper_for_plots <- function(obj=obj,
                               ratio_plot_color=c(Ratio_low="dodgerblue2", Ratio_high="gold2"),
                               reduction="umap", 
                               alpha=1,
+                              raster=TRUE
                               label_size=3,
                               cluster_handel="sketch_snn_res",
                               label_box=FALSE,
@@ -235,7 +236,7 @@ wrapper_for_plots <- function(obj=obj,
   # Feature Plots
   
   if(feature_plot){
-    Feature_Plot <- FeaturePlot(obj, features=rownames(obj@assays$FACS), alpha = alpha, combine=FALSE, raster =TRUE, reduction = reduction)
+    Feature_Plot <- FeaturePlot(obj, features=rownames(obj@assays$FACS), alpha = alpha, combine=FALSE, raster =raster, reduction = reduction)
     
     for(i in 1:length(Feature_Plot)) suppressMessages({
       Feature_Plot[[i]] <- Feature_Plot[[i]] + 
@@ -256,7 +257,7 @@ wrapper_for_plots <- function(obj=obj,
       cluster_plots <- DimPlot(object = obj,
                                group.by = name,
                                cols = smooth_rainbow(max(as.numeric(as.character(obj@meta.data[,name])), na.rm = T)+1, 
-                                                     range = c(0.01, 0.99)), alpha = alpha, raster=TRUE,
+                                                     range = c(0.01, 0.99)), alpha = alpha, raster=raster,
                                label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
     })
     c_nrow <- round(length(grep(cluster_handel, colnames(obj@meta.data)))/3)
@@ -268,7 +269,7 @@ wrapper_for_plots <- function(obj=obj,
     ratio_plots <- DimPlot(object = obj,
                            group.by = "ratio_anno",
                            cols = ratio_plot_color,
-                           alpha = alpha, raster=TRUE,
+                           alpha = alpha, raster=raster,
                            label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
   }else{
     ratio_plots <- NULL
@@ -285,7 +286,7 @@ wrapper_for_plots <- function(obj=obj,
           name <- meta_list[[i]]
           plot <- DimPlot(object = obj, group.by = name,
                           cols = pals::tol(12), 
-                          alpha = alpha, raster=TRUE,
+                          alpha = alpha, raster=raster,
                           label = TRUE, label.box = label_box,
                           label.size = label_size, repel = FALSE, 
                           reduction = reduction, combine = F)
@@ -293,7 +294,7 @@ wrapper_for_plots <- function(obj=obj,
           name <- meta_list[[i]]
           plot <- DimPlot(object = obj, group.by = name,
                           cols = pals::tol.rainbow(25), 
-                          alpha = alpha, raster=TRUE,
+                          alpha = alpha, raster=raster,
                           label = TRUE, label.box = label_box, 
                           label.size = label_size, repel = FALSE, 
                           reduction = reduction, combine = F)
@@ -305,7 +306,7 @@ wrapper_for_plots <- function(obj=obj,
                                                          range = c(0.01, 0.99)), 
                                    label = TRUE, label.box = label_box,
                                    label.size = label_size, repel = FALSE,
-                                   alpha = alpha, raster=TRUE,
+                                   alpha = alpha, raster=raster,
                                    reduction = reduction, combine = F)
           
         }else{
@@ -315,7 +316,7 @@ wrapper_for_plots <- function(obj=obj,
                           cols = smooth_rainbow(index, range = c(0.01, 0.99)), 
                           label = TRUE, label.box = label_box,
                           label.size = label_size, repel = FALSE,
-                          alpha = alpha, raster=TRUE,
+                          alpha = alpha, raster=raster,
                           reduction = reduction, combine = F)
         }
       }
@@ -336,7 +337,7 @@ split_plot_sketch <- function(obj,
                               group_by="seurat_clusters", 
                               split_by="ratio_anno"){
   install.packages(setdiff("ggrastr", rownames(installed.packages())))
-  cells <- rownames(obj@meta.data)[!is.na(obj$sketch_snn_res.4)]
+  cells <- rownames(obj@meta.data)[!is.na(obj$seurat_clusters)]
   meta <- obj@meta.data[cells,]
   meta <- cbind(meta, obj@reductions$umap@cell.embeddings[cells,])
   
@@ -448,7 +449,7 @@ geom_split_violin <- function (mapping = NULL,
 ClusterMarker <- function(obj, 
                           assay="FACS",
                           cluster_handel="cluster_full", 
-                          #resolution=0.5, 
+                          #resolution=0.5,
                           sort=TRUE){
   #cluster_res <- paste0(cluster_handel, ".", resolution)
   dat <- setDT(as.data.frame(BPCells::as.matrix(obj[[assay]]$counts)), keep.rownames = "rowname")[] %>% 
