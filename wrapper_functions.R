@@ -220,7 +220,7 @@ wrapper_for_plots <- function(obj=obj,
                               ratio_plot_color=c(Ratio_low="dodgerblue2", Ratio_high="gold2"),
                               reduction="umap", 
                               alpha=1,
-                              raster=TRUE
+                              raster=TRUE,
                               label_size=3,
                               cluster_handel="sketch_snn_res",
                               label_box=FALSE,
@@ -366,13 +366,13 @@ ratio_cluster_plot <- function(obj,
   pkg <- c("ggplot2")
   invisible(lapply(pkg, library, character.only = TRUE))
   DefaultAssay(obj) <- assay
-  max_i <- max(as.numeric(obj@meta.data[,clusters]), na.rm = T)
+  max_i <- max(as.numeric(as.vector(obj@meta.data[,clusters]), na.rm = T))
   original_warning <- options(warn = -1)
   obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>% 
     ggplot(aes(x = reorder(.data[[clusters]], as.numeric(.data[[clusters]]), FUN = max), y = n, fill = .data[[ratio]])) +
     geom_bar(stat = "identity", position = "fill") +
     scale_fill_manual(values = rev(c("orange2", "dodgerblue2"))) +
-    scale_x_discrete(limits = as.character(1:max_i)) +  # Reorder levels within the range of 1 to 40
+    scale_x_discrete(limits = as.character(0:max_i)) +  # Reorder levels within the range of 1 to 40
     xlab("Clusters") +
     labs(y = "Count") +
     ggtitle("Cluster Analysis") +
