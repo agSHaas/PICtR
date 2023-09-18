@@ -141,7 +141,7 @@ sketch_wrapper <- function(channel=channel,
     }
     obj[["FACS"]]$counts <- counts.mat
     
-    message("Your newly gerneated object will be saved", paste0(working_dir,obj_name, ".rds"))
+    message("Your newly gerneated object will be saved: ", paste0(working_dir, "/", obj_name, ".rds"))
     SeuratObject::saveRDS(object = obj,
                           file = paste0(obj_name, ".rds"),
                           destdir = working_dir)
@@ -253,7 +253,7 @@ wrapper_for_plots <- function(obj=obj,
   }
   # Cluster Plots
   if(cluster_plot){
-    cluster_plots <- lapply(seq(1:length(grep(paste("^",cluster_handel,"$", sep=""), colnames(obj@meta.data)))), function(i){
+    cluster_plots <- lapply(seq(1:length(grep(paste("^",cluster_handel, sep=""), colnames(obj@meta.data)))), function(i){
       name <- grep(cluster_handel, colnames(obj@meta.data), value = T)[i]
       cluster_plots <- DimPlot(object = obj,
                                group.by = name,
@@ -261,7 +261,7 @@ wrapper_for_plots <- function(obj=obj,
                                                      range = c(0.01, 0.99)), alpha = alpha, raster=raster,
                                label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
     })
-    c_nrow <- round(length(grep(cluster_handel, colnames(obj@meta.data)))/3)
+    c_nrow <- ifelse(round((length(meta_list)/3))==0,1,round((length(meta_list)/3)))
   }else{
     cluster_plot <- "not caluculated"
   }
