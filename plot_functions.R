@@ -199,7 +199,7 @@ ratio_cluster_plot <- function(obj,
   pkg <- c("ggplot2")
   invisible(lapply(pkg, library, character.only = TRUE))
   DefaultAssay(obj) <- assay
-  max_i <- max(as.numeric(as.vector(obj@meta.data[,clusters]), na.rm = T))
+  max_i <- max(as.numeric(as.vector(obj@meta.data[,clusters])), na.rm = T)
   original_warning <- options(warn = -1)
   obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>% 
     ggplot(aes(x = reorder(.data[[clusters]], as.numeric(.data[[clusters]]), FUN = max), y = n, fill = .data[[ratio]])) +
