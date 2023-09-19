@@ -9,7 +9,7 @@ project_data <- function(obj,
   obj_ref$clst <- as.vector(data_ref[,ref_clusters])
   
   
-  obj_query <- subset(obj, cells = rownames(obj@meta.data %>% filter(seurat_cluster=="NA")))
+  obj_query <- subset(obj, cells = rownames(obj@meta.data %>% filter(is.na(seurat_clusters))))
   obj_query <- as.data.frame(t(as.matrix(obj_query@assays$FACS$counts)))
   
   lda_model <- MASS::lda(clst ~ ., data=obj_ref)
