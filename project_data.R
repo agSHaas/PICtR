@@ -1,33 +1,55 @@
-project_data <- function(obj,
+project_data <- function(obj=obj,
+                         data_query=df,
                          ref_clusters="sketch_snn_res.2",
-                         return=c("obj", "df")){
-  pkg <- c("Seurat", "tidyr","tidyverse", "dplyr", "BPCells", "readr", "MASS")
+                         FSC.A="FSC-A",
+                         FSC.H="FSC-H",
+                         pred_name="clusters_predicted",
+                         chunk_size=1000000){
+  
+  pkg <- c("Seurat", "tidyr","tidyverse", "dplyr", "BPCells", "readr", "MASS", "pbapply")
   invisible(lapply(pkg, library, character.only = TRUE))
-  data_ref <- obj@meta.data %>% filter(!seurat_clusters=="NA")
-  obj_ref <- subset(obj, cells = rownames(data_ref))
-  obj_ref <- as.data.frame(t(obj_ref@assays$sketch$counts))
-  obj_ref$clst <- as.vector(data_ref[,ref_clusters])
   
+  data_ref <- as.data.frame(as.data.frame(t(obj@assays$sketch$counts)))
+  data_ref$clst <- as.numeric(as.character(obj@meta.data %>% filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))
   
-  obj_query <- subset(obj, cells = rownames(obj@meta.data %>% filter(is.na(seurat_clusters))))
-  obj_query <- as.data.frame(t(as.matrix(obj_query@assays$FACS$counts)))
+  lda_model <- MASS::lda(clst ~ ., data=data_ref)
   
-  lda_model <- MASS::lda(clst ~ ., data=obj_ref)
-  
-  data_to_perdict <- obj_query[,colnames(obj_ref)[-"clst"]]
-  
-  prediced <- predict(lda_model, data_to_perdict)
-  
-  if(return=="obj"){
-    obj$cluster_predicted <- factor(prediced$class, levels = sort(as.numeric(as.vector(unique(prediced$class)))))
+  if(is.data.frame(data_query) | is.data.table(data_query)){ 
+    message("Calculate Ratio")
+    data_query=as.data.frame(data_query)
+    data_query$ratio <- data_query[,FSC.A]/data_query[,FSC.H]
+    data_query$ratio <- scales::rescale(as.numeric(data_query$ratio), to = c(0, 1023))
+    
+    chunk_size <- chunk_size
+    n_rows <- dim(data_query)[1]
+    message("Calculate Prediction")
+    pred <- pblapply(seq(1, n_rows, chunk_size), function(i){
+      start <- i
+      end_row <- min(i + chunk_size - 1, n_rows)
+      data_to_predict <- as.data.frame(data_query[start:end_row,colnames(data_ref)[!colnames(data_ref)=="clst"]])
+      prediced <- predict(lda_model, data_to_predict)
+      prediced_vector <- as.numeric(as.character(prediced$class))
+      return(prediced_vector)
+    })
+    pred_vector <- unlist(pred)
+    pred_vector <- factor(pred_vector, levels = sort(unique(pred_vector)))
+    #data_query$clusters_predicted <- pred_vector
+    obj$clusters_predicted <- pred_vector
     return(obj)
-  }else if(retrun=="df"){
-    obj_query$cluster_predicted <- factor(prediced$class, levels = sort(as.numeric(as.vector(unique(prediced$class)))))
-    obj_ref$status <- "ref"
-    obj_query[,colnames(obj_ref)[-"clst"]]$status <- "query"
-    obj_df <- rbind(obj_ref, obj_query[,colnames(obj_ref)[-"clst"]]$status)
-    return(obj_df)
+    
+  }else if(isS4(data_query)){ 
+    data_ref <- obj@meta.data %>% filter(!seurat_clusters=="NA") 
+    obj_ref <- subset(obj, cells = rownames(data_ref))
+    obj_ref <- as.data.frame(t(obj_ref@assays$sketch$counts))
+    obj_ref$clst <- as.vector(data_ref$sketch_snn_res.2)
+    
+    lda_model <- MASS::lda(clst ~ ., data=obj_ref)
+    
+    data_to_perdict <- as.data.frame(t(as.matrix(obj@assays$FACS$counts)))[,colnames(obj_ref)[-32]]
+    
+    predicted <- predict(lda_model, data_to_perdict)
+    
+    obj[pred_name] <- factor(predicted$class, levels = sort(as.numeric(as.vector(unique(predicted$class)))))
+    return(obj)
   }
-  
-
 }

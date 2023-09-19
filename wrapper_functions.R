@@ -73,7 +73,7 @@ sketch_wrapper <- function(channel=channel,
   invisible(lapply(pkg, library, character.only = TRUE))
   
   if(ratio){
-    message("Calualtion of Ratio")
+    message("Calculate of Ratio")
     channel["ratio"] <- channel[FSC.A]/channel[FSC.H]
     #channel$ratio <- as.numeric(channel$ratio)
     channel$ratio <- scales::rescale(as.numeric(channel$ratio), to = c(0, 1023))
