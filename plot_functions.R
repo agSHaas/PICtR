@@ -94,7 +94,7 @@ wrapper_for_plots <- function(obj=obj,
                                                      range = c(0.01, 0.99)), alpha = alpha, raster=raster,
                                label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
     })
-    c_nrow <- ifelse(round((length(meta_list)/3))==0,1,round((length(meta_list)/3)))
+    c_nrow <- ifelse(ceiling((length(meta_list)/2))==0,1,ceiling((length(meta_list)/2)))
   }else{
     cluster_plot <- "not caluculated"
   }
