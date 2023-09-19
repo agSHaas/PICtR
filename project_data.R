@@ -3,7 +3,8 @@ project_data <- function(obj,
                          return=c("obj", "df")){
   pkg <- c("Seurat", "tidyr","tidyverse", "dplyr", "BPCells", "readr", "MASS")
   invisible(lapply(pkg, library, character.only = TRUE))
-  obj_ref <- subset(obj, cells = rownames(obj@meta.data %>% filter(!seurat_cluster=="NA")))
+  data_ref <- obj@meta.data %>% filter(!seurat_clusters=="NA")
+  obj_ref <- subset(obj, cells = rownames(data_ref))
   obj_ref <- as.data.frame(t(obj_ref@assays$sketch$counts))
   obj_ref$clst <- as.vector(data_ref[,ref_clusters])
   
