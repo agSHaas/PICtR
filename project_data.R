@@ -13,14 +13,21 @@ project_data <- function(obj=obj,
   data_ref$clst <- as.numeric(as.character(obj@meta.data %>% filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))
   
   lda_model <- MASS::lda(clst ~ ., data=data_ref)
+  model_predict <- prediced <- predict(lda_model, data_ref)
   
   if(is.data.frame(data_query) | is.data.table(data_query)){ 
     message("Calculate Ratio")
     data_query=as.data.frame(data_query)
     data_query$ratio <- data_query[,FSC.A]/data_query[,FSC.H]
     data_query$ratio <- scales::rescale(as.numeric(data_query$ratio), to = c(0, 1023))
+    data_query <- data_query[is.na(obj$seurat_clusters),]
     
     chunk_size <- chunk_size
+    
+    if(dim(data_query)[1] < chunk_size){
+      chunk_size <- dim(data_query)[1]
+    }
+    
     n_rows <- dim(data_query)[1]
     message("Calculate Prediction")
     pred <- pblapply(seq(1, n_rows, chunk_size), function(i){
@@ -32,9 +39,11 @@ project_data <- function(obj=obj,
       return(prediced_vector)
     })
     pred_vector <- unlist(pred)
-    pred_vector <- factor(pred_vector, levels = sort(unique(pred_vector)))
     #data_query$clusters_predicted <- pred_vector
-    obj$clusters_predicted <- pred_vector
+    obj[[pred_name]] <- "to_predict"
+    obj[[pred_name]][is.na(obj$seurat_clusters),] <- pred_vector
+    obj[[pred_name]][!is.na(obj$seurat_clusters),] <- model_predict$class
+    obj[[pred_name]] <- factor(obj@meta.data[,pred_name], levels = sort(unique(as.numeric(obj@meta.data[,pred_name]))))
     return(obj)
     
   }else if(isS4(data_query)){ 
@@ -44,12 +53,15 @@ project_data <- function(obj=obj,
     obj_ref$clst <- as.vector(data_ref$sketch_snn_res.2)
     
     lda_model <- MASS::lda(clst ~ ., data=obj_ref)
-    
-    data_to_perdict <- as.data.frame(t(as.matrix(obj@assays$FACS$counts)))[,colnames(obj_ref)[-32]]
+    data_to_predict <- as.data.frame(t(as.matrix(obj@assays$FACS$counts)))
+    data_to_perdict <- data_to_predict[!rownames(data_to_predict) %in% rownames(obj_ref),colnames(obj_ref)[-32]]
     
     predicted <- predict(lda_model, data_to_perdict)
     
-    obj[pred_name] <- factor(predicted$class, levels = sort(as.numeric(as.vector(unique(predicted$class)))))
+    obj[[pred_name]] <- "to_predict"
+    obj[[pred_name]][!rownames(data_to_predict) %in% rownames(obj_ref),] <- predicted$class
+    obj[[pred_name]][rownames(data_to_predict) %in% rownames(obj_ref),] <- model_predict$class
+    obj[[pred_name]] <-factor(obj@meta.data[,pred_name], levels = sort(unique(as.numeric(obj@meta.data[,pred_name]))))
     return(obj)
   }
 }
