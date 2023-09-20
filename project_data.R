@@ -41,8 +41,8 @@ project_data <- function(obj=obj,
     pred_vector <- unlist(pred)
     #data_query$clusters_predicted <- pred_vector
     obj[[pred_name]] <- "to_predict"
-    obj[[pred_name]][is.na(obj$seurat_clusters),] <- pred_vector
-    obj[[pred_name]][!is.na(obj$seurat_clusters),] <- model_predict$class
+    obj[[pred_name]][is.na(obj$seurat_clusters),] <- as.numeric(as.character(pred_vector))
+    obj[[pred_name]][!is.na(obj$seurat_clusters),] <- as.numeric(as.character(model_predict$class))
     obj[[pred_name]] <- factor(obj@meta.data[,pred_name], levels = sort(unique(as.numeric(obj@meta.data[,pred_name]))))
     return(obj)
     
@@ -59,8 +59,8 @@ project_data <- function(obj=obj,
     predicted <- predict(lda_model, data_to_perdict)
     
     obj[[pred_name]] <- "to_predict"
-    obj[[pred_name]][!rownames(data_to_predict) %in% rownames(obj_ref),] <- predicted$class
-    obj[[pred_name]][rownames(data_to_predict) %in% rownames(obj_ref),] <- model_predict$class
+    obj[[pred_name]][!rownames(data_to_predict) %in% rownames(obj_ref),] <- as.numeric(as.character(predicted$class))
+    obj[[pred_name]][rownames(data_to_predict) %in% rownames(obj_ref),] <- as.numeric(as.character(model_predict$class))
     obj[[pred_name]] <-factor(obj@meta.data[,pred_name], levels = sort(unique(as.numeric(obj@meta.data[,pred_name]))))
     return(obj)
   }
