@@ -6,11 +6,11 @@ project_data <- function(obj=obj,
                          pred_name="clusters_predicted",
                          chunk_size=1000000){
   
-  pkg <- c("Seurat", "tidyr","tidyverse", "dplyr", "BPCells", "readr", "MASS", "pbapply")
+  pkg <- c("Seurat", "tidyr","tidyverse", "dplyr", "BPCells", "readr", "MASS", "pbapply", "data.table")
   invisible(lapply(pkg, library, character.only = TRUE))
   
   data_ref <- as.data.frame(as.data.frame(t(obj@assays$sketch$counts)))
-  data_ref$clst <- as.numeric(as.character(obj@meta.data %>% filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))
+  data_ref$clst <- as.numeric(as.character(obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))
   
   lda_model <- MASS::lda(clst ~ ., data=data_ref)
   model_predict <- prediced <- predict(lda_model, data_ref)
@@ -47,7 +47,7 @@ project_data <- function(obj=obj,
     return(obj)
     
   }else if(isS4(data_query)){ 
-    data_ref <- obj@meta.data %>% filter(!seurat_clusters=="NA") 
+    data_ref <- obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") 
     obj_ref <- subset(obj, cells = rownames(data_ref))
     obj_ref <- as.data.frame(t(obj_ref@assays$sketch$counts))
     obj_ref$clst <- as.vector(data_ref[,ref_clusters])
