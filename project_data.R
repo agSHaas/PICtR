@@ -50,11 +50,11 @@ project_data <- function(obj=obj,
     data_ref <- obj@meta.data %>% filter(!seurat_clusters=="NA") 
     obj_ref <- subset(obj, cells = rownames(data_ref))
     obj_ref <- as.data.frame(t(obj_ref@assays$sketch$counts))
-    obj_ref$clst <- as.vector(data_ref$sketch_snn_res.2)
+    obj_ref$clst <- as.vector(data_ref[,ref_clusters])
     
     lda_model <- MASS::lda(clst ~ ., data=obj_ref)
     data_to_predict <- as.data.frame(t(as.matrix(obj@assays$FACS$counts)))
-    data_to_perdict <- data_to_predict[!rownames(data_to_predict) %in% rownames(obj_ref),colnames(obj_ref)[-32]]
+    data_to_perdict <- data_to_predict[!rownames(data_to_predict) %in% rownames(obj_ref),]
     
     predicted <- predict(lda_model, data_to_perdict)
     

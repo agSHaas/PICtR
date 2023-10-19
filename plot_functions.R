@@ -70,8 +70,7 @@ wrapper_for_plots <- function(obj=obj,
   # Feature Plots
   
   if(feature_plot){
-    Feature_Plot <- FeaturePlot(obj, features=rownames(obj@assays$FACS), alpha = alpha, combine=FALSE, raster =raster, reduction = reduction)
-    
+    Feature_Plot <- FeaturePlot(obj, features=rownames(obj[[assay]]), alpha = alpha, combine=FALSE, raster =raster, reduction = reduction)
     for(i in 1:length(Feature_Plot)) suppressMessages({
       Feature_Plot[[i]] <- Feature_Plot[[i]] + 
         scale_colour_gradientn(colours=feature_plot_colors) +
