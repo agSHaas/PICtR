@@ -42,15 +42,15 @@ project_data <- function(obj=obj,
     #data_query$clusters_predicted <- pred_vector
     obj[[pred_name]] <- "to_predict"
     obj[[pred_name]][is.na(obj$seurat_clusters),] <- as.numeric(as.character(pred_vector))
-    obj[[pred_name]][!is.na(obj$seurat_clusters),] <- as.numeric(as.character(model_predict$class))
+    obj[[pred_name]][!is.na(obj$seurat_clusters),] <- as.numeric(as.character(data_ref$clst))
     obj[[pred_name]] <- factor(obj@meta.data[,pred_name], levels = sort(unique(as.numeric(obj@meta.data[,pred_name]))))
     return(obj)
     
   }else if(isS4(data_query)){ 
-    data_ref <- obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") 
+    #data_ref <- obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") 
     obj_ref <- subset(obj, cells = rownames(data_ref))
     obj_ref <- as.data.frame(t(obj_ref@assays$sketch$counts))
-    obj_ref$clst <- as.vector(data_ref[,ref_clusters])
+    obj_ref$clst <- as.numeric(as.character(obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))
     
     lda_model <- MASS::lda(clst ~ ., data=obj_ref)
     data_to_predict <- as.data.frame(t(as.matrix(obj@assays$FACS$counts)))
@@ -60,7 +60,7 @@ project_data <- function(obj=obj,
     
     obj[[pred_name]] <- "to_predict"
     obj[[pred_name]][!rownames(data_to_predict) %in% rownames(obj_ref),] <- as.numeric(as.character(predicted$class))
-    obj[[pred_name]][rownames(data_to_predict) %in% rownames(obj_ref),] <- as.numeric(as.character(model_predict$class))
+    obj[[pred_name]][rownames(data_to_predict) %in% rownames(obj_ref),] <- as.numeric(as.character(data_ref$clst))
     obj[[pred_name]] <-factor(obj@meta.data[,pred_name], levels = sort(unique(as.numeric(obj@meta.data[,pred_name]))))
     return(obj)
   }
