@@ -10,6 +10,10 @@ project_data <- function(obj=obj,
   pkg <- c("Seurat", "tidyr","tidyverse", "dplyr", "BPCells", "readr", "MASS", "pbapply", "data.table")
   invisible(lapply(pkg, library, character.only = TRUE))
   
+  # train LDA model
+  lda_model <- MASS::lda(clst ~ ., data=data_ref)
+  # predict_ref <- predict(lda_model, data_ref)
+  
   # pull clustering with the chosen resolution from sketched cells as training data 
   data_ref <- as.data.frame(t(obj@assays$sketch$counts))
   data_ref$clst <- as.numeric(as.character(obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))
@@ -29,10 +33,6 @@ project_data <- function(obj=obj,
     if(dim(data_query)[1] < chunk_size){
       chunk_size <- dim(data_query)[1]
     }
-    
-    # train LDA model
-    lda_model <- MASS::lda(clst ~ ., data=data_ref)
-    # predict_ref <- predict(lda_model, data_ref)
 
     n_rows <- dim(data_query)[1]
     message("Calculate Prediction")
