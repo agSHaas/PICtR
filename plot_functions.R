@@ -1,8 +1,14 @@
 save.obj <- function(object, path=output_obj_path, file){
   if(is.null(file)){
     print("Please provide a file name")
+  
   }else{
-    saveRDS(object, file = paste0(path, "/", file, ".rds"))
+    if (packageVersion("Seurat") >= "5.0.0"){
+      SeuratObject::SaveSeuratRds(object = object,
+                                  file = paste0(path, "/", file, ".rds"))
+    }else{
+      saveRDS(object, file = paste0(path, "/", file, ".rds"))
+    }
   }
 }
 
@@ -13,12 +19,12 @@ save.plot <- function(plot,
                       dim_w=5){
   if(is.null(file)){
     print("Please provide a file name")
+    
   }else{
     pdf(file = paste0(path, "/", file, ".pdf"), width = dim_w, height = dim_h)
     plot(plot)
     dev.off()
   }
-  
 }
 
 get_density <- function(x, y, ...) {
@@ -195,16 +201,21 @@ ratio_cluster_plot <- function(obj,
                                clusters="seurat_clusters", 
                                ratio="ratio_anno",
                                assay="FACS"){
+  # load dependencies
   pkg <- c("ggplot2")
   invisible(lapply(pkg, library, character.only = TRUE))
+  
+  # switch to specified assay
   DefaultAssay(obj) <- assay
+  # number of clusters 
   max_i <- max(as.numeric(as.vector(obj@meta.data[,clusters])), na.rm = T)
   original_warning <- options(warn = -1)
+  # plot
   obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>% 
     ggplot(aes(x = reorder(.data[[clusters]], as.numeric(.data[[clusters]]), FUN = max), y = n, fill = .data[[ratio]])) +
     geom_bar(stat = "identity", position = "fill") +
     scale_fill_manual(values = rev(c("orange2", "dodgerblue2"))) +
-    scale_x_discrete(limits = as.character(0:max_i)) +  # Reorder levels within the range of 1 to 40
+    scale_x_discrete(limits = as.character(0:max_i)) +  # Reorder levels within the range of 1 to i
     xlab("Clusters") +
     labs(y = "Count") +
     ggtitle("Cluster Analysis") +
@@ -317,5 +328,4 @@ ClusterMarker <- function(obj,
     
     return(p)
   })
-  
 }

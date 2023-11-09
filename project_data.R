@@ -1,6 +1,6 @@
 project_data <- function(obj=obj,
                          data_query=df,
-                         ref_clusters="sketch_snn_res.2",
+                         ref_clusters="",
                          FSC.A="FSC.A",
                          FSC.H="FSC.H",
                          pred_name="clusters_predicted",
@@ -18,13 +18,14 @@ project_data <- function(obj=obj,
   lda_model <- MASS::lda(clst ~ ., data=data_ref)
   # predict_ref <- predict(lda_model, data_ref)
   
-  # query data as dataframe 
+  # query data as data frame 
   if(is.data.frame(data_query) | is.data.table(data_query)){ 
     data_query=as.data.frame(data_query)
     
     message("Calculate Ratio")
     data_query$ratio <- data_query[,FSC.A]/data_query[,FSC.H]
     data_query$ratio <- scales::rescale(as.numeric(data_query$ratio), to = c(0, 1023))
+    
     # remove sketched cells (= training cells)
     data_query <- data_query[is.na(obj$seurat_clusters),]
     
@@ -33,7 +34,8 @@ project_data <- function(obj=obj,
     if(dim(data_query)[1] < chunk_size){
       chunk_size <- dim(data_query)[1]
     }
-
+    
+    # predict 
     n_rows <- dim(data_query)[1]
     message("Calculate Prediction")
     pred <- pblapply(seq(1, n_rows, chunk_size), function(i){
@@ -55,18 +57,22 @@ project_data <- function(obj=obj,
     return(obj)
     
     
-  # query data as Seurat obj  
+  # query data as Seurat object  
   }else if(isS4(data_query)){ 
-    message('test')
+    
+    # pull query data 
     data_to_predict <- as.data.frame(t(as.matrix(obj@assays$FACS$counts)))
     data_to_predict <- data_to_predict[!rownames(data_to_predict) %in% rownames(data_ref),]
     
+    # prediction
     predicted <- predict(lda_model, data_to_predict)
     
+    # add predicted clusters to meta.data, keep original clustering for training cells 
     obj[[pred_name]] <- "to_predict"
     obj[[pred_name]][!colnames(obj) %in% rownames(data_ref),] <- as.numeric(as.character(predicted$class))
     obj[[pred_name]][colnames(obj) %in% rownames(data_ref),] <- as.numeric(as.character(data_ref$clst))
     obj[[pred_name]] <-factor(obj@meta.data[,pred_name], levels = sort(unique(as.numeric(obj@meta.data[,pred_name]))))
+    
     return(obj)
   }
 }
