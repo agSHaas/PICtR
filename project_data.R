@@ -4,6 +4,7 @@ project_data <- function(obj=obj,
                          FSC.A="FSC.A",
                          FSC.H="FSC.H",
                          pred_name="clusters_predicted",
+                         assay="sketch",
                          chunk_size=1000000){
   
   # required packages
@@ -11,7 +12,7 @@ project_data <- function(obj=obj,
   invisible(lapply(pkg, library, character.only = TRUE))
   
   # pull clustering with the chosen resolution from sketched cells as training data 
-  data_ref <- as.data.frame(t(obj@assays$sketch$counts))
+  data_ref <- as.data.frame(t(obj[[assay]]$counts))
   data_ref$clst <- as.numeric(as.character(obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))
   
   # train LDA model
@@ -27,7 +28,9 @@ project_data <- function(obj=obj,
     data_query$ratio <- scales::rescale(as.numeric(data_query$ratio), to = c(0, 1023))
     
     # remove sketched cells (= training cells)
+    if(anyNA(obj$seurat_clusters)){
     data_query <- data_query[is.na(obj$seurat_clusters),]
+    }
     
     # chunks 
     chunk_size <- chunk_size
