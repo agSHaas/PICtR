@@ -3,13 +3,14 @@ select_dbt <- function(obj,
                        ratio="ratio_anno",
                        ratio_high="Ratio_high",
                        assay="FACS",
+                       quantile=0.8,
                        selected_clusters="doublet_clusters"){
   
   # pick clusters with a doublet content in the 80th percentile
   dist <- obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>% ungroup() %>% 
     group_by(.data[[clusters]]) %>% mutate(ratio_ratio = n/sum(n)) %>% dplyr::filter(.data[[ratio]]==ratio_high) 
   
-  cutoff <- quantile(dist$ratio_ratio, probs = 80/100)
+  cutoff <- quantile(dist$ratio_ratio, probs = quantile)
   cluster_to_use <- as.vector(pull(dist[dist$ratio_ratio > cutoff,], .data[[clusters]]))
   
   # assign to misc slot in Seurat object as a named vector
