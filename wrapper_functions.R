@@ -1,4 +1,4 @@
-calculateThreshold<- function(hist){
+calculateThreshold <- function(hist){
   # OTSU threshold
   hn = hist$counts
   wB = 0
