@@ -16,7 +16,7 @@ select_dbt <- function(obj,
   # assign to misc slot in Seurat object as a named vector
   names <- names(obj@misc)
   obj@misc <- append(obj@misc, list(cluster_to_use))
-  names(obj@misc) <- append(names, selected_clusters)
+  names(obj@misc) <- append(names, paste0(selected_clusters, "_q", quantile))
   
   # return obj
   return(obj)
