@@ -4,7 +4,8 @@ project_data <- function(obj=obj,
                          FSC.A="FSC.A",
                          FSC.H="FSC.H",
                          pred_name="clusters_predicted",
-                         assay="sketch",
+                         assay_ref=NULL,
+                         assay_query=NULL,
                          chunk_size=1000000, 
                          return_obj=TRUE){
   
@@ -13,7 +14,10 @@ project_data <- function(obj=obj,
   invisible(lapply(pkg, library, character.only = TRUE))
   
   # pull clustering with the chosen resolution from sketched cells as training data 
-  data_ref <- as.data.frame(t(obj[[assay]]$counts))
+  if (is.null(assay_ref)) {
+    stop("Please provide assay to pull data from (assay_ref)")
+  }
+  data_ref <- as.data.frame(t(obj[[assay_ref]]$counts))
   data_ref$clst <- as.numeric(as.character(obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))
   
   # train LDA model
@@ -71,7 +75,10 @@ project_data <- function(obj=obj,
   }else if(isS4(data_query)){ 
     
     # pull query data 
-    data_to_predict <- as.data.frame(t(as.matrix(obj@assays$FACS$counts)))
+    if (is.null(assay_query)) {
+      stop("Please provide assay to project data for (assay_query)")
+    }
+    data_to_predict <- as.data.frame(t(as.matrix(obj[[assay_query]]$counts)))
     data_to_predict <- data_to_predict[!rownames(data_to_predict) %in% rownames(data_ref),]
     
     # prediction
