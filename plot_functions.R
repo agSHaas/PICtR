@@ -329,3 +329,63 @@ ClusterMarker <- function(obj,
     return(p)
   })
 }
+
+
+umap_domi_style <- function(data=obj,
+                            group.by="seurat_clusters",
+                            raster.dpi=500,
+                            label=TRUE,
+                            cols=pals::tol.rainbow(70),
+                            umap1="umap_1",
+                            umap2="umap_2",
+                            reduction="umap",
+                            raster=TRUE){
+  if(isS4(data)){
+    data$umap_1 <- data@reductions[[reduction]]@cell.embeddings[,1]
+    data$umap_2 <- data@reductions[[reduction]]@cell.embeddings[,2]
+    if(lable==TRUE){
+      cluster_centers <- data@meta.data %>%
+        group_by(.data[[group.by]]) %>%
+        summarise(center_x = mean(umap_1), center_y = mean(umap_2))
+    }
+    if(raster==TRUE){
+      data@meta.data %>% 
+        ggplot(aes(umap_1, umap_2, color=.data[[group.by]])) +
+        ggrastr::geom_point_rast(size=0.2,color="black", raster.dpi=700)+
+        ggrastr::geom_point_rast(aes(color=as.factor(.data[[group.by]])),size=0.05, raster.dpi=700)+
+        scale_color_manual(values =cols)+theme_classic()+
+        guides(colour = guide_legend(override.aes = list(size=5)))+
+        geom_text_repel(data = cluster_centers, aes(x = center_x, y = center_y, label = .data[[group.by]]), color="black", size = 3)
+    }else(
+      data@meta.data %>% 
+        ggplot(aes(umap_1, umap_2, color=.data[[group.by]])) +
+        geom_point(size=0.2,color="black")+
+        geom_point(aes(color=as.factor(.data[[group.by]])),size=0.05)+
+        scale_color_manual(values =cols)+theme_classic()+
+        guides(colour = guide_legend(override.aes = list(size=5)))+
+        geom_text_repel(data = cluster_centers, aes(x = center_x, y = center_y, label = .data[[group.by]]), color="black", size = 3)
+    )
+  }else if(is.data.frame(data)){
+    if(!any(colnames(data)==umap1 | colnames(data)==umap2)){
+      stop("Plase insert a umap_1 and umap_2 embedding values")
+    }
+    if(raster==TRUE){
+      data %>% 
+        ggplot(aes(umap_1, umap_2, color=.data[[group.by]])) +
+        ggrastr::geom_point_rast(size=0.2,color="black", raster.dpi=700)+
+        ggrastr::geom_point_rast(aes(color=as.factor(.data[[group.by]])),size=0.05, raster.dpi=700)+
+        scale_color_manual(values =cols)+theme_classic()+
+        guides(colour = guide_legend(override.aes = list(size=5)))+
+        geom_text_repel(data = cluster_centers, aes(x = center_x, y = center_y, label = .data[[group.by]]), color="black", size = 3)
+    }else(
+      data %>% 
+        ggplot(aes(umap_1, umap_2, color=.data[[group.by]])) +
+        geom_point(size=0.2,color="black")+
+        geom_point(aes(color=as.factor(.data[[group.by]])),size=0.05)+
+        scale_color_manual(values =cols)+theme_classic()+
+        guides(colour = guide_legend(override.aes = list(size=5)))+
+        geom_text_repel(data = cluster_centers, aes(x = center_x, y = center_y, label = .data[[group.by]]), color="black", size = 3)
+    )
+  }
+}
+
