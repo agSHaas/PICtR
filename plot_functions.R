@@ -343,7 +343,7 @@ umap_domi_style <- function(data=obj,
   if(isS4(data)){
     data$umap_1 <- data@reductions[[reduction]]@cell.embeddings[,1]
     data$umap_2 <- data@reductions[[reduction]]@cell.embeddings[,2]
-    if(lable==TRUE){
+    if(label==TRUE){
       cluster_centers <- data@meta.data %>%
         group_by(.data[[group.by]]) %>%
         summarise(center_x = mean(umap_1), center_y = mean(umap_2))
