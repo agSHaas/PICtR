@@ -389,3 +389,58 @@ umap_domi_style <- function(data=obj,
   }
 }
 
+
+# provide the Seurat object (obj) and the features that you want to plot in the heatmap, 
+# including the cluster column (markers). Also provide the cluster column name.
+MEM_heatmap <- function(obj,
+                        markers = c(), 
+                        cluster_col = "seurat_clusters",
+                        cols = pals::coolwarm(100),
+                        heatmap_name = "MEM enrichment score", 
+                        heatmap_column_title = "marker", 
+                        heatmap_row_title = "cluster"){
+  # required packages
+  list.of.packages <- c("cytoMEM", "pals", "ComplexHeatmap", "dplyr")
+  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  if(length(new.packages)) install.packages(new.packages)
+  invisible(lapply(list.of.packages, library, character.only = TRUE))
+  
+  # select markers and cluster annotations
+  MEM <- obj@meta.data %>% 
+    dplyr::select(markers) %>% 
+    rename(cluster = .data[[cluster_col]]) %>% 
+    mutate(cluster = as.numeric(as.character(cluster)))
+  
+  # calculate MEM scores
+  MEM_values <- cytoMEM::MEM(MEM,
+                             transform = F,
+                             choose.markers = F,
+                             markers = "all",
+                             choose.ref = F,
+                             zero.ref = F,
+                             IQR.thresh = NULL)
+  
+  # extract MEM matrix for plotting
+  heatmap <- as.data.frame(MEM_values$MEM_matrix[[1]]) 
+  
+  # create heatmap
+  h1 <- Heatmap(t(as.matrix(heatmap)),
+                col=cols,
+                name = "MEM enrichment score",
+                clustering_distance_rows = "euclidean",
+                clustering_method_rows = "ward.D2",
+                column_title = "marker", 
+                row_title = "cluster",
+                row_names_gp = gpar(fontsize = 9),
+                column_names_gp = gpar(fontsize = 9),
+                show_row_names = T,
+                cluster_rows = T,
+                cluster_columns = T,
+                show_parent_dend_line = FALSE,
+                width = ncol(heatmap)*unit(2.2, "mm"), 
+                height = nrow(heatmap)*unit(5, "mm"))
+  
+  # plot
+  print(h1)
+}
+
