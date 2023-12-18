@@ -392,13 +392,16 @@ umap_domi_style <- function(data=obj,
 
 # provide the Seurat object (obj) and the features that you want to plot in the heatmap, 
 # including the cluster column (markers). Also provide the cluster column name.
+# scale height and scale width: scaling the heatmap size based on number of rows and columns
 MEM_heatmap <- function(obj,
                         markers = c(), 
                         cluster_col = "seurat_clusters",
                         cols = pals::coolwarm(100),
                         heatmap_name = "MEM enrichment score", 
                         heatmap_column_title = "marker", 
-                        heatmap_row_title = "cluster"){
+                        heatmap_row_title = "cluster", 
+                        scale_width = 2.2, 
+                        scale_height = 5){
   # required packages
   list.of.packages <- c("cytoMEM", "pals", "ComplexHeatmap", "dplyr")
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
