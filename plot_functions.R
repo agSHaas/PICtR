@@ -440,8 +440,8 @@ MEM_heatmap <- function(obj,
                 cluster_rows = T,
                 cluster_columns = T,
                 show_parent_dend_line = FALSE,
-                width = ncol(heatmap)*unit(2.2, "mm"), 
-                height = nrow(heatmap)*unit(5, "mm"))
+                width = ncol(heatmap)*unit(scale_width, "mm"), 
+                height = nrow(heatmap)*unit(scale_height, "mm"))
   
   # plot
   print(h1)
