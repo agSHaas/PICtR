@@ -40,7 +40,8 @@ calculateThreshold <- function(hist){
 
 
 
-#Sample per group
+# PICtR workflow to characterize cells according to the OTSU threshold, 
+# sample a representative subset of cells using Sketching and run the standard Seurat analysis workflow 
 sketch_wrapper <- function(channel=channel,
                            meta_data=NULL,
                            assay="FACS",
