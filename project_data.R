@@ -24,7 +24,7 @@ project_data <- function(obj=obj,
   lda_model <- MASS::lda(clst ~ ., data=data_ref)
   # predict_ref <- predict(lda_model, data_ref)
   
-  # query data as data frame 
+  # query data as data frame ------------------------------------------------------
   if(is.data.frame(data_query) | is.data.table(data_query)){ 
     data_query=as.data.frame(data_query)
     
@@ -57,9 +57,8 @@ project_data <- function(obj=obj,
     
     # assign predictions to obj meta.data, keep original clustering for training cells
     pred_vector <- unlist(pred)
-    #data_query$clusters_predicted <- pred_vector
     
-    #Either return the infomation back to the seurat object or add to the query data 
+    # Either return the infomation back to the seurat object or add to the query data 
     if(return_obj==TRUE){
       obj[[pred_name]] <- "to_predict"
       obj[[pred_name]][is.na(obj$seurat_clusters),] <- as.numeric(as.character(pred_vector))
@@ -71,7 +70,7 @@ project_data <- function(obj=obj,
       return(data_query)
     }
     
-  # query data as Seurat object  
+  # query data as Seurat object  --------------------------------------------------------
   }else if(isS4(data_query)){ 
     
     # pull query data 
