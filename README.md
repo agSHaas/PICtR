@@ -1,6 +1,6 @@
 # PICtR
 
-This is the computational workflow to analyse physically interacting cells (PIC) with flow cytometry using R.  
+This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.  
   
 ## Workflow  
   
