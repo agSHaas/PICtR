@@ -1,4 +1,4 @@
-project_data <- function(obj=obj,
+predict_data <- project_data <- function(obj=obj,
                          data_query=df,
                          ref_clusters="",
                          FSC.A="FSC.A",
@@ -22,7 +22,6 @@ project_data <- function(obj=obj,
   
   # train LDA model
   lda_model <- MASS::lda(clst ~ ., data=data_ref)
-  # predict_ref <- predict(lda_model, data_ref)
   
   # query data as data frame ------------------------------------------------------
   if(is.data.frame(data_query) | is.data.table(data_query)){ 
@@ -58,7 +57,7 @@ project_data <- function(obj=obj,
     # assign predictions to obj meta.data, keep original clustering for training cells
     pred_vector <- unlist(pred)
     
-    # Either return the infomation back to the seurat object or add to the query data 
+    # either return the infomation back to the seurat object or add to the query data 
     if(return_obj==TRUE){
       obj[[pred_name]] <- "to_predict"
       obj[[pred_name]][is.na(obj$seurat_clusters),] <- as.numeric(as.character(pred_vector))
