@@ -1,0 +1,34 @@
+Package: PICtR
+Type: Package
+Title: Physically Interacting Cell (PIC) toolkit for R
+Version: 0.1.0
+Date: 2024-03-22
+Authors@R: c(
+    person(given = "Lea", family = "Jopp-Saile", role = "aut", comment = c(ORCID = "0000-0002-7032-3003")),
+    person(given = "Viktoria", family = "Flore", email = "viktoria.flore@bih-charite.de", role = c("aut", "cre"), comment = c(ORCID = "0009-0001-3023-433X")))
+Description: This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.
+Encoding: UTF-8
+License: MIT + file LICENSE
+LazyData: true
+RoxygenNote: 7.3.1
+Depends: 
+    R (>= 4.3),
+    Seurat (>= 5.0.1),
+    dplyr (>= 1.1.4),
+    ggplot2 (>= 3.5.0)
+Imports:
+    BPCells (>= 0.1.0),
+    cowplot (>= 1.1.3),
+    cytoMEM (>= 1.4.0),
+    data.table (>= 1.15.2),
+    ggrastr (>= 1.0.2),
+    ggrepel (>= 0.9.5),
+    khroma (>= 1.12.0),
+    MASS (>= 7.3.60.0.1),
+    pals (>= 1.8),
+    pbapply (>= 1.7.2),
+    readr (>= 2.1.5),
+    scales (>= 1.3.0),
+    SeuratObject (>= 5.0.1),
+    tibble (>= 3.2.1),
+    tidyr (>= 1.3.1)

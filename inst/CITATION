@@ -1,0 +1,32 @@
+citHeader("To cite PICtR in publications, please use:")
+
+bibentry(bibtype = "Unpublished",
+  author = c(
+  as.person("Dominik Vonficht"),
+  as.person("Lea Jopp-Saile"),
+  as.person("Schayan Yousefian"),
+  as.person("Viktoria Flore"),
+  as.person("Ruth Teuber"),
+  as.person("Ines Simo Vesperinas"),
+  as.person("Florian Gruenschlaeger"),
+  as.person("Mirian Fernandez-Vaquero"),
+  as.person("Yanjiang Luo"),
+  as.person("Diana Ordonez-Rueda"),
+  as.person("Laura K. Schmalbrock"),
+  as.person("Caroline Roethemeier"),
+  as.person("Mathias Heikenwaelder"),
+  as.person("Angelika Eggert"),
+  as.person("Arend von Stackelberg"),
+  as.person("Sebastian Kobold"),
+  as.person("Jan Kroenke"),
+  as.person("Ulrich Keller"),
+  as.person("Andreas Trumpp"),
+  as.person("Ahmed N. Hegazy"),
+  as.person("Cornelia Eckert"),
+  as.person("Daniel Huebschmann"),
+  as.person("Simon Haas")
+  ),
+  title = "Ultra-high scale cytometry-based cellular interaction mapping",
+  year = "2024",
+  note = "Manuscript under review"
+)
