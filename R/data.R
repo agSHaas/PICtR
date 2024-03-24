@@ -1,6 +1,6 @@
 #' Demo data set
 #'
-#' Demo data set for the PICtR workflow containing 10,000 random sampled cells from LCMV infected mice (Figure 5 and 6).
+#' Demo data set for the PICtR workflow containing 10% random sampled cells from the spleen of one LCMV infected mouse (Figure 5 and 6).
 #' Data was analysed using high parametric spectral flow cytometry (n=26).
 #'
 #' @docType data

@@ -8,7 +8,7 @@ Authors@R: c(
     person(given = "Viktoria", family = "Flore", email = "viktoria.flore@bih-charite.de", role = "aut", comment = c(ORCID = "0009-0001-3023-433X")))
 Description: This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.
 Encoding: UTF-8
-License: MIT + file LICENSE
+License: ALS
 LazyData: true
 RoxygenNote: 7.3.1
 Depends: 
