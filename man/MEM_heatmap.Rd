@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_functions.R
 \name{MEM_heatmap}
 \alias{MEM_heatmap}
-\title{Marker Enrichment Modeling (MEM) Heat map}
+\title{Marker Enrichment Modeling (MEM) Heatmap}
 \usage{
 MEM_heatmap(
   obj,
@@ -19,25 +19,25 @@ MEM_heatmap(
 \arguments{
 \item{obj}{The Seurat object.}
 
-\item{markers}{meta.data columns with features that should be plotted in the heat map and the clustering solution.}
+\item{markers}{Meta.data columns with features that should be plotted in the heat map and the clustering resolution.}
 
 \item{cluster_col}{Character string specifying the column that contains the clustering solution.}
 
 \item{cols}{Color palette.}
 
-\item{heatmap_name}{Title of the heat map.}
+\item{heatmap_name}{Title of the heatmap.}
 
-\item{heatmap_column_title}{Title for the columns of the heat map.}
+\item{heatmap_column_title}{Title for the columns of the heatmap.}
 
-\item{heatmap_row_title}{Title for the rows of the heat map.}
+\item{heatmap_row_title}{Title for the rows of the heatmap.}
 
-\item{scale_width}{Scaling factor for the width of the heat map in relation to the number of columns.}
+\item{scale_width}{Scaling factor for the width of the heatmap in relation to the number of columns.}
 
-\item{scale_height}{Scaling factor for the height of the heat map in relation to the number of rows.}
+\item{scale_height}{Scaling factor for the height of the heatmap in relation to the number of rows.}
 }
 \value{
 MEM heat map
 }
 \description{
-Marker Enrichment Modeling (MEM) Heat map
+Marker Enrichment Modeling (MEM) Heatmap
 }

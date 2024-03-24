@@ -9,13 +9,13 @@ wrapper_for_plots(
   feature_plot = TRUE,
   cluster_plot = TRUE,
   meta_list = list("ratio_anno"),
+  cluster_handle = "sketch_snn_res",
   feature_plot_colors = pals::parula(1000),
   ratio_plot_color = c(Ratio_low = "dodgerblue2", Ratio_high = "gold2"),
   reduction = "umap",
   alpha = 1,
   raster = TRUE,
   label_size = 3,
-  cluster_handle = "sketch_snn_res",
   label_box = FALSE,
   assay = "sketch"
 )
@@ -23,11 +23,14 @@ wrapper_for_plots(
 \arguments{
 \item{obj}{The Seurat object.}
 
-\item{feature_plot}{Plot \code{\link[Seurat]{FeaturePlot}}?}
+\item{feature_plot}{Boolean. TRUE indicates that UMAP is colored for all features (see \code{\link[Seurat]{FeaturePlot}})}
 
-\item{cluster_plot}{Plot \code{\link[Seurat]{DimPlot}} by cluster?}
+\item{cluster_plot}{Boolean. TRUE indicates that UMAP is colored by the different cluster resolutions stored with the \code{\link{cluster_handle}}.}
 
-\item{meta_list}{List of meta.data columns to color \code{\link[Seurat]{DimPlot}} by.}
+\item{meta_list}{List of meta.data columns to color \code{\link[Seurat]{DimPlot}} by. 
+Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class character or factor for \code{\link[Seurat]{DimPlot}}}
+
+\item{cluster_handle}{Prefix for the clustering solutions in the meta.data slot.}
 
 \item{feature_plot_colors}{Color palette for \code{\link[Seurat]{FeaturePlot}}}
 
@@ -37,19 +40,18 @@ wrapper_for_plots(
 
 \item{alpha}{Alpha value for plotting.}
 
-\item{raster}{Rasterize plots?}
+\item{raster}{Convert points to raster format. If TURE plot is rastered to raster.dpi=c(512, 512).}
 
-\item{label_size}{Size of the labels.}
+\item{label_size}{Size of the labels plotted within the embedding.}
 
-\item{cluster_handle}{Prefix for the clustering solutions in the meta.data slot.}
+\item{label_box}{Plot boxes around labels in the color of the cluster.}
 
-\item{label_box}{Plot boxes around labels?}
-
-\item{assay}{The Seurat assay to use.}
+\item{assay}{The Seurat assay (default FACS).}
 }
 \value{
 A list with the requested plots.
 }
 \description{
-A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}. Includes \code{\link[Seurat]{FeaturePlot}}, \code{\link[Seurat]{DimPlot}} for different parameters, and \code{\link{ratio_cluster_plot}}.
+A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}. 
+Includes \code{\link[Seurat]{FeaturePlot}}, \code{\link[Seurat]{DimPlot}} for different parameters, and \code{\link{ratio_cluster_plot}}.
 }

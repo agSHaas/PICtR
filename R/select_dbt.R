@@ -3,12 +3,12 @@
 #' Selects the clusters that belong to a given percentile of the clusters with the largest physically interacting cells proportion based on
 #'
 #' @param obj The Seurat object.
-#' @param clusters The meta.data column with the clustering solution.
-#' @param ratio The meta.data column with the classification of cells based on the Otsu threshold of the FSC.A/FSC.H ratio.
-#' @param ratio_high The character string that indicates cells with a FSC.A/FSC.H ratio above the Otsu threshold within the meta.data column with the classification of cells based on the FSC.A/FSC.H ratio.
-#' @param assay The Seurat assay.
-#' @param quantile The desired percentile cutoff above which clusters are classified as physically interacting cell clusters.
-#' @param selected_clusters Character vector for the misc slot in the Seurat object that will contain the selected physically interacting cell clusters.
+#' @param clusters The meta.data column containing the cluster labels
+#' @param ratio The meta.data column with the classification of cells into ratio_high and ratio_low using FSC.A/FSC.H ratio and Otsu's thresholding method.
+#' @param ratio_high The character string that indicates cells with a FSC.A/FSC.H ratio above the threshold detmeined with Otsu's within the meta.data column.
+#' @param assay The Seurat assay containing FACS data.
+#' @param quantile The desired percentile cutoff above which clusters are classified as physically interacting cell clusters (Default 0.8).
+#' @param selected_clusters Character vector for the misc slot in the Seurat object that will contain the clutster numbers of the selected physically interacting cell clusters.
 #'
 #' @return Seurat object
 #'

@@ -21,7 +21,7 @@ umap_rasterized(
 
 \item{group.by}{meta.data column to group the dimensional reduction plot by, for exmaple a clustering solution.}
 
-\item{raster.dpi}{dpi (dots per inch) value.}
+\item{raster.dpi}{Pixel resolution (numeric; default 500)}
 
 \item{label}{Plot labels?}
 

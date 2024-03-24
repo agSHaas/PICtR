@@ -17,17 +17,17 @@ select_dbt(
 \arguments{
 \item{obj}{The Seurat object.}
 
-\item{clusters}{The meta.data column with the clustering solution.}
+\item{clusters}{The meta.data column containing the cluster labels}
 
-\item{ratio}{The meta.data column with the classification of cells based on the Otsu threshold of the FSC.A/FSC.H ratio.}
+\item{ratio}{The meta.data column with the classification of cells into ratio_high and ratio_low using FSC.A/FSC.H ratio and Otsu's thresholding method.}
 
-\item{ratio_high}{The character string that indicates cells with a FSC.A/FSC.H ratio above the Otsu threshold within the meta.data column with the classification of cells based on the FSC.A/FSC.H ratio.}
+\item{ratio_high}{The character string that indicates cells with a FSC.A/FSC.H ratio above the threshold detmeined with Otsu's within the meta.data column.}
 
-\item{assay}{The Seurat assay.}
+\item{assay}{The Seurat assay containing FACS data.}
 
-\item{quantile}{The desired percentile cutoff above which clusters are classified as physically interacting cell clusters.}
+\item{quantile}{The desired percentile cutoff above which clusters are classified as physically interacting cell clusters (Default 0.8).}
 
-\item{selected_clusters}{Character vector for the misc slot in the Seurat object that will contain the selected physically interacting cell clusters.}
+\item{selected_clusters}{Character vector for the misc slot in the Seurat object that will contain the clutster numbers of the selected physically interacting cell clusters.}
 }
 \value{
 Seurat object

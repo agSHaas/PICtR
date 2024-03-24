@@ -14,15 +14,15 @@ ratio_cluster_plot(
 \arguments{
 \item{obj}{The Seurat object.}
 
-\item{clusters}{The meta.data column with the clustering solution.}
+\item{clusters}{The string of the meta.data column with the clustering resolution to plot}
 
-\item{ratio}{The meta.data column with the classification of cells based on the Otsu threshold of the FSC.A/FSC.H ratio.}
+\item{ratio}{The meta.data column with the classification of cells (ratio_high/ratio_low) based determined using FSC.A/FSC.H ratio. and the determined threshold using Otsu's method.}
 
-\item{assay}{The Seurat assay to use.}
+\item{assay}{The Seurat assay to use (default FACS).}
 }
 \value{
 None
 }
 \description{
-Stacked bar plot for the proportion of cells below/above the Otsu threshold for the FSC.A/FSC.H ratio, in each cluster.
+Stacked bar plot indicatingof each cluster for the proportion of cells below/above the threshold determined with Otu's method using the FSC.A/FSC.H ratio.
 }

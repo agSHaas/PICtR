@@ -2,16 +2,23 @@
 % Please edit documentation in R/calculateThreshold.R
 \name{calculateThreshold}
 \alias{calculateThreshold}
-\title{Otsu Threshold}
+\title{Threshold caluclaition using Otsu's method}
 \usage{
 calculateThreshold(hist)
 }
 \arguments{
-\item{hist}{A histogram to calculate the Otsu threshold for, for example created by \code{\link[graphics]{hist}}}
+\item{hist}{A histogram to calculate the Otsu threshold for, for example created by \code{\link[graphics]{hist}}. 
+Please make sure that the histogram compises enough breaks (n>100).}
 }
 \value{
 Numerical threshold value
 }
 \description{
-Calculates the Otsu threshold for a given histogram.
+Calculates a threshold based on Ostu's method for a given histogram.
+}
+\examples{
+data("demo_lcmv")
+demo_lcmv$ratio <- demo_lcmv$FSC.A/demo_lcmv$FSC.H
+threshold <- calculateThreshold(hist(demo_lcmv$ratio, breaks=200))
+
 }

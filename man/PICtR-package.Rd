@@ -9,11 +9,11 @@
 This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.
 }
 \author{
-\strong{Maintainer}: Viktoria Flore \email{viktoria.flore@bih-charite.de} (\href{https://orcid.org/0009-0001-3023-433X}{ORCID})
+\strong{Maintainer}: Lea Jopp-Saile \email{jopp-saile@protonmail.com} (\href{https://orcid.org/0000-0002-7032-3003}{ORCID})
 
 Authors:
 \itemize{
-  \item Lea Jopp-Saile (\href{https://orcid.org/0000-0002-7032-3003}{ORCID})
+  \item Viktoria Flore \email{viktoria.flore@bih-charite.de} (\href{https://orcid.org/0009-0001-3023-433X}{ORCID})
 }
 
 }

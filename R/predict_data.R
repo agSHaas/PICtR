@@ -8,9 +8,9 @@
 #' @param FSC.A The name of the column containing the FSC.A scatter parameter.
 #' @param FSC.H The name of the column containing the FSC.H scatter parameter.
 #' @param pred_name The name of the meta.data column for predicted cluster labels (character vector).
-#' @param assay_ref The name of the Seurat assay with the reference cluster labels.
+#' @param assay_ref The name of the Seurat assay with was use to calculate the reference cluster labels.
 #' @param assay_query The name of the Seurat assay containing cells whose labels should be predicted. Only if the query is provided as a Seurat object.
-#' @param chunk_size Chunk size for the prediction progress.
+#' @param chunk_size Chunk size for the prediction progress for verbose output to standard out. 
 #' @param return_obj Add the predicted cluster labels to the Seurat object? Only if the query is provided as a data frame.
 #'
 #' @return Seurat object or data frame containing the predicted cluster labels.
@@ -21,7 +21,7 @@
 #' @export
 predict_data <- project_data <- function(obj=obj,
                          data_query=query,
-                         ref_clusters="",
+                         ref_clusters=NULL,
                          FSC.A="FSC.A",
                          FSC.H="FSC.H",
                          pred_name="clusters_predicted",
@@ -33,6 +33,9 @@ predict_data <- project_data <- function(obj=obj,
   # pull clustering with the chosen resolution from sketched cells as training data
   if (is.null(assay_ref)) {
     stop("Please provide assay to pull data from (assay_ref)")
+  }
+  if (is.null(ref_clusters)) {
+    stop("Please provide a column name containing reference cluster labels used as query for projection")
   }
   data_ref <- as.data.frame(t.data.frame(obj[[assay_ref]]$counts))
   data_ref$clst <- as.numeric(as.character(obj@meta.data %>% dplyr::filter(!seurat_clusters=="NA") %>% pull(.data[[ref_clusters]])))

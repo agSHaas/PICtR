@@ -7,7 +7,7 @@
 predict_data(
   obj = obj,
   data_query = query,
-  ref_clusters = "",
+  ref_clusters = NULL,
   FSC.A = "FSC.A",
   FSC.H = "FSC.H",
   pred_name = "clusters_predicted",
@@ -30,11 +30,11 @@ predict_data(
 
 \item{pred_name}{The name of the meta.data column for predicted cluster labels (character vector).}
 
-\item{assay_ref}{The name of the Seurat assay with the reference cluster labels.}
+\item{assay_ref}{The name of the Seurat assay with was use to calculate the reference cluster labels.}
 
 \item{assay_query}{The name of the Seurat assay containing cells whose labels should be predicted. Only if the query is provided as a Seurat object.}
 
-\item{chunk_size}{Chunk size for the prediction progress.}
+\item{chunk_size}{Chunk size for the prediction progress for verbose output to standard out.}
 
 \item{return_obj}{Add the predicted cluster labels to the Seurat object? Only if the query is provided as a data frame.}
 }

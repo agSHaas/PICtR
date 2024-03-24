@@ -4,8 +4,8 @@ Title: Physically Interacting Cell (PIC) toolkit for R
 Version: 0.1.0
 Date: 2024-03-22
 Authors@R: c(
-    person(given = "Lea", family = "Jopp-Saile", role = "aut", comment = c(ORCID = "0000-0002-7032-3003")),
-    person(given = "Viktoria", family = "Flore", email = "viktoria.flore@bih-charite.de", role = c("aut", "cre"), comment = c(ORCID = "0009-0001-3023-433X")))
+    person(given = "Lea", family = "Jopp-Saile", email = "jopp-saile@protonmail.com",  role = c("aut", "cre"), comment = c(ORCID = "0000-0002-7032-3003")),
+    person(given = "Viktoria", family = "Flore", email = "viktoria.flore@bih-charite.de", role = "aut", comment = c(ORCID = "0009-0001-3023-433X")))
 Description: This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.
 Encoding: UTF-8
 License: MIT + file LICENSE

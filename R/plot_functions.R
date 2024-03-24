@@ -1,20 +1,22 @@
 #' Plot wrapper function.
 #'
-#' A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}. Includes \code{\link[Seurat]{FeaturePlot}}, \code{\link[Seurat]{DimPlot}} for different parameters, and \code{\link{ratio_cluster_plot}}.
+#' A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}. 
+#' Includes \code{\link[Seurat]{FeaturePlot}}, \code{\link[Seurat]{DimPlot}} for different parameters, and \code{\link{ratio_cluster_plot}}.
 #'
 #' @param obj The Seurat object.
-#' @param feature_plot Plot \code{\link[Seurat]{FeaturePlot}}?
-#' @param cluster_plot Plot \code{\link[Seurat]{DimPlot}} by cluster?
-#' @param meta_list List of meta.data columns to color \code{\link[Seurat]{DimPlot}} by.
+#' @param feature_plot Boolean. TRUE indicates that UMAP is colored for all features (see \code{\link[Seurat]{FeaturePlot}})
+#' @param cluster_plot Boolean. TRUE indicates that UMAP is colored by the different cluster resolutions stored with the \code{\link{cluster_handle}}.
+#' @param meta_list List of meta.data columns to color \code{\link[Seurat]{DimPlot}} by. 
+#' Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class character or factor for \code{\link[Seurat]{DimPlot}}
+#' @param cluster_handle Prefix for the clustering solutions in the meta.data slot.
 #' @param feature_plot_colors Color palette for \code{\link[Seurat]{FeaturePlot}}
 #' @param ratio_plot_color Color palette for \code{\link{ratio_cluster_plot}}
 #' @param reduction Reduction to use for plotting, for example UMAP.
 #' @param alpha Alpha value for plotting.
-#' @param raster Rasterize plots?
-#' @param label_size Size of the labels.
-#' @param cluster_handle Prefix for the clustering solutions in the meta.data slot.
-#' @param label_box Plot boxes around labels?
-#' @param assay The Seurat assay to use.
+#' @param raster Convert points to raster format. If TURE plot is rastered to raster.dpi=c(512, 512).
+#' @param label_size Size of the labels plotted within the embedding. 
+#' @param label_box Plot boxes around labels in the color of the cluster. 
+#' @param assay The Seurat assay (default FACS).
 #'
 #' @return A list with the requested plots.
 #'
@@ -27,13 +29,13 @@ wrapper_for_plots <- function(obj=obj,
                               feature_plot=TRUE,
                               cluster_plot=TRUE,
                               meta_list=list("ratio_anno"),
+                              cluster_handle="sketch_snn_res",
                               feature_plot_colors=pals::parula(1000),
                               ratio_plot_color=c(Ratio_low="dodgerblue2", Ratio_high="gold2"),
                               reduction="umap",
                               alpha=1,
                               raster=TRUE,
                               label_size=3,
-                              cluster_handle="sketch_snn_res",
                               label_box=FALSE,
                               assay="sketch"){
 
@@ -142,7 +144,8 @@ wrapper_for_plots <- function(obj=obj,
 
 #' Split plot wrapper.
 #'
-#' Dimensional reduction (UMAP) plot split by a given parameetr.
+#' Dimensional reduction (UMAP) plot split by a given parameter. 
+#' Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_ras}}
 #'
 #' @param obj The Seurat object.
 #' @param group_by Parameter to group the plot by.
@@ -178,12 +181,12 @@ split_plot_sketch <- function(obj,
 
 #' Ratio cluster plot.
 #'
-#' Stacked bar plot for the proportion of cells below/above the Otsu threshold for the FSC.A/FSC.H ratio, in each cluster.
+#' Stacked bar plot indicatingof each cluster for the proportion of cells below/above the threshold determined with Otu's method using the FSC.A/FSC.H ratio.
 #'
 #' @param obj The Seurat object.
-#' @param clusters The meta.data column with the clustering solution.
-#' @param ratio The meta.data column with the classification of cells based on the Otsu threshold of the FSC.A/FSC.H ratio.
-#' @param assay The Seurat assay to use.
+#' @param clusters The string of the meta.data column with the clustering resolution to plot
+#' @param ratio The meta.data column with the classification of cells (ratio_high/ratio_low) based determined using FSC.A/FSC.H ratio. and the determined threshold using Otsu's method.
+#' @param assay The Seurat assay to use (default FACS).
 #'
 #' @return None
 #'
@@ -219,7 +222,7 @@ ratio_cluster_plot <- function(obj,
 #'
 #' @param data Seurat object.
 #' @param group.by meta.data column to group the dimensional reduction plot by, for exmaple a clustering solution.
-#' @param raster.dpi dpi (dots per inch) value.
+#' @param raster.dpi Pixel resolution (numeric; default 500)
 #' @param label Plot labels?
 #' @param cols Color palette.
 #' @param umap1 First UMAP dimension as found in the meta.data.
@@ -288,19 +291,17 @@ umap_rasterized <- function(data=obj,
   }
 }
 
-#' Marker Enrichment Modeling (MEM) Heat map
-#'
-#'
+#' Marker Enrichment Modeling (MEM) Heatmap
 #'
 #' @param obj The Seurat object.
-#' @param markers meta.data columns with features that should be plotted in the heat map and the clustering solution.
+#' @param markers Meta.data columns with features that should be plotted in the heat map and the clustering resolution.
 #' @param cluster_col Character string specifying the column that contains the clustering solution.
 #' @param cols Color palette.
-#' @param heatmap_name Title of the heat map.
-#' @param heatmap_column_title Title for the columns of the heat map.
-#' @param heatmap_row_title Title for the rows of the heat map.
-#' @param scale_width Scaling factor for the width of the heat map in relation to the number of columns.
-#' @param scale_height Scaling factor for the height of the heat map in relation to the number of rows.
+#' @param heatmap_name Title of the heatmap.
+#' @param heatmap_column_title Title for the columns of the heatmap.
+#' @param heatmap_row_title Title for the rows of the heatmap.
+#' @param scale_width Scaling factor for the width of the heatmap in relation to the number of columns.
+#' @param scale_height Scaling factor for the height of the heatmap in relation to the number of rows.
 #'
 #' @return MEM heat map
 #'

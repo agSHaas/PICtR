@@ -12,6 +12,7 @@ sketch_wrapper(
   FSC.H = "FSC.H",
   n_sketch_cells = 50000,
   resolution = c(0.5, 1, 2, 3, 4),
+  clst_algorithm = 1,
   obj_name = "obj_sketched_non_projected",
   group_by = NULL,
   verbose = TRUE,
@@ -23,33 +24,46 @@ sketch_wrapper(
 \arguments{
 \item{channel}{A data frame with the dimensionality cells x flow cytometry parameters.}
 
-\item{meta_data}{A data frame with meta_data for every cell.}
+\item{meta_data}{A data frame with meta_data for every cell (Default=NULL).}
 
-\item{assay}{A character string with the name of the assay.}
+\item{assay}{A character string with the name of the assay (Default="FACS").}
 
-\item{FSC.A}{The name of the column containing the FSC.A scatter parameter.}
+\item{FSC.A}{The name (string) of the column containing the FSC.A scatter parameter (Default="FACS.A").}
 
-\item{FSC.H}{The name of the column containing the FSC.H scatter parameter.}
+\item{FSC.H}{The name (string) of the column containing the FSC.H scatter parameter (Default="FACS.H").}
 
-\item{n_sketch_cells}{The number of cells to be subsampled by \code{\link[Seurat]{SketchData}}.}
+\item{n_sketch_cells}{The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000)}
 
 \item{resolution}{A character vector with the desired resolutions for clustering.}
 
-\item{obj_name}{The name of the Seurat object.}
+\item{clst_algorithm}{Algorithm used for clustering in \code{\link[Seurat]{FindClusters}}.
+1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). 
+Leiden requires the leidenalg python.}
 
-\item{group_by}{Optional grouping parameter to calculate the FSC.A/FSC.H Otsu threshold for.}
+\item{obj_name}{The name used for storing the Seurat object.}
 
-\item{verbose}{Verbosity.}
+\item{group_by}{Optional parameter grouping parameter to calculate the FSC.A/FSC.H Otsu thresholding method for.}
 
-\item{BPcell_dir}{Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.}
+\item{verbose}{Verbosity (Boolean).}
 
-\item{ratio}{Should the ratio be calculated?}
+\item{BPcell_dir}{Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}. 
+Recommended if data contain more than 300 000 cells.}
 
-\item{working_dir}{Working directory as a character string.}
+\item{ratio}{Boolean variable. If TRUE the ratio will be calculated?}
+
+\item{working_dir}{Directory path as a character string used as working directory.}
 }
 \value{
 Seurat object.
 }
 \description{
-Characterizes cells according to the Otsu threshold, samples a representative subset of cells using \code{\link[Seurat]{SketchData}} and runs the standard Seurat analysis workflow
+Characterizes cells into ratio_high and ratio_low cells for physically interacting cell analysis,
+samples a representative subset of cells using \code{\link[Seurat]{SketchData}} and runs the standard Seurat analysis workflow
+}
+\examples{
+obj <- sketch_wrapper(channel = demo_lcmv, 
+                      meta_data = demo_lcmv, 
+                      n_sketch_cells = 5000,
+                      ratio = TRUE)
+
 }
