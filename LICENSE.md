@@ -36,7 +36,7 @@ If any portion of this section is held invalid or unenforceable under any partic
 It is not the purpose of this section to induce you to infringe any patents or other property right claims or to contest validity of any such claims; this section has the sole purpose of protecting the integrity of the free software distribution system, which is implemented by public license practices. Many people have made generous contributions to the wide range of software distributed through that system in reliance on consistent application of that system; it is up to the author/donor to decide if he or she is willing to distribute software through any other system and a licensee cannot impose that choice. 
 This section is intended to make thoroughly clear what is believed to be a consequence of the rest of this License. 
 8. If the distribution and/or use of the Program is restricted in certain countries either by patents or by copyrighted interfaces, the original copyright holder who places the Program under this License may add an explicit geographical distribution limitation excluding those countries, so that distribution is permitted only in or among countries not thus excluded. In such case, this License incorporates the limitation as if written in the body of this License. 
-9.Not used. 
+9. Not used. 
 10. If you wish to incorporate parts of the Program into other free programs whose distribution conditions are different, write to the licensor to ask for permission.
  
 NO WARRANTY  
