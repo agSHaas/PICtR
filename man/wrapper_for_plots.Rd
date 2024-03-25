@@ -25,22 +25,22 @@ wrapper_for_plots(
 
 \item{feature_plot}{Boolean. TRUE indicates that UMAP is colored for all features (see \code{\link[Seurat]{FeaturePlot}})}
 
-\item{cluster_plot}{Boolean. TRUE indicates that UMAP is colored by the different cluster resolutions stored with the \code{\link{cluster_handle}}.}
+\item{cluster_plot}{Boolean. TRUE indicates that UMAP is colored by the different cluster resolutions stored with the cluster_handle.}
 
-\item{meta_list}{List of meta.data columns to color \code{\link[Seurat]{DimPlot}} by. 
-Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class character or factor for \code{\link[Seurat]{DimPlot}}}
+\item{meta_list}{List of meta.data columns to color \code{\link[Seurat]{DimPlot}} by.
+Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class character or factor for \code{\link[Seurat]{DimPlot}}.}
 
 \item{cluster_handle}{Prefix for the clustering solutions in the meta.data slot.}
 
-\item{feature_plot_colors}{Color palette for \code{\link[Seurat]{FeaturePlot}}}
+\item{feature_plot_colors}{Color palette for \code{\link[Seurat]{FeaturePlot}}.}
 
-\item{ratio_plot_color}{Color palette for \code{\link{ratio_cluster_plot}}}
+\item{ratio_plot_color}{Color palette for \code{\link{ratio_cluster_plot}}.}
 
 \item{reduction}{Reduction to use for plotting, for example UMAP.}
 
 \item{alpha}{Alpha value for plotting.}
 
-\item{raster}{Convert points to raster format. If TURE plot is rastered to raster.dpi=c(512, 512).}
+\item{raster}{Convert points to raster format. If TURE plot is rasterized to raster.dpi=c(512, 512).}
 
 \item{label_size}{Size of the labels plotted within the embedding.}
 
@@ -52,6 +52,6 @@ Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class chara
 A list with the requested plots.
 }
 \description{
-A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}. 
+A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}.
 Includes \code{\link[Seurat]{FeaturePlot}}, \code{\link[Seurat]{DimPlot}} for different parameters, and \code{\link{ratio_cluster_plot}}.
 }

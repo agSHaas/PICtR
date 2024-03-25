@@ -17,6 +17,6 @@ split_plot_sketch(obj, group_by = "seurat_clusters", split_by = "ratio_anno")
 ggplot object
 }
 \description{
-Dimensional reduction (UMAP) plot split by a given parameter. 
-Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_ras}}
+Dimensional reduction (UMAP) plot split by a given parameter.
+Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_rast}}.
 }

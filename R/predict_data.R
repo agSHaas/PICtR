@@ -1,6 +1,6 @@
 #' Cluster label prediction
 #'
-#' Predicts the cluster labels for a reference data set to a query data set using \code{\link[MASS]{lda}}
+#' Predicts the cluster labels for a reference data set to a query data set using \code{\link[MASS]{lda}}.
 #'
 #' @param obj The Seurat object.
 #' @param data_query A data frame or a Seurat object with the cells whose labels should be predicted.
@@ -8,15 +8,16 @@
 #' @param FSC.A The name of the column containing the FSC.A scatter parameter.
 #' @param FSC.H The name of the column containing the FSC.H scatter parameter.
 #' @param pred_name The name of the meta.data column for predicted cluster labels (character vector).
-#' @param assay_ref The name of the Seurat assay with was use to calculate the reference cluster labels.
+#' @param assay_ref The name of the Seurat assay which was used to calculate the reference cluster labels.
 #' @param assay_query The name of the Seurat assay containing cells whose labels should be predicted. Only if the query is provided as a Seurat object.
-#' @param chunk_size Chunk size for the prediction progress for verbose output to standard out. 
-#' @param return_obj Add the predicted cluster labels to the Seurat object? Only if the query is provided as a data frame.
+#' @param chunk_size Chunk size for the prediction progress for verbose output to standard out.
+#' @param return_obj Boolean. Add the predicted cluster labels to the Seurat object? Only if the query is provided as a data frame.
 #'
 #' @return Seurat object or data frame containing the predicted cluster labels.
 #'
 #' @importFrom MASS lda
 #' @importFrom data.table is.data.table
+#' @importFrom stats predict
 #'
 #' @export
 predict_data <- project_data <- function(obj=obj,

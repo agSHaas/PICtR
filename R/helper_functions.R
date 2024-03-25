@@ -20,7 +20,7 @@ save.obj <- function(object, path=output_obj_path, file){
 
 #' Save plot
 #'
-#' Wrapper function for saving plots as pdf.
+#' Wrapper function for saving plots as a pdf file.
 #'
 #' @param plot The plot.
 #' @param path Directory path.

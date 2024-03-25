@@ -19,11 +19,11 @@ umap_rasterized(
 \arguments{
 \item{data}{Seurat object.}
 
-\item{group.by}{meta.data column to group the dimensional reduction plot by, for exmaple a clustering solution.}
+\item{group.by}{meta.data column to group the dimensional reduction plot by, for example a clustering solution.}
 
-\item{raster.dpi}{Pixel resolution (numeric; default 500)}
+\item{raster.dpi}{Pixel resolution (numeric; default 500).}
 
-\item{label}{Plot labels?}
+\item{label}{Boolean. Plot labels?}
 
 \item{cols}{Color palette.}
 
@@ -31,9 +31,9 @@ umap_rasterized(
 
 \item{umap2}{Second UMAP dimension as found in the meta.data.}
 
-\item{reduction}{Whcih reduction to use.}
+\item{reduction}{Which reduction to use.}
 
-\item{raster}{Rasterize the plot?}
+\item{raster}{Boolean. Rasterize the plot?}
 }
 \value{
 Plot

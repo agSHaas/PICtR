@@ -30,17 +30,17 @@ predict_data(
 
 \item{pred_name}{The name of the meta.data column for predicted cluster labels (character vector).}
 
-\item{assay_ref}{The name of the Seurat assay with was use to calculate the reference cluster labels.}
+\item{assay_ref}{The name of the Seurat assay which was used to calculate the reference cluster labels.}
 
 \item{assay_query}{The name of the Seurat assay containing cells whose labels should be predicted. Only if the query is provided as a Seurat object.}
 
 \item{chunk_size}{Chunk size for the prediction progress for verbose output to standard out.}
 
-\item{return_obj}{Add the predicted cluster labels to the Seurat object? Only if the query is provided as a data frame.}
+\item{return_obj}{Boolean. Add the predicted cluster labels to the Seurat object? Only if the query is provided as a data frame.}
 }
 \value{
 Seurat object or data frame containing the predicted cluster labels.
 }
 \description{
-Predicts the cluster labels for a reference data set to a query data set using \code{\link[MASS]{lda}}
+Predicts the cluster labels for a reference data set to a query data set using \code{\link[MASS]{lda}}.
 }

@@ -1,15 +1,17 @@
-#' Threshold caluclaition using Otsu's method  
+#' Threshold calculation using Otsu's method
 #'
 #' Calculates a threshold based on Ostu's method for a given histogram.
 #'
-#' @param hist A histogram to calculate the Otsu threshold for, for example created by \code{\link[graphics]{hist}}. 
-#' Please make sure that the histogram compises enough breaks (n>100).
-#' 
+#' @param hist A histogram to calculate the Otsu threshold for, for example created by \code{\link[graphics]{hist}}.
+#' Please make sure that the histogram comprises enough breaks (n>100).
+#'
 #' @examples data("demo_lcmv")
 #' demo_lcmv$ratio <- demo_lcmv$FSC.A/demo_lcmv$FSC.H
 #' threshold <- calculateThreshold(hist(demo_lcmv$ratio, breaks=200))
 #'
 #' @return Numerical threshold value
+#'
+#' @importFrom graphics hist
 #'
 #' @export
 calculateThreshold <- function(hist){

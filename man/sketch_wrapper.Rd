@@ -32,24 +32,24 @@ sketch_wrapper(
 
 \item{FSC.H}{The name (string) of the column containing the FSC.H scatter parameter (Default="FACS.H").}
 
-\item{n_sketch_cells}{The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000)}
+\item{n_sketch_cells}{The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000).}
 
 \item{resolution}{A character vector with the desired resolutions for clustering.}
 
 \item{clst_algorithm}{Algorithm used for clustering in \code{\link[Seurat]{FindClusters}}.
-1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). 
+1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm).
 Leiden requires the leidenalg python.}
 
 \item{obj_name}{The name used for storing the Seurat object.}
 
-\item{group_by}{Optional parameter grouping parameter to calculate the FSC.A/FSC.H Otsu thresholding method for.}
+\item{group_by}{Optional grouping parameter to calculate the FSC.A/FSC.H Otsu thresholding method for.}
 
 \item{verbose}{Verbosity (Boolean).}
 
-\item{BPcell_dir}{Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}. 
+\item{BPcell_dir}{Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.
 Recommended if data contain more than 300 000 cells.}
 
-\item{ratio}{Boolean variable. If TRUE the ratio will be calculated?}
+\item{ratio}{Boolean variable. If TRUE the ratio will be calculated.}
 
 \item{working_dir}{Directory path as a character string used as working directory.}
 }
@@ -58,11 +58,11 @@ Seurat object.
 }
 \description{
 Characterizes cells into ratio_high and ratio_low cells for physically interacting cell analysis,
-samples a representative subset of cells using \code{\link[Seurat]{SketchData}} and runs the standard Seurat analysis workflow
+samples a representative subset of cells using \code{\link[Seurat]{SketchData}} and runs the standard Seurat analysis workflow.
 }
 \examples{
-obj <- sketch_wrapper(channel = demo_lcmv, 
-                      meta_data = demo_lcmv, 
+obj <- sketch_wrapper(channel = demo_lcmv,
+                      meta_data = demo_lcmv,
                       n_sketch_cells = 5000,
                       ratio = TRUE)
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_functions.R
 \name{MEM_heatmap}
 \alias{MEM_heatmap}
-\title{Marker Enrichment Modeling (MEM) Heatmap}
+\title{Marker Enrichment Modeling (MEM) Heatmap.}
 \usage{
 MEM_heatmap(
   obj,
@@ -36,8 +36,8 @@ MEM_heatmap(
 \item{scale_height}{Scaling factor for the height of the heatmap in relation to the number of rows.}
 }
 \value{
-MEM heat map
+MEM heat map.
 }
 \description{
-Marker Enrichment Modeling (MEM) Heatmap
+Marker Enrichment Modeling (MEM) Heatmap.
 }

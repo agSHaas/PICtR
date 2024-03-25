@@ -1,21 +1,21 @@
 #' Plot wrapper function.
 #'
-#' A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}. 
+#' A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}.
 #' Includes \code{\link[Seurat]{FeaturePlot}}, \code{\link[Seurat]{DimPlot}} for different parameters, and \code{\link{ratio_cluster_plot}}.
 #'
 #' @param obj The Seurat object.
 #' @param feature_plot Boolean. TRUE indicates that UMAP is colored for all features (see \code{\link[Seurat]{FeaturePlot}})
-#' @param cluster_plot Boolean. TRUE indicates that UMAP is colored by the different cluster resolutions stored with the \code{\link{cluster_handle}}.
-#' @param meta_list List of meta.data columns to color \code{\link[Seurat]{DimPlot}} by. 
-#' Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class character or factor for \code{\link[Seurat]{DimPlot}}
+#' @param cluster_plot Boolean. TRUE indicates that UMAP is colored by the different cluster resolutions stored with the cluster_handle.
+#' @param meta_list List of meta.data columns to color \code{\link[Seurat]{DimPlot}} by.
+#' Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class character or factor for \code{\link[Seurat]{DimPlot}}.
 #' @param cluster_handle Prefix for the clustering solutions in the meta.data slot.
-#' @param feature_plot_colors Color palette for \code{\link[Seurat]{FeaturePlot}}
-#' @param ratio_plot_color Color palette for \code{\link{ratio_cluster_plot}}
+#' @param feature_plot_colors Color palette for \code{\link[Seurat]{FeaturePlot}}.
+#' @param ratio_plot_color Color palette for \code{\link{ratio_cluster_plot}}.
 #' @param reduction Reduction to use for plotting, for example UMAP.
 #' @param alpha Alpha value for plotting.
-#' @param raster Convert points to raster format. If TURE plot is rastered to raster.dpi=c(512, 512).
-#' @param label_size Size of the labels plotted within the embedding. 
-#' @param label_box Plot boxes around labels in the color of the cluster. 
+#' @param raster Convert points to raster format. If TURE plot is rasterized to raster.dpi=c(512, 512).
+#' @param label_size Size of the labels plotted within the embedding.
+#' @param label_box Plot boxes around labels in the color of the cluster.
 #' @param assay The Seurat assay (default FACS).
 #'
 #' @return A list with the requested plots.
@@ -23,6 +23,8 @@
 #' @importFrom pals parula
 #' @importFrom khroma colour
 #' @importFrom cowplot plot_grid
+#' @importFrom grDevices dev.off pdf
+#' @importFrom ggrastr geom_point_rast
 #'
 #' @export
 wrapper_for_plots <- function(obj=obj,
@@ -87,7 +89,6 @@ wrapper_for_plots <- function(obj=obj,
   if(length(meta_list) > 0){
     meta_plots <-lapply(seq(1:length(meta_list)), function(i){
       name <- meta_list[[i]]
-      #print(name)
       if(is.numeric(obj@meta.data[,meta_list[[i]]])){
         FeaturePlot(obj, features=name, combine=T, alpha = alpha, raster =TRUE, reduction = reduction)+scale_colour_gradientn(colours=feature_plot_colors)
       }else{
@@ -144,8 +145,8 @@ wrapper_for_plots <- function(obj=obj,
 
 #' Split plot wrapper.
 #'
-#' Dimensional reduction (UMAP) plot split by a given parameter. 
-#' Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_ras}}
+#' Dimensional reduction (UMAP) plot split by a given parameter.
+#' Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_rast}}.
 #'
 #' @param obj The Seurat object.
 #' @param group_by Parameter to group the plot by.
@@ -181,14 +182,16 @@ split_plot_sketch <- function(obj,
 
 #' Ratio cluster plot.
 #'
-#' Stacked bar plot indicatingof each cluster for the proportion of cells below/above the threshold determined with Otu's method using the FSC.A/FSC.H ratio.
+#' Stacked bar plot of each cluster with the proportion of cells below/above the threshold determined with Otsu's method using the FSC.A/FSC.H ratio.
 #'
 #' @param obj The Seurat object.
-#' @param clusters The string of the meta.data column with the clustering resolution to plot
-#' @param ratio The meta.data column with the classification of cells (ratio_high/ratio_low) based determined using FSC.A/FSC.H ratio. and the determined threshold using Otsu's method.
+#' @param clusters The string of the meta.data column with the clustering resolution to plot.
+#' @param ratio The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio and the determined threshold using Otsu's method.
 #' @param assay The Seurat assay to use (default FACS).
 #'
 #' @return None
+#'
+#' @importFrom stats reorder
 #'
 #' @export
 ratio_cluster_plot <- function(obj,
@@ -221,16 +224,18 @@ ratio_cluster_plot <- function(obj,
 #' Wrapper function to plot a dimensional reduction plot colored by clusters.
 #'
 #' @param data Seurat object.
-#' @param group.by meta.data column to group the dimensional reduction plot by, for exmaple a clustering solution.
-#' @param raster.dpi Pixel resolution (numeric; default 500)
-#' @param label Plot labels?
+#' @param group.by meta.data column to group the dimensional reduction plot by, for example a clustering solution.
+#' @param raster.dpi Pixel resolution (numeric; default 500).
+#' @param label Boolean. Plot labels?
 #' @param cols Color palette.
 #' @param umap1 First UMAP dimension as found in the meta.data.
 #' @param umap2 Second UMAP dimension as found in the meta.data.
-#' @param reduction Whcih reduction to use.
-#' @param raster Rasterize the plot?
+#' @param reduction Which reduction to use.
+#' @param raster Boolean. Rasterize the plot?
 #'
 #' @return Plot
+#'
+#' @importFrom ggrastr geom_point_rast
 #'
 #' @export
 umap_rasterized <- function(data=obj,
@@ -291,7 +296,7 @@ umap_rasterized <- function(data=obj,
   }
 }
 
-#' Marker Enrichment Modeling (MEM) Heatmap
+#' Marker Enrichment Modeling (MEM) Heatmap.
 #'
 #' @param obj The Seurat object.
 #' @param markers Meta.data columns with features that should be plotted in the heat map and the clustering resolution.
@@ -303,7 +308,11 @@ umap_rasterized <- function(data=obj,
 #' @param scale_width Scaling factor for the width of the heatmap in relation to the number of columns.
 #' @param scale_height Scaling factor for the height of the heatmap in relation to the number of rows.
 #'
-#' @return MEM heat map
+#' @return MEM heat map.
+#'
+#' @importFrom cytoMEM MEM
+#' @importFrom pals coolwarm
+#' @importFrom ComplexHeatmap Heatmap
 #'
 #' @export
 MEM_heatmap <- function(obj,
@@ -315,11 +324,6 @@ MEM_heatmap <- function(obj,
                         heatmap_row_title = "cluster",
                         scale_width = 2.2,
                         scale_height = 5){
-  # required packages
-  list.of.packages <- c("cytoMEM", "pals", "ComplexHeatmap", "dplyr")
-  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-  if(length(new.packages)) install.packages(new.packages)
-  invisible(lapply(list.of.packages, library, character.only = TRUE))
 
   # select markers and cluster annotations
   MEM <- obj@meta.data %>%

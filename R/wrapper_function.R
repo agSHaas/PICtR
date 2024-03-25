@@ -1,37 +1,39 @@
 #' PICtR workflow wrapper
 #'
 #' Characterizes cells into ratio_high and ratio_low cells for physically interacting cell analysis,
-#' samples a representative subset of cells using \code{\link[Seurat]{SketchData}} and runs the standard Seurat analysis workflow
+#' samples a representative subset of cells using \code{\link[Seurat]{SketchData}} and runs the standard Seurat analysis workflow.
 #'
 #' @param channel A data frame with the dimensionality cells x flow cytometry parameters.
 #' @param meta_data A data frame with meta_data for every cell (Default=NULL).
 #' @param assay A character string with the name of the assay (Default="FACS").
 #' @param FSC.A The name (string) of the column containing the FSC.A scatter parameter (Default="FACS.A").
 #' @param FSC.H The name (string) of the column containing the FSC.H scatter parameter (Default="FACS.H").
-#' @param n_sketch_cells The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000)
+#' @param n_sketch_cells The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000).
 #' @param resolution A character vector with the desired resolutions for clustering.
 #' @param clst_algorithm Algorithm used for clustering in \code{\link[Seurat]{FindClusters}}.
-#' 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). 
+#' 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm).
 #' Leiden requires the leidenalg python.
-#' @param obj_name The name used for storing the Seurat object. 
-#' @param group_by Optional parameter grouping parameter to calculate the FSC.A/FSC.H Otsu thresholding method for.
+#' @param obj_name The name used for storing the Seurat object.
+#' @param group_by Optional grouping parameter to calculate the FSC.A/FSC.H Otsu thresholding method for.
 #' @param verbose Verbosity (Boolean).
-#' @param BPcell_dir Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}. 
-#' Recommended if data contain more than 300 000 cells. 
-#' @param ratio Boolean variable. If TRUE the ratio will be calculated?
+#' @param BPcell_dir Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.
+#' Recommended if data contain more than 300 000 cells.
+#' @param ratio Boolean variable. If TRUE the ratio will be calculated.
 #' @param working_dir Directory path as a character string used as working directory.
 #'
-#' @examples obj <- sketch_wrapper(channel = demo_lcmv, 
-#'                       meta_data = demo_lcmv, 
+#' @examples obj <- sketch_wrapper(channel = demo_lcmv,
+#'                       meta_data = demo_lcmv,
 #'                       n_sketch_cells = 5000,
 #'                       ratio = TRUE)
 #'
 #' @return Seurat object.
 #'
 #' @import Seurat
-#' 
-#' 
-#' @export 
+#' @importFrom methods as
+#' @importFrom utils packageVersion
+#'
+#'
+#' @export
 sketch_wrapper <- function(channel=channel,
                            meta_data=NULL,
                            assay="FACS",

@@ -21,5 +21,5 @@ save.plot(plot, path = output_plot_path, file, dim_h = 7, dim_w = 5)
 None
 }
 \description{
-Wrapper function for saving plots as pdf.
+Wrapper function for saving plots as a pdf file.
 }

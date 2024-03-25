@@ -5,7 +5,7 @@
 \alias{demo_lcmv}
 \title{Demo data set}
 \format{
-A csv file with 10000 observations (cells) and 30 variables (markers, scaled to 0-1023)
+161287 observations (cells) and 30 variables (markers, scaled to 0-1023).
 \describe{
   \item{FSC.A}{Forward scatter area}
   \item{FSC.H}{Forward scatter height}
@@ -18,7 +18,7 @@ A csv file with 10000 observations (cells) and 30 variables (markers, scaled to 
 data(demo_lcmv)
 }
 \description{
-Demo data set for the PICtR workflow containing 10,000 random sampled cells from LCMV infected mice (Figure 5 and 6).
-Data was analysed using high parametric spectral flow cytometry (n=26).
+Demo data set for the PICtR workflow containing 10 percent randomly sampled cells from the spleen of one LCMV infected mouse (day 7, Figure 5 and 6).
+Data was analysed using high parametric spectral flow cytometry (n=26 markers).
 }
 \keyword{datasets}

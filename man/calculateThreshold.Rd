@@ -2,13 +2,13 @@
 % Please edit documentation in R/calculateThreshold.R
 \name{calculateThreshold}
 \alias{calculateThreshold}
-\title{Threshold caluclaition using Otsu's method}
+\title{Threshold calculation using Otsu's method}
 \usage{
 calculateThreshold(hist)
 }
 \arguments{
-\item{hist}{A histogram to calculate the Otsu threshold for, for example created by \code{\link[graphics]{hist}}. 
-Please make sure that the histogram compises enough breaks (n>100).}
+\item{hist}{A histogram to calculate the Otsu threshold for, for example created by \code{\link[graphics]{hist}}.
+Please make sure that the histogram comprises enough breaks (n>100).}
 }
 \value{
 Numerical threshold value
