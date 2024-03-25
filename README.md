@@ -5,8 +5,8 @@ This is the computational workflow to analyse physically interacting cells (PICs
 ## Installation
 For installation please use the following instuction (installation < 1 minute)
 ```
-devtools::install_github(https://github.com/agSHaas/PICtR) # Currently the repository is private. It will be made public upon manuscript acceptence
-install.packages("path/to/package/PICtR_0.1.0.tar.gz", repos = NULL) # After downloading from [Zenodo](https://zenodo.org/records/10694407?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjI0ODdiYzc2LWJmYzUtNGE5NS1iMzYzLWY2ZmU5Mzg4MzVmMCIsImRhdGEiOnt9LCJyYW5kb20iOiJlMDdiY2I0MDQzMGE3ZWE3NThiNzc2NGIwMGMzOWQ3MiJ9.rGbkSQ0fvx7ElMbD9HjXLtzen5qcfPonIpTXR1zdrdFQc5yBw5cthsn-yYiHXSWWQbhipHxlm7m8eLgDRXfsGg)
+devtools::install_github(https://github.com/agSHaas/PICtR) # Currently the repository is private. It will be made public upon manuscript acceptance
+install.packages("path/to/package/PICtR_0.1.0.tar.gz", repos = NULL) # After downloading from https://zenodo.org/records/10637096?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjI0ODdiYzc2LWJmYzUtNGE5NS1iMzYzLWY2ZmU5Mzg4MzVmMCIsImRhdGEiOnt9LCJyYW5kb20iOiJlMDdiY2I0MDQzMGE3ZWE3NThiNzc2NGIwMGMzOWQ3MiJ9.rGbkSQ0fvx7ElMbD9HjXLtzen5qcfPonIpTXR1zdrdFQc5yBw5cthsn-yYiHXSWWQbhipHxlm7m8eLgDRXfsGg 
 ``` 
 
 ## Workflow  
