@@ -1,8 +1,8 @@
-Available Source Licence (“ASL”)
+Available Source Licence (“ASL”)  
 
-Copyright (c) 2024, Interact-omics framework authors
+Copyright (c) 2024, Interact-omics framework authors  
 
-Preamble
+Preamble  
 ASL is a software license that proposes to offer copyleft style rights to use the software in an academic non-commercial setting. The purpose of ASL is to encourage academic cooperation and collaboration free-of-charge whilst enabling academic institutions to earn revenue from the parallel licensing of valuable bodies of software code.  Significant proportions of such revenue are typically reinvested in academic research.
 ASL is not an open-source licence because it does not allow commercial use – it is an “available source” licence, meaning that the source code is made available subject to the terms of this licence and only for academic non-commercial use.
 ASL is a reciprocal licence very similar to GPL and the core terms are identical to those of GNU GPLv2 (except for the limitation to non-commercial use), making it easier for those who know the GPLv2 to understand the licensing*.  As a reciprocal licence, if you redistribute any derivative works you have created based on ASL licenced code, then you are required to license the new work under the ASL - including making your source code available and ensuring that licensees are aware of the terms of the ASL licence.
@@ -10,7 +10,7 @@ The non-commercial limitation makes ASL incompatible with the GPL and other open
 The non-commercial restriction is an integral part of the license and you may not remove it without the consent of the rights holder in the ASL licensed code. Please contact Cambridge Enterprise for any questions and/or to enquire about commercial use rights. 
 *The changes to the GPLv2 are: removing the Preamble, replacing the reference to the “General Public License” in clause 0 with a reference to the “ASL”, removing clause 9 and adding clause 13 with the non-commercial restriction and limited patent grant
 
-TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION  
 0. This License applies to any program or other work which contains a notice placed by the copyright holder saying it may be distributed under the terms of this License. The "Program", below, refers to any such program or work, and a "work based on the Program" means either the Program or any derivative work under copyright law: that is to say, a work containing the Program or a portion of it, either verbatim or with modifications and/or translated into another language. (Hereinafter, translation is included without limitation in the term "modification".) Each licensee is addressed as "you". 
 Activities other than copying, distribution and modification are not covered by this License; they are outside its scope. The act of running the Program is not restricted, and the output from the Program is covered only if its contents constitute a work based on the Program (independent of having been made by running the Program). Whether that is true depends on what the Program does. 
 1. You may copy and distribute verbatim copies of the Program's source code as you receive it, in any medium, provided that you conspicuously and appropriately publish on each copy an appropriate copyright notice and disclaimer of warranty; keep intact all the notices that refer to this License and to the absence of any warranty; and give any other recipients of the Program a copy of this License along with the Program. 
@@ -37,11 +37,12 @@ It is not the purpose of this section to induce you to infringe any patents or o
 This section is intended to make thoroughly clear what is believed to be a consequence of the rest of this License. 
 8. If the distribution and/or use of the Program is restricted in certain countries either by patents or by copyrighted interfaces, the original copyright holder who places the Program under this License may add an explicit geographical distribution limitation excluding those countries, so that distribution is permitted only in or among countries not thus excluded. In such case, this License incorporates the limitation as if written in the body of this License. 
 9.Not used. 
-10. If you wish to incorporate parts of the Program into other free programs whose distribution conditions are different, write to the licensor to ask for permission. 
+10. If you wish to incorporate parts of the Program into other free programs whose distribution conditions are different, write to the licensor to ask for permission.
+ 
 NO WARRANTY
-11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION. 
-12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. 
-13. Non Commercial Use; Limited Patent Rights Grant
+12. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION. 
+13. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. 
+14. Non Commercial Use; Limited Patent Rights Grant
 The Preamble of the GPLv2 does not apply to this License
 The Program is provided to you by the Licensor subject to the following conditions, which prevail over any clause or indication to the contrary in the GPLv2:
 a) The grant of rights under the License is for academic non-commercial use only.  Academic non-commercial use is defined as use for academic research or other not-for-profit scholarly purposes, which are undertaken at an educational, non-profit, charitable or governmental institution, and which does not involve and is not intended to lead to the production or manufacture of products for sale, or the enhancement of a product or service in or proposed for commerce, or the performance of services for a fee. 
@@ -52,16 +53,16 @@ END OF TERMS AND CONDITIONS
 
 You may contact the original licensor at 
 
-Simon Haas 
-Berliner Institut für Gesundheitsforschung in der Charité and 
-Berlin Institute for Medical Systems Biology 
-MDC Berlin-Mitte
-Hannoversche Str. 28
-10115 Berlin
+Simon Haas  
+Berliner Institut für Gesundheitsforschung in der Charité and   
+Berlin Institute for Medical Systems Biology  
+MDC Berlin-Mitte  
+Hannoversche Str. 28  
+10115 Berlin  
 
-and
+and  
 
-German Cancer Research Center (DKFZ)
-Foundation under Public Law
-Im Neuenheimer Feld 280
-69120 Heidelberg
+German Cancer Research Center (DKFZ)  
+Foundation under Public Law  
+Im Neuenheimer Feld 280  
+69120 Heidelberg  
