@@ -6,7 +6,7 @@ This is the computational workflow to analyse physically interacting cells (PICs
 For installation please use the following instuction (installation < 1 minute)
 ```
 devtools::install_github(https://github.com/agSHaas/PICtR) # Currently the repository is private. It will be made public upon manuscript acceptence
-install.packages("path/to/package/PICtR.tar.gz", repos=NULL, type='source') # After downloading from [Zenodo](https://zenodo.org/records/10694407?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjI0ODdiYzc2LWJmYzUtNGE5NS1iMzYzLWY2ZmU5Mzg4MzVmMCIsImRhdGEiOnt9LCJyYW5kb20iOiJlMDdiY2I0MDQzMGE3ZWE3NThiNzc2NGIwMGMzOWQ3MiJ9.rGbkSQ0fvx7ElMbD9HjXLtzen5qcfPonIpTXR1zdrdFQc5yBw5cthsn-yYiHXSWWQbhipHxlm7m8eLgDRXfsGg)
+install.packages("path/to/package/PICtR_0.1.0.tar.gz", repos = NULL) # After downloading from [Zenodo](https://zenodo.org/records/10694407?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjI0ODdiYzc2LWJmYzUtNGE5NS1iMzYzLWY2ZmU5Mzg4MzVmMCIsImRhdGEiOnt9LCJyYW5kb20iOiJlMDdiY2I0MDQzMGE3ZWE3NThiNzc2NGIwMGMzOWQ3MiJ9.rGbkSQ0fvx7ElMbD9HjXLtzen5qcfPonIpTXR1zdrdFQc5yBw5cthsn-yYiHXSWWQbhipHxlm7m8eLgDRXfsGg)
 ``` 
 
 ## Workflow  
@@ -84,11 +84,11 @@ Next the aim is to select clusters with a high number of interacting cells:
 demo_obj <- select_dbt(demo_obj, clusters = "clusters_predicted_obj", quantile = 0.95)
 ```
 The selected cluster numbers are stored in `demo_obj@misc$doublet_clusters_q0.95`. The cells within these clusters represent physically interacting cells and can be used for downstream analysis.  
-The demo Seurat object is included in the package data to exemplify the expected output of the pipeline.
+The demo Seurat object is included in the package data to exemplify the expected output of the pipeline. The demo pipeline has a runtime of <30 seconds on a standard desktop computer.
 
 ## Dependencies
 
-The core of this framework relies on [Seurat version 5](https://github.com/satijalab/seurat), [BPCells](https://github.com/bnprks/BPCells), [MASS](https://cran.r-project.org/web/packages/MASS/index.html), and the [tidyverse](https://www.tidyverse.org/). The full list of dependencies are listed in the DESCRIPTION file, and they are installed automatically upon package installation. The package has been tested on the indicated dependency versions. Please make sure that R is operating in version 4.3 or higher. 
+The core of this framework relies on [Seurat version 5](https://github.com/satijalab/seurat), [BPCells](https://github.com/bnprks/BPCells), [MASS](https://cran.r-project.org/web/packages/MASS/index.html), and the [tidyverse](https://www.tidyverse.org/). The full list of dependencies are listed in the DESCRIPTION file. The package has been tested on the indicated dependency versions. Please make sure that R is operating in version 4.3 or higher. 
 
 ## Version 
 
