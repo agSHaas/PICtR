@@ -3,7 +3,7 @@
 This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.  
 
 ## Installation
-For installation please use the following instuction (installation < 1 minute)
+For installation please use the following instructions (installation < 1 minute)
 ```
 devtools::install_github(https://github.com/agSHaas/PICtR) # Currently the repository is private. It will be made public upon manuscript acceptance
 install.packages("path/to/package/PICtR_0.1.0.tar.gz", repos = NULL) # After downloading from https://zenodo.org/records/10637096?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjI0ODdiYzc2LWJmYzUtNGE5NS1iMzYzLWY2ZmU5Mzg4MzVmMCIsImRhdGEiOnt9LCJyYW5kb20iOiJlMDdiY2I0MDQzMGE3ZWE3NThiNzc2NGIwMGMzOWQ3MiJ9.rGbkSQ0fvx7ElMbD9HjXLtzen5qcfPonIpTXR1zdrdFQc5yBw5cthsn-yYiHXSWWQbhipHxlm7m8eLgDRXfsGg 
@@ -24,7 +24,7 @@ Please refer to the Method section of the manuscript for a comprehensive descrip
 
 ## Demo Data
 
-The package comprises a demo data set of 10% randomly sampled cells from the LCMV infected mice data (subset of data shown in Figure 5 and 6). Data was analysed using high parametric spectral flow cytometry (n=26). Data can be loaded though `data(demo_lcmv)`
+The package comprises a demo data set of 10% randomly sampled cells from the LCMV infected mice data (subset of data shown in Figure 5 and 6). Data was analysed using high parametric spectral flow cytometry (n=26 markers). Data can be loaded with `data(demo_lcmv)`
 
 ## How to use PICtR
 
@@ -34,7 +34,7 @@ library(PICtR)
 data(demo_lcmv)
 ```
 
-Run sketch wrapper to identify cells which a high FSC.A/FSC.H ratio, potentially representing interacting cells, and run the standard Seurat workflow. To keep computational time manageable, data will be sketched (more details see manuscript or [Seurat](https://satijalab.org/seurat/articles/seurat5_sketch_analysis)).
+Run sketch wrapper to identify cells with a high FSC.A/FSC.H ratio, potentially representing interacting cells, and run the standard Seurat workflow. To keep computational time manageable, data will be sketched (more details see manuscript or [Seurat](https://satijalab.org/seurat/articles/seurat5_sketch_analysis)).
 ```
 demo_obj <- sketch_wrapper(channel = demo_lcmv,
                        meta_data = demo_lcmv,
@@ -79,7 +79,7 @@ By using the cluster label information of sketched and projected cells and combi
 ```
 ratio_cluster_plot(demo_obj, clusters = "clusters_predicted_obj")
 ```
-Next the aim is to select clusters with a high number of interacting cells:
+Next, the aim is to select clusters with a high number of interacting cells:
 ```
 demo_obj <- select_dbt(demo_obj, clusters = "clusters_predicted_obj", quantile = 0.95)
 ```
