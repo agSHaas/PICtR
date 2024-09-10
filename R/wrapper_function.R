@@ -29,8 +29,6 @@
 #' @return Seurat object.
 #'
 #' @import Seurat
-#' @importFrom methods as
-#' @importFrom utils packageVersion
 #'
 #'
 #' @export

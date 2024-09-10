@@ -17,7 +17,6 @@
 #'
 #' @importFrom MASS lda
 #' @importFrom data.table is.data.table
-#' @importFrom stats predict
 #'
 #' @export
 predict_data <- project_data <- function(obj=obj,

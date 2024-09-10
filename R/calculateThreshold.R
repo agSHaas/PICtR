@@ -11,7 +11,6 @@
 #'
 #' @return Numerical threshold value
 #'
-#' @importFrom graphics hist
 #'
 #' @export
 calculateThreshold <- function(hist){

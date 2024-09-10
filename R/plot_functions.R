@@ -23,7 +23,6 @@
 #' @importFrom pals parula
 #' @importFrom khroma colour
 #' @importFrom cowplot plot_grid
-#' @importFrom grDevices dev.off pdf
 #' @importFrom ggrastr geom_point_rast
 #'
 #' @export
@@ -41,7 +40,7 @@ wrapper_for_plots <- function(obj=obj,
                               label_box=FALSE,
                               assay="sketch"){
 
-  smooth_rainbow <- colour("smooth rainbow")
+  smooth_rainbow <- khroma::colour("smooth rainbow")
   DefaultAssay(obj) <- assay
 
   # Feature Plots
@@ -165,7 +164,7 @@ split_plot_sketch <- function(obj,
   meta <- obj@meta.data[cells,]
   meta <- cbind(meta, obj@reductions$umap@cell.embeddings[cells,])
 
-  smooth_rainbow <- colour("smooth rainbow")
+  smooth_rainbow <- khroma::colour("smooth rainbow")
   p <- meta %>% ggplot(aes(umap_1, umap_2, color=meta[[group_by]]))+ggrastr::geom_point_rast(aes(alpha=0.1), size=0.3)+
     facet_wrap(~meta[[split_by]])+
     theme_classic()+
@@ -191,7 +190,6 @@ split_plot_sketch <- function(obj,
 #'
 #' @return None
 #'
-#' @importFrom stats reorder
 #'
 #' @export
 ratio_cluster_plot <- function(obj,
