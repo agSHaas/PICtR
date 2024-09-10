@@ -3,12 +3,22 @@
 This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.  
 
 ## Installation
-For installation please use the following instuction (installation < 1 minute)
-```
-devtools::install_github(https://github.com/agSHaas/PICtR) # Currently the repository is private. It will be made public upon manuscript acceptence
-install.packages("path/to/package/PICtR_0.1.0.tar.gz", repos = NULL) # After downloading from [Zenodo](https://zenodo.org/records/10694407?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjI0ODdiYzc2LWJmYzUtNGE5NS1iMzYzLWY2ZmU5Mzg4MzVmMCIsImRhdGEiOnt9LCJyYW5kb20iOiJlMDdiY2I0MDQzMGE3ZWE3NThiNzc2NGIwMGMzOWQ3MiJ9.rGbkSQ0fvx7ElMbD9HjXLtzen5qcfPonIpTXR1zdrdFQc5yBw5cthsn-yYiHXSWWQbhipHxlm7m8eLgDRXfsGg)
+For installation please use the following instructions (installation < 1 minute):
+```R
+remotes::install_github("agSHaas/PICtR") # Currently the repository is private. It will be made public upon manuscript acceptance
+remotes::install_local("/path/to/PICtR_0.1.0.tar.gz", dependencies = T) # After downloading from https://zenodo.org/records/10637096?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjI0ODdiYzc2LWJmYzUtNGE5NS1iMzYzLWY2ZmU5Mzg4MzVmMCIsImRhdGEiOnt9LCJyYW5kb20iOiJlMDdiY2I0MDQzMGE3ZWE3NThiNzc2NGIwMGMzOWQ3MiJ9.rGbkSQ0fvx7ElMbD9HjXLtzen5qcfPonIpTXR1zdrdFQc5yBw5cthsn-yYiHXSWWQbhipHxlm7m8eLgDRXfsGg 
 ``` 
+BPCells can be installed from GitHub using 
+```R
+remotes::install_github("bnprks/BPCells")
+```
+and cytoMEM and ComplexHeatmap can be installed from Bioconductor using
+```R
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
 
+BiocManager::install(c("cytoMEM", "ComplexHeatmap"))
+```
 ## Workflow  
   
 1. In brief, the `sketch_wrapper` function is used to
@@ -24,18 +34,18 @@ Please refer to the Method section of the manuscript for a comprehensive descrip
 
 ## Demo Data
 
-The package comprises a demo data set of 10% randomly sampled cells from the LCMV infected mice data (subset of data shown in Figure 5 and 6). Data was analysed using high parametric spectral flow cytometry (n=26). Data can be loaded though `data(demo_lcmv)`
+The package comprises a demo data set of 10% randomly sampled cells from the LCMV infected mice data (subset of data shown in Figure 5 and 6). Data was analysed using high parametric spectral flow cytometry (n=26 markers). Data can be loaded with `data(demo_lcmv)`.
 
 ## How to use PICtR
 
 Load PICtR package and demo data:
-```
+```R
 library(PICtR)
 data(demo_lcmv)
 ```
 
-Run sketch wrapper to identify cells which a high FSC.A/FSC.H ratio, potentially representing interacting cells, and run the standard Seurat workflow. To keep computational time manageable, data will be sketched (more details see manuscript or [Seurat](https://satijalab.org/seurat/articles/seurat5_sketch_analysis)).
-```
+Run sketch wrapper to identify cells with a high FSC.A/FSC.H ratio, potentially representing interacting cells, and run the standard Seurat workflow. To keep computational time manageable, data will be sketched (more details see manuscript or [Seurat](https://satijalab.org/seurat/articles/seurat5_sketch_analysis)).
+```R
 demo_obj <- sketch_wrapper(channel = demo_lcmv,
                        meta_data = demo_lcmv,
                        FSC.A = "FSC.A", 
@@ -48,7 +58,7 @@ demo_obj <- sketch_wrapper(channel = demo_lcmv,
 ```
 
 Generate different plots to evaluate the analysis:
-```
+```R
 plot_list <- wrapper_for_plots(demo_obj, 
                        feature_plot=TRUE,
                        cluster_plot = TRUE,
@@ -56,7 +66,7 @@ plot_list <- wrapper_for_plots(demo_obj,
 ```  
 
 Project the remaining cells to obtain cluster information across all cells using either a Seurat object or data frame as query data:
-```
+```R
 # Seurat object
 demo_obj <- predict_data(obj = demo_obj, 
                       data_query = demo_obj, 
@@ -76,11 +86,11 @@ demo_obj <- predict_data(obj = demo_obj,
 
 By using the cluster label information of sketched and projected cells and combining it with the distribution of ratio high and ratio low cells, interacting cell clusters can be determined: 
 
-```
+```R
 ratio_cluster_plot(demo_obj, clusters = "clusters_predicted_obj")
 ```
-Next the aim is to select clusters with a high number of interacting cells:
-```
+Next, the aim is to select clusters with a high number of interacting cells:
+```R
 demo_obj <- select_dbt(demo_obj, clusters = "clusters_predicted_obj", quantile = 0.95)
 ```
 The selected cluster numbers are stored in `demo_obj@misc$doublet_clusters_q0.95`. The cells within these clusters represent physically interacting cells and can be used for downstream analysis.  
@@ -92,4 +102,4 @@ The core of this framework relies on [Seurat version 5](https://github.com/satij
 
 ## Version 
 
-Current version 0.1.0
+Current version 0.1.0-alpha
