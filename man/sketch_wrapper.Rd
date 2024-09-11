@@ -14,6 +14,8 @@ sketch_wrapper(
   n_components = "all",
   resolution = c(0.5, 1, 2, 3, 4),
   clst_algorithm = 1,
+  min_clst_size = 100,
+  meta.k = "auto",
   obj_name = "obj_sketched_non_projected",
   ratio = TRUE,
   thresholding_method = "otsu",
@@ -21,7 +23,8 @@ sketch_wrapper(
   group_by = NULL,
   verbose = TRUE,
   BPcell_dir = NULL,
-  working_dir = getwd()
+  working_dir = getwd(),
+  seed = 42
 )
 }
 \arguments{
@@ -41,7 +44,14 @@ sketch_wrapper(
 
 \item{resolution}{A numerical vector with the desired resolutions for clustering (Default: c(0.5,1,2,3,4)).}
 
-\item{clst_algorithm}{Algorithm used for clustering in \code{\link[Seurat]{FindClusters}}. 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). Leiden requires the leidenalg python.}
+\item{clst_algorithm}{Algorithm used for clustering. For Seurat's \code{\link[Seurat]{FindClusters}}: 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). Leiden requires the leidenalg python.
+Alternatively, "hdbscan" for Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) on the UMAP embedding, see \code{\link[dbscan]{hdbscan}}),
+"flowMeans" for non-parametric clustering and segmented-regression-based change point detection, see \code{\link[flowMeans]{flowMeans}},
+or "flowSOM" for self-organizing maps, see \code{\link[Spectre]{run.flowsom}}, (Default: Louvain, 1)}
+
+\item{min_clst_size}{minimum cluster size for HDBSCAN. See details at \code{\link[dbscan]{hdbscan}} (Default: 100).}
+
+\item{meta.k}{meta k for FlowSOM clustering, see \code{\link[Spectre]{run.flowsom}} (Default: "auto").}
 
 \item{obj_name}{The name used for storing the Seurat object (character).}
 
@@ -58,6 +68,8 @@ sketch_wrapper(
 \item{BPcell_dir}{Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.}
 
 \item{working_dir}{Directory path to be used as working directory (character string).}
+
+\item{seed}{Seed for reproducibility (Default: 42).}
 }
 \value{
 Seurat object.
@@ -70,10 +82,17 @@ samples a representative subset of cells using \code{\link[Seurat]{SketchData}} 
 obj <- sketch_wrapper(channel = demo_lcmv,
                       meta_data = demo_lcmv,
                       n_sketch_cells = 5000,
+                      clst_algorithm = 1,
                       ratio = TRUE,
                       thresholding_method = "otsu")
 
 }
 \references{
 Hao et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nature Biotechnology (2023). doi: \url{https://doi.org/10.1038/s41587-023-01767-y}.
+
+Van Gassen S et al. (2015) FlowSOM: Using self-organizing maps for visualization and interpretation of cytometry data. Cytom Part J Int Soc Anal Cytol 87: 636-645. \url{https://onlinelibrary.wiley.com/doi/full/10.1002/cyto.a.22625}.
+
+Aghaeepour, N., Nikolic, R., Hoos, H.H. and Brinkman, R.R. (2011), Rapid cell population identification in flow cytometry data. Cytometry, 79A: 6-13. \url{https://doi.org/10.1002/cyto.a.21007}.
+
+Campello, R.J.G.B., Moulavi, D., Sander, J. (2013). Density-Based Clustering Based on Hierarchical Density Estimates. In: Pei, J., Tseng, V.S., Cao, L., Motoda, H., Xu, G. (eds) Advances in Knowledge Discovery and Data Mining. PAKDD 2013. Lecture Notes in Computer Science(), vol 7819. Springer, Berlin, Heidelberg. \url{https://doi.org/10.1007/978-3-642-37456-2_14}
 }
