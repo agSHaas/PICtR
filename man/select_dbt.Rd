@@ -19,13 +19,13 @@ select_dbt(
 
 \item{clusters}{The meta.data column containing the cluster labels.}
 
-\item{ratio}{The meta.data column with the classification of cells into ratio_high and ratio_low using the FSC.A/FSC.H ratio and Otsu's thresholding method.}
+\item{ratio}{The meta.data column with the classification of cells into ratio_high and ratio_low using the FSC ratio (FSC.A/FSC.H) and Otsu's thresholding method.}
 
-\item{ratio_high}{The character string that indicates cells with a FSC.A/FSC.H ratio above the threshold determined with Otsu's method within the meta.data column.}
+\item{ratio_high}{The character string that indicates cells with a FSC ratio (FSC.A/FSC.H) above the threshold determined with calculateThreshold() within the meta.data column.}
 
 \item{assay}{The Seurat assay containing FACS data.}
 
-\item{quantile}{The desired percentile cutoff above which clusters are classified as physically interacting cell clusters (Default 0.8).}
+\item{quantile}{The desired percentile cutoff above which clusters are classified as physically interacting cell clusters (Default 0.8, meaning top 20 percent of clusters are chosen).}
 
 \item{selected_clusters}{Character vector for the misc slot in the Seurat object that will contain the cluster numbers of the selected physically interacting cell clusters.}
 }
@@ -33,5 +33,5 @@ select_dbt(
 Seurat object
 }
 \description{
-Selects the clusters that belong to a given percentile of the clusters with the largest physically interacting cells proportion based on
+Selects the clusters that belong to a given percentile of the clusters with the largest physically interacting cells proportion based on FSC ratio thresholding.
 }

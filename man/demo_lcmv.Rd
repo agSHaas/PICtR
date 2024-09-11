@@ -21,4 +21,7 @@ data(demo_lcmv)
 Demo data set for the PICtR workflow containing 10 percent randomly sampled cells from the spleen of one LCMV infected mouse (day 7, Figure 5 and 6).
 Data was analysed using high parametric spectral flow cytometry (n=26 markers).
 }
+\references{
+Vonficht, Jopp-Saile, Yousefian, Flore et al. (2024). Ultra-high scale cytometry-based cellular interaction mapping.
+}
 \keyword{datasets}

@@ -24,4 +24,7 @@ data(demo_obj)
 \description{
 Demo Seurat object based on the demo data set for the spleen of one LCMV infected mouse at day 7.
 }
+\references{
+Vonficht, Jopp-Saile, Yousefian, Flore et al. (2024). Ultra-high scale cytometry-based cellular interaction mapping.
+}
 \keyword{datasets}

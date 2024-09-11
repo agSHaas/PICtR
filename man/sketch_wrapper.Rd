@@ -11,13 +11,16 @@ sketch_wrapper(
   FSC.A = "FSC.A",
   FSC.H = "FSC.H",
   n_sketch_cells = 50000,
+  n_components = "all",
   resolution = c(0.5, 1, 2, 3, 4),
   clst_algorithm = 1,
   obj_name = "obj_sketched_non_projected",
+  ratio = TRUE,
+  thresholding_method = "otsu",
+  hist_breaks = 2000,
   group_by = NULL,
   verbose = TRUE,
   BPcell_dir = NULL,
-  ratio = TRUE,
   working_dir = getwd()
 )
 }
@@ -26,7 +29,7 @@ sketch_wrapper(
 
 \item{meta_data}{A data frame with meta_data for every cell (Default=NULL).}
 
-\item{assay}{A character string with the name of the assay (Default="FACS").}
+\item{assay}{A character string with the name of the assay to be created (Default="FACS").}
 
 \item{FSC.A}{The name (string) of the column containing the FSC.A scatter parameter (Default="FACS.A").}
 
@@ -34,24 +37,27 @@ sketch_wrapper(
 
 \item{n_sketch_cells}{The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000).}
 
-\item{resolution}{A character vector with the desired resolutions for clustering.}
+\item{n_components}{The number of components computed and used during analysis. "all" or given as an integer (Default="all").}
 
-\item{clst_algorithm}{Algorithm used for clustering in \code{\link[Seurat]{FindClusters}}.
-1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm).
-Leiden requires the leidenalg python.}
+\item{resolution}{A numerical vector with the desired resolutions for clustering (Default: c(0.5,1,2,3,4)).}
 
-\item{obj_name}{The name used for storing the Seurat object.}
+\item{clst_algorithm}{Algorithm used for clustering in \code{\link[Seurat]{FindClusters}}. 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). Leiden requires the leidenalg python.}
 
-\item{group_by}{Optional grouping parameter to calculate the FSC.A/FSC.H Otsu thresholding method for.}
+\item{obj_name}{The name used for storing the Seurat object (character).}
+
+\item{ratio}{Boolean variable. If TRUE the FSC ratio (FSC.A/FSC.H) will be calculated.}
+
+\item{thresholding_method}{Method for thresholding. One of "otsu", "triangle", "kmeans", or any method from the autothresholdr package. For details see ?calculateThreshold() (Default = "otsu").}
+
+\item{hist_breaks}{Number of histogram breaks for methods that rely on histograms. Should be >100 (Default: 2000).}
+
+\item{group_by}{Optional grouping parameter to calculate the FSC ratio (FSC.A/FSC.H) thresholding method for.}
 
 \item{verbose}{Verbosity (Boolean).}
 
-\item{BPcell_dir}{Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.
-Recommended if data contain more than 300 000 cells.}
+\item{BPcell_dir}{Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.}
 
-\item{ratio}{Boolean variable. If TRUE the ratio will be calculated.}
-
-\item{working_dir}{Directory path as a character string used as working directory.}
+\item{working_dir}{Directory path to be used as working directory (character string).}
 }
 \value{
 Seurat object.
@@ -64,6 +70,10 @@ samples a representative subset of cells using \code{\link[Seurat]{SketchData}} 
 obj <- sketch_wrapper(channel = demo_lcmv,
                       meta_data = demo_lcmv,
                       n_sketch_cells = 5000,
-                      ratio = TRUE)
+                      ratio = TRUE,
+                      thresholding_method = "otsu")
 
+}
+\references{
+Hao et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nature Biotechnology (2023). doi: \url{https://doi.org/10.1038/s41587-023-01767-y}.
 }

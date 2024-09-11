@@ -5,31 +5,34 @@
 #'
 #' @param channel A data frame with the dimensionality cells x flow cytometry parameters.
 #' @param meta_data A data frame with meta_data for every cell (Default=NULL).
-#' @param assay A character string with the name of the assay (Default="FACS").
+#' @param assay A character string with the name of the assay to be created (Default="FACS").
 #' @param FSC.A The name (string) of the column containing the FSC.A scatter parameter (Default="FACS.A").
 #' @param FSC.H The name (string) of the column containing the FSC.H scatter parameter (Default="FACS.H").
 #' @param n_sketch_cells The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000).
-#' @param resolution A character vector with the desired resolutions for clustering.
-#' @param clst_algorithm Algorithm used for clustering in \code{\link[Seurat]{FindClusters}}.
-#' 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm).
-#' Leiden requires the leidenalg python.
-#' @param obj_name The name used for storing the Seurat object.
-#' @param group_by Optional grouping parameter to calculate the FSC.A/FSC.H Otsu thresholding method for.
+#' @param n_components The number of components computed and used during analysis. "all" or given as an integer (Default="all").
+#' @param resolution A numerical vector with the desired resolutions for clustering (Default: c(0.5,1,2,3,4)).
+#' @param clst_algorithm Algorithm used for clustering in \code{\link[Seurat]{FindClusters}}. 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). Leiden requires the leidenalg python.
+#' @param obj_name The name used for storing the Seurat object (character).
+#' @param ratio Boolean variable. If TRUE the FSC ratio (FSC.A/FSC.H) will be calculated.
+#' @param thresholding_method Method for thresholding. One of "otsu", "triangle", "kmeans", or any method from the autothresholdr package. For details see ?calculateThreshold() (Default = "otsu").
+#' @param hist_breaks Number of histogram breaks for methods that rely on histograms. Should be >100 (Default: 2000).
+#' @param group_by Optional grouping parameter to calculate the FSC ratio (FSC.A/FSC.H) thresholding method for.
 #' @param verbose Verbosity (Boolean).
 #' @param BPcell_dir Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.
-#' Recommended if data contain more than 300 000 cells.
-#' @param ratio Boolean variable. If TRUE the ratio will be calculated.
-#' @param working_dir Directory path as a character string used as working directory.
+#' @param working_dir Directory path to be used as working directory (character string).
 #'
 #' @examples obj <- sketch_wrapper(channel = demo_lcmv,
 #'                       meta_data = demo_lcmv,
 #'                       n_sketch_cells = 5000,
-#'                       ratio = TRUE)
+#'                       ratio = TRUE,
+#'                       thresholding_method = "otsu")
 #'
 #' @return Seurat object.
 #'
-#' @import Seurat
+#' @references Hao et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nature Biotechnology (2023). doi: \url{https://doi.org/10.1038/s41587-023-01767-y}.
 #'
+#' @import Seurat
+#' @importFrom autothresholdr auto_thresh
 #'
 #' @export
 sketch_wrapper <- function(channel=channel,
@@ -38,13 +41,16 @@ sketch_wrapper <- function(channel=channel,
                            FSC.A="FSC.A",
                            FSC.H="FSC.H",
                            n_sketch_cells=50000,
+                           n_components="all",
                            resolution=c(0.5,1,2,3,4),
                            clst_algorithm=1,
                            obj_name="obj_sketched_non_projected",
+                           ratio=TRUE,
+                           thresholding_method="otsu",
+                           hist_breaks = 2000,
                            group_by=NULL,
                            verbose=TRUE,
                            BPcell_dir=NULL,
-                           ratio=TRUE,
                            working_dir=getwd()){
   # check Seurat version
   if(packageVersion("Seurat") < "4.9.9.9058"){
@@ -65,7 +71,6 @@ sketch_wrapper <- function(channel=channel,
   if(ratio){
     message("Calculation of Ratio")
     channel["ratio"] <- channel[FSC.A]/channel[FSC.H]
-    #channel$ratio <- as.numeric(channel$ratio)
     channel$ratio <- scales::rescale(as.numeric(channel$ratio), to = c(0, 1023))
   }
 
@@ -109,14 +114,14 @@ sketch_wrapper <- function(channel=channel,
 
   # calculate threshold and divide cells accordingly
   if(ratio){
-    cutoff <- calculateThreshold(hist(obj$ratio, breaks = 2000, plot = FALSE))
+    cutoff <- calculateThreshold(data = obj$ratio, method = thresholding_method, breaks = hist_breaks)
     obj$ratio_anno <- ifelse(obj$ratio>=cutoff, "Ratio_high", "Ratio_low")
     obj$ratio_anno <- factor(obj$ratio_anno, levels = c("Ratio_low", "Ratio_high"))
 
     if(!is.null(group_by)){
       ratio_list <-  split(obj@meta.data, f=obj@meta.data[,group_by])
       ratio_anno <- lapply(ratio_list, function(list){
-        cutoff <- calculateThreshold(hist(list$ratio, breaks = 2000, plot = FALSE))
+        cutoff <- calculateThreshold(data = list$ratio, method = thresholding_method, breaks = hist_breaks)
         list$ratio_anno_group <- ifelse(list$ratio>=cutoff, "Ratio_high", "Ratio_low")
         return(list)
       })
@@ -147,14 +152,23 @@ sketch_wrapper <- function(channel=channel,
 
   # standard Seurat workflow
   DefaultAssay(obj) <- "sketch"
-  n_dims <- dim(channel)[2]
+
+  # number of components to be used
+  if (n_components == "all") {
+    n_dims <- dim(channel)[2]
+  } else if (all.equal(n_components, as.integer(n_components))) {
+    n_dims <- n_components
+  } else {
+    stop("Please provide an integer for the number of components to be used, or specify all")
+  }
+
   obj <- obj %>%
     FindVariableFeatures(verbose=verbose) %>%
     ScaleData(verbose=verbose) %>%
-    RunPCA(npcs=n_dims-1, approx=F, verbose=verbose) %>%
-    FindNeighbors(dims = 1:n_dims-1, verbose=verbose) %>%
+    RunPCA(npcs=n_dims, approx=F, verbose=verbose) %>%
+    FindNeighbors(dims = 1:n_dims, verbose=verbose) %>%
     FindClusters(resolution = resolution, algorithm=clst_algorithm, verbose = verbose) %>%
-    RunUMAP(dims = 1:n_dims-1, return.model = TRUE, verbose = verbose)
+    RunUMAP(dims = 1:n_dims, return.model = TRUE, verbose = verbose)
 
   message("Sketching is done")
   message("The object will be updated and saved")
