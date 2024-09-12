@@ -10,7 +10,7 @@
 #' @param FSC.H The name (string) of the column containing the FSC.H scatter parameter (Default="FACS.H").
 #' @param n_sketch_cells The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000).
 #' @param n_components The number of components computed and used during analysis. "all" or given as an integer (Default="all").
-#' @param resolution A numerical vector with the desired resolutions for clustering (Default: c(0.5,1,2,3,4)).
+#' @param resolution A numerical vector with the desired resolutions for clustering (Default: c(0.5,1,2,3,4)). Only used for Louvain, SLM, and Leiden clustering.
 #' @param clst_algorithm Algorithm used for clustering. For Seurat's \code{\link[Seurat]{FindClusters}}: 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). Leiden requires the leidenalg python.
 #' Alternatively, "hdbscan" for Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) on the UMAP embedding, see \code{\link[dbscan]{hdbscan}}),
 #' "flowMeans" for non-parametric clustering and segmented-regression-based change point detection, see \code{\link[flowMeans]{flowMeans}},
@@ -24,6 +24,7 @@
 #' @param group_by Optional grouping parameter to calculate the FSC ratio (FSC.A/FSC.H) thresholding method for.
 #' @param verbose Verbosity (Boolean).
 #' @param BPcell_dir Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.
+#' @param overwrite Overwrite existing BPCells directory? (Default: FALSE)
 #' @param working_dir Directory path to be used as working directory (character string).
 #' @param seed Seed for reproducibility (Default: 42).
 #'
@@ -53,8 +54,8 @@ sketch_wrapper <- function(channel=channel,
                            FSC.H="FSC.H",
                            n_sketch_cells=50000,
                            n_components="all",
-                           resolution=c(0.5,1,2,3,4),
                            clst_algorithm=1,
+                           resolution=c(0.5,1,2,3,4),
                            min_clst_size=100,
                            meta.k="auto",
                            obj_name="obj_sketched_non_projected",
@@ -64,6 +65,7 @@ sketch_wrapper <- function(channel=channel,
                            group_by=NULL,
                            verbose=TRUE,
                            BPcell_dir=NULL,
+                           overwrite=F,
                            working_dir=getwd(),
                            seed = 42){
   # check Seurat version
@@ -75,10 +77,12 @@ sketch_wrapper <- function(channel=channel,
   }
 
   # check if BP cells was already run
-  if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir)){
-    stop("Seems like BPcells was already run, either remove the folder containing compressed data or define a path (BPcell_dir) to read in compressed files")
+  if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir) & overwrite == F){
+    stop("Seems like BPcells was already run, either remove the folder containing compressed data, define a path (BPcell_dir) to read in compressed files, or specify overwrite = TRUE")
   }else if(dir.exists(paste0(working_dir, "/counts")) | !is.null(BPcell_dir)){
-    warning("The pre-exisiting compressed data generated with BPCells will be used")
+    message("The pre-exisiting compressed data generated with BPCells will be used")
+  } else if(overwrite == T) {
+    message("The BPCells directory will be overwritten")
   }
 
   # calculate FSC area to height ratio
@@ -89,16 +93,16 @@ sketch_wrapper <- function(channel=channel,
   }
 
   # create Seurat obj and save counts on-disk with BPcells
-  if(!file.exists(paste0(working_dir, obj_name, ".rds"))){
+  if (!file.exists(paste0(working_dir, obj_name, ".rds"))) {
     obj <- CreateSeuratObject(as(object=t(channel), Class="dgCMatrix"), assay = assay)
 
-    if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir)){
-      counts.mat <- BPCells::open_matrix_dir(dir =  paste0(working_dir, "counts"))
+    if (dir.exists(paste0(working_dir, "/counts")) & !is.null(BPcell_dir)){
+      counts.mat <- BPCells::open_matrix_dir(dir =  paste0(working_dir, "/counts"))
     }else if(!is.null(BPcell_dir)){
       counts.mat <- BPCells::open_matrix_dir(dir =  BPcell_dir)
     }else{
       BPCells::write_matrix_dir(mat = obj[[assay]]$counts,
-                       dir = paste0(working_dir, "/counts"), overwrite = TRUE)
+                       dir = paste0(working_dir, "/counts"), overwrite = overwrite)
       counts.mat <- BPCells::open_matrix_dir(dir =  paste0(working_dir, "/counts"))
     }
     obj[[assay]]$counts <- counts.mat

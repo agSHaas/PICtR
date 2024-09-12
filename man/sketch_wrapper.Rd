@@ -12,8 +12,8 @@ sketch_wrapper(
   FSC.H = "FSC.H",
   n_sketch_cells = 50000,
   n_components = "all",
-  resolution = c(0.5, 1, 2, 3, 4),
   clst_algorithm = 1,
+  resolution = c(0.5, 1, 2, 3, 4),
   min_clst_size = 100,
   meta.k = "auto",
   obj_name = "obj_sketched_non_projected",
@@ -23,6 +23,7 @@ sketch_wrapper(
   group_by = NULL,
   verbose = TRUE,
   BPcell_dir = NULL,
+  overwrite = F,
   working_dir = getwd(),
   seed = 42
 )
@@ -42,12 +43,12 @@ sketch_wrapper(
 
 \item{n_components}{The number of components computed and used during analysis. "all" or given as an integer (Default="all").}
 
-\item{resolution}{A numerical vector with the desired resolutions for clustering (Default: c(0.5,1,2,3,4)).}
-
 \item{clst_algorithm}{Algorithm used for clustering. For Seurat's \code{\link[Seurat]{FindClusters}}: 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). Leiden requires the leidenalg python.
 Alternatively, "hdbscan" for Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) on the UMAP embedding, see \code{\link[dbscan]{hdbscan}}),
 "flowMeans" for non-parametric clustering and segmented-regression-based change point detection, see \code{\link[flowMeans]{flowMeans}},
 or "flowSOM" for self-organizing maps, see \code{\link[Spectre]{run.flowsom}}, (Default: Louvain, 1)}
+
+\item{resolution}{A numerical vector with the desired resolutions for clustering (Default: c(0.5,1,2,3,4)). Only used for Louvain, SLM, and Leiden clustering.}
 
 \item{min_clst_size}{minimum cluster size for HDBSCAN. See details at \code{\link[dbscan]{hdbscan}} (Default: 100).}
 
@@ -66,6 +67,8 @@ or "flowSOM" for self-organizing maps, see \code{\link[Spectre]{run.flowsom}}, (
 \item{verbose}{Verbosity (Boolean).}
 
 \item{BPcell_dir}{Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.}
+
+\item{overwrite}{Overwrite existing BPCells directory? (Default: FALSE)}
 
 \item{working_dir}{Directory path to be used as working directory (character string).}
 
