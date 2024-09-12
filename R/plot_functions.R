@@ -308,9 +308,7 @@ umap_rasterized <- function(data=obj,
 #'
 #' @return MEM heat map.
 #'
-#' @importFrom cytoMEM MEM
 #' @importFrom pals coolwarm
-#' @importFrom ComplexHeatmap Heatmap
 #'
 #' @export
 MEM_heatmap <- function(obj,
@@ -322,6 +320,14 @@ MEM_heatmap <- function(obj,
                         heatmap_row_title = "cluster",
                         scale_width = 2.2,
                         scale_height = 5){
+
+  # check that required packages are installed
+  if (!requireNamespace(c("ComplexHeatmap", "cytoMEM"), quietly = TRUE)) {
+    stop("Packages \"ComplexHeatmap\" and \"cytoMEM\" must be installed to use MEM_heatmap(). Install from Bioconductor using\n
+    if (!require(\"BiocManager\", quietly = TRUE))
+    \tinstall.packages(\"BiocManager\")
+    BiocManager::install(c(\"cytoMEM\", \"ComplexHeatmap\"))")
+  }
 
   # select markers and cluster annotations
   MEM <- obj@meta.data %>%
@@ -342,7 +348,7 @@ MEM_heatmap <- function(obj,
   heatmap <- as.data.frame(MEM_values$MEM_matrix[[1]])
 
   # create heatmap
-  h1 <- Heatmap(t(as.matrix(heatmap)),
+  h1 <- ComplexHeatmap::Heatmap(t(as.matrix(heatmap)),
                 col=cols,
                 name = "MEM enrichment score",
                 clustering_distance_rows = "euclidean",
