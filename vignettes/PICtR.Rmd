@@ -1,68 +1,124 @@
 ---
 title: "PICtR: Physically Interacting Cell toolkit for R"
-author: "Vignette Author"
-output: rmarkdown::html_vignette
+author: "Viktoria Flore"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    highlight: tango
 vignette: >
   %\VignetteIndexEntry{PICtR: Physically Interacting Cell toolkit for R}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  warning = FALSE
 )
 ```
 
-```{r setup}
-library(PICtR)
+# Introduction
+
+Many fundamental processes in life are shaped by physical interactions between cells. PICtR provides a computational workflow to analyse both cellular landscapes and cellular interactions in high-dimensional flow cytometry data using R. PICtR can be used with any cytometry-based assay and the approach can also be applied to existing datasets, provided that the following guidelines are met:  
+
+- The data stems from a case-control setting
+- All samples were treated the same during sample processing and acquisition, e.g. regarding equal cell concentrations, incubation times, and flow rates 
+- Samples should not be pooled across conditions, organs or donors
+- For *in vivo* experiments, cells with a strong affinity to interact can artificially interact if they are brought into proximity during sample preparation, even if they were physically separated *in vivo*. These interactions may still be biologically meaningful, but take this into account when interpreting the results.  
+
+
+# Installation
+
+PICtR requires R version 4.3 or later. Before installing PICtR, please ensure that [BPCells](https://github.com/bnprks/BPCells) is installed: 
+
+```{r, eval=FALSE}
+if (!require("BPCells", quietly = TRUE)) {
+  if (!require("remotes", quietly = TRUE)) {
+    install.packages("remotes")
+  }
+  remotes::install_github("bnprks/BPCells/r")
+}
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+To install PICtR please download the source package and use 
+```{r, eval=FALSE}
+remotes::install_local("path_to_file", dependencies = T)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+or, upon publication, install PICtR from GitHub:
+```{r, eval=FALSE}
+if (!require("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+remotes::install_github("agSHaas/PICtR")
 ```
 
-Also a quote using `>`:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+Some other packages are not necessarily required, but expand the functionality of PICtR. Consider installing  
+
+- [flowMeans](https://www.bioconductor.org/packages/release/bioc/html/flowMeans.html)  
+- [dbscan](https://github.com/mhahsler/dbscan)  
+- [Spectre](https://github.com/ImmuneDynamics/Spectre)
+- [ComplexHeatmap](https://www.bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html)  
+- [cytoMEM](https://www.bioconductor.org/packages/release/bioc/html/cytoMEM.html)  
+
+
+# PICtR Pipeline
+
+## Pre-Processing of Cytometry Data 
+
+Data from FCS files should be unmixed/compensated and transformed (for example using FlowJo from BD). We recommend using quality control tools such as [PeacoQC](https://doi.org/10.1002/cyto.a.24501) or [FlowAI](https://doi.org/10.1093/bioinformatics/btw191) to ensure high quality cytometry data. Export the populations of interest using channel values defined by the inbuilt export function of FlowJo or [flowWorkspace](https://github.com/RGLab/flowWorkspace).
+
+## Example Data
+
+We provide a demo data set from the spleen of lymphocytic choriomeningitis virus (LCMV) infected mice. Five days prior to infection, LCMV-specific T cells were transferred into the hosts, so that we can differentiate between antigen-specific interactions between immune cells and bystander interactions. The samples were analysed using high parametric spectral flow cytometry with n=26 markers, allowing us to detect all important cell types across the immune cell landscape. You can read more about the experiment in the manuscript accompanying the PICtR package. 
+
+Demo data can be loaded with `data(demo_lcmv)`.  
+
+
+## Subsampling, Dimensional Reduction and Clustering 
+
+The pipeline starts with a data frame with the dimensionality cells x flow cytometry parameters. First, we calculate the FSC ratio based on the forward scatter area (FSC-A) and forward scatter height (FSC-H) parameters. The FSC ratio is highly discriminatory for singlets and multiplets, and will help us to select interacting populations later on. We find a threshold that classifies all events as having a low or high FSC ratio using thresholding methods such as Otsu thresholding.
+  
+Then, we create a Seurat object using forward scatter parameters, side scatter parameters, cell type markers and the FSC ratio as features. We store the counts layer on-disk using [BPCells](https://github.com/bnprks/BPCells), enabling us to analyse millions of events while keeping computational time manageable. In addition, we sample a representative subset of cells using atomic sketching as implemented in [Seurat](https://satijalab.org/seurat/articles/parsebio_sketch_integration). In contrast to random sampling, sketching retains both abundant and rare cell types, including cellular interactions. We use the sketched data set for dimensional reduction and clustering, before predicting cell type and interaction labels back to the full data set.  
+
+PICtR provides a convenient wrapper around these steps: 
+```{r wrapper}
+devtools::load_all(quiet = T)
+data(demo_lcmv)
+
+demo_obj <- sketch_wrapper(demo_lcmv,
+                       meta_data = demo_lcmv,
+                       assay = "FACS",
+                       FSC.A = "FSC.A", 
+                       FSC.H = "FSC.H", 
+                       working_dir = getwd(),
+                       resolution = c(0.5, 1),
+                       clst_algorithm = 1,
+                       n_sketch_cells = 5000,
+                       obj_name = "obj_sketched_non_projected",
+                       ratio = T, 
+                       thresholding_method = "otsu", 
+                       overwrite = T)
+```
+
+### Guidelines for Clustering 
+
+## Selecting Interacting Populations 
+
+## Annotation 
+
+## Predict Labels for the full Data Set
+
+# Citing PICtR 
+
+If you are using PICtR in your research, please consider citing:  
+
+- Vonficht D, Jopp-Saile L, Yousefian S, Flore V et al. "Ultra-high scale cytometry-based cellular interaction mapping.", unpublished.
+
+
