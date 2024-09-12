@@ -1,6 +1,7 @@
 ---
 title: "PICtR: Physically Interacting Cell toolkit for R"
 author: "Viktoria Flore"
+date: "09/2024"
 output: 
   rmarkdown::html_vignette:
     toc: true
@@ -44,12 +45,12 @@ if (!require("BPCells", quietly = TRUE)) {
 }
 ```
 
-To install PICtR please download the source package and use 
+To install PICtR please download the source package and use: 
 ```{r, eval=FALSE}
 remotes::install_local("path_to_file", dependencies = T)
 ```
 
-or, upon publication, install PICtR from GitHub:
+Or, upon publication, install PICtR from GitHub:
 ```{r, eval=FALSE}
 if (!require("remotes", quietly = TRUE)) {
   install.packages("remotes")
@@ -72,24 +73,25 @@ Some other packages are not necessarily required, but expand the functionality o
 
 ## Pre-Processing of Cytometry Data 
 
-Data from FCS files should be unmixed/compensated and transformed (for example using FlowJo from BD). We recommend using quality control tools such as [PeacoQC](https://doi.org/10.1002/cyto.a.24501) or [FlowAI](https://doi.org/10.1093/bioinformatics/btw191) to ensure high quality cytometry data. Export the populations of interest using channel values defined by the inbuilt export function of FlowJo or [flowWorkspace](https://github.com/RGLab/flowWorkspace).
+Data from FCS files should be unmixed/compensated and transformed (for example using FlowJo from BD). We recommend using quality control tools such as [PeacoQC](https://doi.org/10.1002/cyto.a.24501) or [FlowAI](https://doi.org/10.1093/bioinformatics/btw191) to ensure high quality cytometry data. Export the populations of interest using channel values defined by the inbuilt export function of FlowJo or use [flowWorkspace](https://github.com/RGLab/flowWorkspace).
 
 ## Example Data
 
-We provide a demo data set from the spleen of lymphocytic choriomeningitis virus (LCMV) infected mice. Five days prior to infection, LCMV-specific T cells were transferred into the hosts, so that we can differentiate between antigen-specific interactions between immune cells and bystander interactions. The samples were analysed using high parametric spectral flow cytometry with n=26 markers, allowing us to detect all important cell types across the immune cell landscape. You can read more about the experiment in the manuscript accompanying the PICtR package. 
+We provide a small demo data set from the spleen of one lymphocytic choriomeningitis virus (LCMV) infected mouse. Five days prior to infection, LCMV-specific T cells were transferred into the host, so that we can differentiate between antigen-specific interactions between immune cells and bystander interactions. The samples were analysed using high parametric spectral flow cytometry with n=26 markers, allowing us to detect all important cell types across the immune cell landscape. You can read more about the experiment in the manuscript accompanying the PICtR package. 
 
-Demo data can be loaded with `data(demo_lcmv)`.  
+Demo data can be loaded with `data(demo_lcmv)`. See `?demo_lcmv` for details.  
 
 
 ## Subsampling, Dimensional Reduction and Clustering 
 
 The pipeline starts with a data frame with the dimensionality cells x flow cytometry parameters. First, we calculate the FSC ratio based on the forward scatter area (FSC-A) and forward scatter height (FSC-H) parameters. The FSC ratio is highly discriminatory for singlets and multiplets, and will help us to select interacting populations later on. We find a threshold that classifies all events as having a low or high FSC ratio using thresholding methods such as Otsu thresholding.
   
-Then, we create a Seurat object using forward scatter parameters, side scatter parameters, cell type markers and the FSC ratio as features. We store the counts layer on-disk using [BPCells](https://github.com/bnprks/BPCells), enabling us to analyse millions of events while keeping computational time manageable. In addition, we sample a representative subset of cells using atomic sketching as implemented in [Seurat](https://satijalab.org/seurat/articles/parsebio_sketch_integration). In contrast to random sampling, sketching retains both abundant and rare cell types, including cellular interactions. We use the sketched data set for dimensional reduction and clustering, before predicting cell type and interaction labels back to the full data set.  
+Then, we create a Seurat object using forward scatter parameters, side scatter parameters, cell type markers and the FSC ratio as features. We store the counts layer on-disk using [BPCells](https://github.com/bnprks/BPCells), enabling us to analyse millions of events while keeping computational time manageable. Thus far, we have analysed up to 60 million events with PICtR. 
+In addition, we sample a representative subset of cells using atomic sketching as implemented in [Seurat](https://satijalab.org/seurat/articles/parsebio_sketch_integration). In contrast to random sampling, sketching retains both abundant and rare cell types, including cellular interactions. For the demo data set, we sample `n_sketch_cells = 5000` cells. We use the sketched data set for dimensional reduction and clustering, before predicting cell type and interaction labels back to the full data set later on.  
 
-PICtR provides a convenient wrapper around these steps: 
+PICtR provides a convenient wrapper function for these steps: 
 ```{r wrapper}
-devtools::load_all(quiet = T)
+library(PICtR, quietly = T)
 data(demo_lcmv)
 
 demo_obj <- sketch_wrapper(demo_lcmv,
@@ -109,11 +111,37 @@ demo_obj <- sketch_wrapper(demo_lcmv,
 
 ### Guidelines for Clustering 
 
+Finding a good clustering resolution is critical to detecting interacting populations. PICtR provides several different options for clustering. In addition to [Louvain](10.1088/1742-5468/2008/10/P10008), [SLM](https://doi.org/10.1140/epjb/e2013-40829-0), and [Leiden](https://doi.org/10.1038/s41598-019-41695-z) algorithms, which are implemented in the Seurat framework, [FlowSOM](https://doi.org/10.1002/cyto.a.22625), [flowMeans](https://doi.org/10.1002/cyto.a.21007) and [HDBSCAN]( https://doi.org/10.1007/978-3-642-37456-2_14) (Hierarchical Density-Based Spatial Clustering of Applications with Noise) are available. We recommend using Louvain or Leiden due to their successful identification of interaction populations, fast run times, and easily customizable resolution parameter. Note that Leiden requires the leidenalg python package.    
+
+The effect of the resolution parameter can be seen when comparing a resolution of 0.5 and 1 for the demo data set:
+```{r clustering_resolution, fig.show='hold'}
+DimPlot(demo_obj, group.by = "sketch_snn_res.0.5")
+DimPlot(demo_obj, group.by = "sketch_snn_res.1")
+```
+
+  
+The [Seurat tutorials](https://satijalab.org/seurat/) and [Heumos, Schaar, Lance et al. (2023)](https://doi.org/10.1038/s41576-023-00586-w) provide excellent guidance on clustering of single-cell data sets. 
+
 ## Selecting Interacting Populations 
+
+```{r, eval = F}
+ratio_cluster_plot(demo_obj, clusters = "clusters_predicted_obj")
+
+demo_obj <- select_dbt(demo_obj, clusters = "clusters_predicted_obj", quantile = 0.85)
+```
 
 ## Annotation 
 
 ## Predict Labels for the full Data Set
+
+```{r, eval = F}
+demo_obj <- predict_data(obj = demo_obj, 
+                      data_query = demo_obj, 
+                      ref_clusters = "sketch_snn_res.0.8",
+                      pred_name = "clusters_predicted_obj",
+                      assay_ref = "sketch", 
+                      assay_query = "FACS")
+```
 
 # Citing PICtR 
 
@@ -121,4 +149,8 @@ If you are using PICtR in your research, please consider citing:
 
 - Vonficht D, Jopp-Saile L, Yousefian S, Flore V et al. "Ultra-high scale cytometry-based cellular interaction mapping.", unpublished.
 
-
+# References  
+  
+- Hao, Y., Stuart, T., Kowalski, M.H. et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nat Biotechnol 42, 293–304 (2024). <https://doi.org/10.1038/s41587-023-01767-y>  
+- Heumos, L., Schaar, A.C., Lance, C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). <https://doi.org/10.1038/s41576-023-00586-w>  
+- Parks B (2024). BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0, https://github.com/bnprks/BPCells, <https://bnprks.github.io/BPCells> 
