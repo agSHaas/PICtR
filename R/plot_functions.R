@@ -13,7 +13,7 @@
 #' @param ratio_plot_color Color palette for \code{\link{ratio_cluster_plot}}.
 #' @param reduction Reduction to use for plotting, for example UMAP.
 #' @param alpha Alpha value for plotting.
-#' @param raster Convert points to raster format. If TURE plot is rasterized to raster.dpi=c(512, 512).
+#' @param raster Convert points to raster format. If TRUE plot is rasterized to raster.dpi=c(512, 512). Requires ggrastr.
 #' @param label_size Size of the labels plotted within the embedding.
 #' @param label_box Plot boxes around labels in the color of the cluster.
 #' @param assay The Seurat assay (default FACS).
@@ -23,7 +23,6 @@
 #' @importFrom pals parula
 #' @importFrom khroma colour
 #' @importFrom cowplot plot_grid
-#' @importFrom ggrastr geom_point_rast
 #'
 #' @export
 wrapper_for_plots <- function(obj=obj,
@@ -35,7 +34,7 @@ wrapper_for_plots <- function(obj=obj,
                               ratio_plot_color=c(Ratio_low="dodgerblue2", Ratio_high="gold2"),
                               reduction="umap",
                               alpha=1,
-                              raster=TRUE,
+                              raster=F,
                               label_size=3,
                               label_box=FALSE,
                               assay="sketch"){
@@ -145,7 +144,7 @@ wrapper_for_plots <- function(obj=obj,
 #' Split plot wrapper.
 #'
 #' Dimensional reduction (UMAP) plot split by a given parameter.
-#' Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_rast}}.
+#' Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_rast}}. Requires ggrastr.
 #'
 #' @param obj The Seurat object.
 #' @param group_by Parameter to group the plot by.
@@ -160,6 +159,12 @@ wrapper_for_plots <- function(obj=obj,
 split_plot_sketch <- function(obj,
                               group_by="seurat_clusters",
                               split_by="ratio_anno"){
+
+  if (!requireNamespace("ggrastr", quietly = TRUE)) {
+    stop("Package \"ggrastr\" must be installed to rasterize the plots.")
+  }
+
+
   cells <- rownames(obj@meta.data)[!is.na(obj$seurat_clusters)]
   meta <- obj@meta.data[cells,]
   meta <- cbind(meta, obj@reductions$umap@cell.embeddings[cells,])
@@ -233,7 +238,6 @@ ratio_cluster_plot <- function(obj,
 #'
 #' @return Plot
 #'
-#' @importFrom ggrastr geom_point_rast
 #'
 #' @export
 umap_rasterized <- function(data=obj,
@@ -254,6 +258,10 @@ umap_rasterized <- function(data=obj,
         summarise(center_x = mean(umap_1), center_y = mean(umap_2))
     }
     if(raster==TRUE){
+      if (!requireNamespace("ggrastr", quietly = TRUE)) {
+        stop("Package \"ggrastr\" must be installed to rasterize the plots.")
+      }
+
       data@meta.data %>%
         ggplot(aes(umap_1, umap_2, color=.data[[group.by]])) +
         ggrastr::geom_point_rast(size=0.2,color="black", raster.dpi=700)+
@@ -275,6 +283,11 @@ umap_rasterized <- function(data=obj,
       stop("Plase insert a umap_1 and umap_2 embedding values")
     }
     if(raster==TRUE){
+
+      if (!requireNamespace("ggrastr", quietly = TRUE)) {
+        stop("Package \"ggrastr\" must be installed to rasterize the plots.")
+      }
+
       data %>%
         ggplot(aes(umap_1, umap_2, color=.data[[group.by]])) +
         ggrastr::geom_point_rast(size=0.2,color="black", raster.dpi=700)+

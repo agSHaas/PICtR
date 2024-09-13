@@ -18,5 +18,5 @@ ggplot object
 }
 \description{
 Dimensional reduction (UMAP) plot split by a given parameter.
-Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_rast}}.
+Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_rast}}. Requires ggrastr.
 }

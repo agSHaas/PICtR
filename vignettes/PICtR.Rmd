@@ -115,9 +115,24 @@ Finding a good clustering resolution is critical to detecting interacting popula
 
 The effect of the resolution parameter can be seen when comparing a resolution of 0.5 and 1 for the demo data set:
 ```{r clustering_resolution, fig.show='hold'}
-DimPlot(demo_obj, group.by = "sketch_snn_res.0.5")
-DimPlot(demo_obj, group.by = "sketch_snn_res.1")
+DimPlot(demo_obj, group.by = "sketch_snn_res.0.5") + theme(legend.key.size = unit(3, 'pt'))
+DimPlot(demo_obj, group.by = "sketch_snn_res.1") + theme(legend.key.size = unit(3, 'pt'))
 ```
+
+We recommend to over-cluster the data to 
+
+```{r feature_plots, include=FALSE}
+features <- c("CD3", "CD4", "CD8", "CD19", "CD90.1", "CD45.1", "CD11b", "ratio")
+plots = vector('list', length(features))
+for(i in seq_along(features)){
+  plots[[i]] = FeaturePlot(demo_obj, features = features[i]) + labs(title = features[i]) & scale_color_viridis_c()
+}
+```
+
+```{r, echo=F, fig.show='hold'}
+for (p in plots) {print(p)}
+```
+
 
   
 The [Seurat tutorials](https://satijalab.org/seurat/) and [Heumos, Schaar, Lance et al. (2023)](https://doi.org/10.1038/s41576-023-00586-w) provide excellent guidance on clustering of single-cell data sets. 
@@ -154,3 +169,66 @@ If you are using PICtR in your research, please consider citing:
 - Hao, Y., Stuart, T., Kowalski, M.H. et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nat Biotechnol 42, 293–304 (2024). <https://doi.org/10.1038/s41587-023-01767-y>  
 - Heumos, L., Schaar, A.C., Lance, C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). <https://doi.org/10.1038/s41576-023-00586-w>  
 - Parks B (2024). BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0, https://github.com/bnprks/BPCells, <https://bnprks.github.io/BPCells> 
+
+```{r}
+dbt=c("B*cDC1"="#573B88",
+                   "B*cDC2"="#744598",
+                   "B*Granulo"="#9151A4",
+                   "B*Macro" ="#AD5FAD",
+                   "B*Mono" ="#C36FB1",
+                   "B*pDC"= "#E597B9",
+                   "B_IgD+*Granulo"="#F4C5CB",
+                   "B_IgD+*B"="#DDBFEE",
+                   "B_IgD+*NK" = "#C19FE0" ,
+                   "B*Prog" = "plum4",
+                   "Plasmablast*Granulo" = "#C42B79", 
+                   "Plasmablast*Macro"= "#A42276",
+                  
+                   "CD4_Ag_spec*B"= "#004529",
+                   "CD4_Ag_spec*CD4_Ag_spec/CD4"="#006837",
+                   "CD4_Ag_spec*CD8_Ag_spec" = "#238443" ,
+                   "CD4_Ag_spec*CD8_Ag_spec*B"= "#41AB5D",
+                   "CD4_Ag_spec*DC"="#78C679",
+                   "CD4_Ag_spec*Granulo"="#ADDD8E",        
+                   "CD4_Ag_spec*NK"="#D9F0A3",
+                   "CD4_Ag_spec*Plasmablast" ="#F7FCB9",
+                   "CD4_Ag_spec*CD24_hi" ="#CCCC8F",
+                   
+                   "CD4_pDC" ="#D7F9D0",                    
+                   "CD4*B" ="#BCE6B1",
+                   "CD4*B*Macro" ="#A0D494",
+                   "CD4*CD8"  ="#3BA455",
+                   "CD4*CD8*Myeloid"="#31BD67",
+                   "CD4*CD8*TCRgd"  ="#0D804A",
+                   "CD4*Plasmablast"="#18482F",
+                   
+                   "CD8_Ag_spec*B" ="#1D536A",
+                   "CD8_Ag_spec*CD24_hi"="#2A6779",
+                   "CD8_Ag_spec*CD4"="#3A7C89",
+                   "CD8_Ag_spec*CD8"="#4B9197",
+                   "CD8_Ag_spec*Granulo"="#61A6A4",
+                   "CD8_Ag_spec*Myeloid" ="#7BBCB0",
+                   "CD8_Ag_spec*CD4*Myeloid"= "#97D0BB",
+                   "CD8_Ag_spec*NK"= "#B4E5C8",
+                   "CD8_Ag_spec*Plasmablast"=  "#D2FBD4",
+                   "CD8*B"="#81BADA" ,  
+                   "CD8*CD4*B"="#084D96", 
+                   "CD8*Plasmablast"="#3787C0",
+                   "TCRgd*B"="#08306B",
+                  
+                   "NK*B*CD4" = "#FBE6C5",
+                   
+                   "NK*B*Macro" ="#F3B093",
+                   "NK*B*Myeloid" ="#EF9386",
+                   "NK*Myeloid" = "#BF5268",
+                   "NK*CD4" = "#DC7176",
+                   "NK*My_Prog"= "#D06170",
+                   "B*NK"="#A4435F",
+                   
+                   "B_IgD+*pDC"="#8A3555",
+                   "NK*Plasmablast"= "#70284A",
+                   "Granulo*CD4"  =  "#FAB782",
+                   "Granulo*CD8"  =  "#FCDE9C"
+                    )
+```
+

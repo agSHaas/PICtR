@@ -19,7 +19,6 @@
 #' @references Hartigan, J. A., & Wong, M. A. (1979). Algorithm AS 136: A K-Means Clustering Algorithm. Journal of the Royal Statistical Society. Series C (Applied Statistics), 28(1), 100–108. \url{https://doi.org/10.2307/2346830}.
 #' @references G. Landini, D.A. Randell, S. Fouad, and A. Galton. Automatic thresholding from the gradients of region boundaries. Journal of Microscopy, 265(2), 185-195.
 #'
-#' @importFrom autothresholdr auto_thresh
 #'
 #' @export
 calculateThreshold <- function(data,
@@ -199,7 +198,11 @@ calculateThreshold <- function(data,
                            "Triangle",
                            "Yen")) {
 
-    threshold <- auto_thresh(as.integer(data), method = method)[1]
+    if (!requireNamespace("autothresholdr", quietly = TRUE)) {
+      stop("Package \"autothresholdr\" must be installed to use this thresholding method.")
+    }
+
+    threshold <- autothresholdr::auto_thresh(as.integer(data), method = method)[1]
     return(threshold)
   }
 }

@@ -5,13 +5,13 @@
 \alias{demo_obj}
 \title{Demo Seurat object}
 \format{
-A Seurat object with 161287 samples (cells) and 31 Features. n = 5000 cells were sketched.
+A Seurat object with 161287 samples (cells) and 16 Features. n = 5000 cells were sketched.
 \describe{
-  \item{meta.data}{Contains all scatter and fluorescence markers,
+  \item{meta.data}{Contains all scatter and the demo subset of fluorescence markers,
   the calculated FSC.A/FSC.H ratio,
   the classification into ratio_high/ratio_low cells (ratio_anno),
-  the clustering solutions for sketched cells with resolutions of 0.8 and 1 (sketch_snn_res),
-  and predicted cluster labels for all cells (clusters_predicted_obj).}
+  the clustering solutions for sketched cells with resolutions of 0.5 and 1 (sketch_snn_res),
+  and predicted cluster labels for all cells (clusters_predicted).}
   \item{assay "FACS"}{The Seurat assay for n = 161287 cells.}
   \item{assay "sketch"}{The Seurat assay for n = 5000 sketched cells.}
   \item{reductions}{Calculated dimensional reductions (PCA, UMAP).}

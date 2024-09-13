@@ -43,7 +43,6 @@
 #' @references Campello, R.J.G.B., Moulavi, D., Sander, J. (2013). Density-Based Clustering Based on Hierarchical Density Estimates. In: Pei, J., Tseng, V.S., Cao, L., Motoda, H., Xu, G. (eds) Advances in Knowledge Discovery and Data Mining. PAKDD 2013. Lecture Notes in Computer Science(), vol 7819. Springer, Berlin, Heidelberg. \url{https://doi.org/10.1007/978-3-642-37456-2_14}
 #'
 #' @import Seurat
-#' @importFrom autothresholdr auto_thresh
 #'
 #'
 #' @export
@@ -124,7 +123,8 @@ sketch_wrapper <- function(channel=channel,
 
   # add meta data and add features to meta data as well
   if(!is.null(meta_data)){
-    obj@meta.data <- cbind(obj@meta.data, meta_data, channel)
+    meta_data <- meta_data %>% dplyr::select(-(intersect(colnames(channel), colnames(meta_data)))) # remove cols present in both meta_data and channel
+    obj@meta.data <- cbind(obj@meta.data, meta_data, channel) # add provided meta_data and all channel values to meta.data
     obj$ratio <- channel$ratio
   }else{
     obj@meta.data <- cbind(obj@meta.data, channel)

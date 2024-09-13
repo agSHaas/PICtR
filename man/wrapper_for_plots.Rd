@@ -14,7 +14,7 @@ wrapper_for_plots(
   ratio_plot_color = c(Ratio_low = "dodgerblue2", Ratio_high = "gold2"),
   reduction = "umap",
   alpha = 1,
-  raster = TRUE,
+  raster = F,
   label_size = 3,
   label_box = FALSE,
   assay = "sketch"
@@ -40,7 +40,7 @@ Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class chara
 
 \item{alpha}{Alpha value for plotting.}
 
-\item{raster}{Convert points to raster format. If TURE plot is rasterized to raster.dpi=c(512, 512).}
+\item{raster}{Convert points to raster format. If TRUE plot is rasterized to raster.dpi=c(512, 512). Requires ggrastr.}
 
 \item{label_size}{Size of the labels plotted within the embedding.}
 
