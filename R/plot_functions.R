@@ -20,6 +20,7 @@
 #'
 #' @return A list with the requested plots.
 #'
+#' @import ggplot2
 #' @importFrom pals parula
 #' @importFrom khroma colour
 #' @importFrom cowplot plot_grid

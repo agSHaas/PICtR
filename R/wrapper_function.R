@@ -43,6 +43,7 @@
 #' @references Campello, R.J.G.B., Moulavi, D., Sander, J. (2013). Density-Based Clustering Based on Hierarchical Density Estimates. In: Pei, J., Tseng, V.S., Cao, L., Motoda, H., Xu, G. (eds) Advances in Knowledge Discovery and Data Mining. PAKDD 2013. Lecture Notes in Computer Science(), vol 7819. Springer, Berlin, Heidelberg. \url{https://doi.org/10.1007/978-3-642-37456-2_14}
 #'
 #' @import Seurat
+#' @import dplyr
 #'
 #'
 #' @export
@@ -78,12 +79,14 @@ sketch_wrapper <- function(channel=channel,
   # check if BP cells was already run
   if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir) & overwrite == F){
     stop("Seems like BPcells was already run, either remove the folder containing compressed data, define a path (BPcell_dir) to read in compressed files, or specify overwrite = TRUE")
-  }else if(dir.exists(paste0(working_dir, "/counts")) | !is.null(BPcell_dir)){
+  }else if(!is.null(BPcell_dir) & dir.exists(paste0(working_dir, "/counts"))){
     message("The pre-exisiting compressed data generated with BPCells will be used")
-  } else if(overwrite == T) {
+  } else if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir) & overwrite == T) {
     message("The BPCells directory will be overwritten")
   }
 
+  channel <- as.data.frame(channel)
+  meta_data <- as.data.frame(meta_data)
   # calculate FSC area to height ratio
   if(ratio){
     message("Calculation of Ratio")

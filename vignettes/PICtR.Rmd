@@ -28,8 +28,8 @@ Many fundamental processes in life are shaped by physical interactions between c
 
 - The data stems from a case-control setting
 - All samples were treated the same during sample processing and acquisition, e.g. regarding equal cell concentrations, incubation times, and flow rates 
-- Samples should not be pooled across conditions, organs or donors
-- For *in vivo* experiments, cells with a strong affinity to interact can artificially interact if they are brought into proximity during sample preparation, even if they were physically separated *in vivo*. These interactions may still be biologically meaningful, but take this into account when interpreting the results.  
+- Pooling across conditions, organs or donors should be avoided
+- For *in vivo* experiments, cells with a strong affinity to interact can artificially interact if they are brought into proximity during sample preparation, even if they were physically separated *in vivo*. These interactions may still be biologically meaningful, but this should be taken into account when interpreting the results.  
 
 
 # Installation
@@ -47,6 +47,10 @@ if (!require("BPCells", quietly = TRUE)) {
 
 To install PICtR please download the source package and use: 
 ```{r, eval=FALSE}
+if (!require("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
 remotes::install_local("path_to_file", dependencies = T)
 ```
 
@@ -67,6 +71,7 @@ Some other packages are not necessarily required, but expand the functionality o
 - [Spectre](https://github.com/ImmuneDynamics/Spectre)
 - [ComplexHeatmap](https://www.bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html)  
 - [cytoMEM](https://www.bioconductor.org/packages/release/bioc/html/cytoMEM.html)  
+- [autothresholdr](https://github.com/rorynolan/autothresholdr)
 
 
 # PICtR Pipeline
@@ -77,21 +82,47 @@ Data from FCS files should be unmixed/compensated and transformed (for example u
 
 ## Example Data
 
-We provide a small demo data set from the spleen of one lymphocytic choriomeningitis virus (LCMV) infected mouse. Five days prior to infection, LCMV-specific T cells were transferred into the host, so that we can differentiate between antigen-specific interactions between immune cells and bystander interactions. The samples were analysed using high parametric spectral flow cytometry with n=26 markers, allowing us to detect all important cell types across the immune cell landscape. You can read more about the experiment in the manuscript accompanying the PICtR package. 
+We provide a small demo data set from the spleens of lymphocytic choriomeningitis virus (LCMV) infected mice and controls. Five days prior to infection, LCMV-specific CD4 (CD90_1-positive) T cells were transferred into the hosts. The samples were analysed using high parametric spectral flow cytometry with *n* = 36 markers, allowing the detection of all important cell types across the immune cell landscape. For the demo data set, we will focus on 10 different markers:
+  
+- CD3: T cell marker  
+- MHCII: Major histocompatibility complex II, expressed on antigen-presenting cells   
+- CD11c: Dendritic cell (DC) marker  
+- CD11b: Myeloid cell marker
+- CD45_2: Pan-hematopoetic marker, allelic form 2  
+- CD19: B cell marker   
+- Ly6G: Neutrophil marker  
+- CD90_1: Marker for LCMV-specific CD4 T cells  
+- CD4: Expressed on CD4 T cells and some myeloid populations  
+- CD8: Expressed on CD8 T cells, some natural killer cells (NK) and some dendritic cells  
+
+Details on the experimental setup can be found in the manuscript accompanying the PICtR package.
 
 Demo data can be loaded with `data(demo_lcmv)`. See `?demo_lcmv` for details.  
 
 
 ## Subsampling, Dimensional Reduction and Clustering 
 
-The pipeline starts with a data frame with the dimensionality cells x flow cytometry parameters. First, we calculate the FSC ratio based on the forward scatter area (FSC-A) and forward scatter height (FSC-H) parameters. The FSC ratio is highly discriminatory for singlets and multiplets, and will help us to select interacting populations later on. We find a threshold that classifies all events as having a low or high FSC ratio using thresholding methods such as Otsu thresholding.
+The pipeline starts with a data frame with the dimensionality cells x flow cytometry parameters. First, we calculate the FSC ratio based on the forward scatter area (FSC-A) and forward scatter height (FSC-H) parameters. The FSC ratio is highly discriminatory for singlets and multiplets, and will help us to select interacting populations after clustering. We find a threshold that classifies all events as having a low or high FSC ratio using thresholding methods such as Otsu thresholding.  
+
+```{r lib, results='hide', message=F, warning=F, error=F}
+library(PICtR)
+```
+
+
+```{r FSC_ratio, fig.show='hold', fig.width=7}
+threshold <- calculateThreshold((demo_lcmv$FSC.A/demo_lcmv$FSC.H), method = "otsu")
+
+hist(demo_lcmv$FSC.A/demo_lcmv$FSC.H, breaks = 2000)
+abline(v = threshold)
+```
+
   
-Then, we create a Seurat object using forward scatter parameters, side scatter parameters, cell type markers and the FSC ratio as features. We store the counts layer on-disk using [BPCells](https://github.com/bnprks/BPCells), enabling us to analyse millions of events while keeping computational time manageable. Thus far, we have analysed up to 60 million events with PICtR. 
+Then, we create a [Seurat](https://satijalab.org/seurat/) object using forward scatter parameters, side scatter parameters, cell type markers and the FSC ratio as features. Several steps of the PICtR workflow make use of the Seurat framework.  
+We store the counts layer on-disk using [BPCells](https://github.com/bnprks/BPCells), enabling us to analyse millions of events while keeping computational time manageable. Thus far, we have analysed data sets with more than 60 million events with PICtR.  
 In addition, we sample a representative subset of cells using atomic sketching as implemented in [Seurat](https://satijalab.org/seurat/articles/parsebio_sketch_integration). In contrast to random sampling, sketching retains both abundant and rare cell types, including cellular interactions. For the demo data set, we sample `n_sketch_cells = 5000` cells. We use the sketched data set for dimensional reduction and clustering, before predicting cell type and interaction labels back to the full data set later on.  
 
-PICtR provides a convenient wrapper function for these steps: 
-```{r wrapper}
-library(PICtR, quietly = T)
+PICtR provides a convenient wrapper function for these steps, including calculation of the FSC ratio threshold: 
+```{r wrapper, warning=F}
 data(demo_lcmv)
 
 demo_obj <- sketch_wrapper(demo_lcmv,
@@ -100,7 +131,7 @@ demo_obj <- sketch_wrapper(demo_lcmv,
                        FSC.A = "FSC.A", 
                        FSC.H = "FSC.H", 
                        working_dir = getwd(),
-                       resolution = c(0.5, 1),
+                       resolution = c(0.5, 0.8, 1),
                        clst_algorithm = 1,
                        n_sketch_cells = 5000,
                        obj_name = "obj_sketched_non_projected",
@@ -111,53 +142,219 @@ demo_obj <- sketch_wrapper(demo_lcmv,
 
 ### Guidelines for Clustering 
 
-Finding a good clustering resolution is critical to detecting interacting populations. PICtR provides several different options for clustering. In addition to [Louvain](10.1088/1742-5468/2008/10/P10008), [SLM](https://doi.org/10.1140/epjb/e2013-40829-0), and [Leiden](https://doi.org/10.1038/s41598-019-41695-z) algorithms, which are implemented in the Seurat framework, [FlowSOM](https://doi.org/10.1002/cyto.a.22625), [flowMeans](https://doi.org/10.1002/cyto.a.21007) and [HDBSCAN]( https://doi.org/10.1007/978-3-642-37456-2_14) (Hierarchical Density-Based Spatial Clustering of Applications with Noise) are available. We recommend using Louvain or Leiden due to their successful identification of interaction populations, fast run times, and easily customizable resolution parameter. Note that Leiden requires the leidenalg python package.    
+Finding a good clustering resolution is critical to detecting and annotating interacting populations. PICtR provides several different options for clustering: In addition to [Louvain](10.1088/1742-5468/2008/10/P10008), [SLM](https://doi.org/10.1140/epjb/e2013-40829-0), and [Leiden](https://doi.org/10.1038/s41598-019-41695-z) algorithms, which are implemented in the Seurat framework, [FlowSOM](https://doi.org/10.1002/cyto.a.22625), [flowMeans](https://doi.org/10.1002/cyto.a.21007) and [HDBSCAN]( https://doi.org/10.1007/978-3-642-37456-2_14) (Hierarchical Density-Based Spatial Clustering of Applications with Noise) are available. We recommend using Louvain or Leiden due to their successful identification of interaction populations, fast run times, and easy customization of the resolution parameter. Note that Leiden requires the leidenalg python package.    
 
-The effect of the resolution parameter can be seen when comparing a resolution of 0.5 and 1 for the demo data set:
+The effect of the resolution parameter can be seen when comparing a resolution of 0.5, 0.8 and 1 (Louvain clustering) for the demo data set:
 ```{r clustering_resolution, fig.show='hold'}
-DimPlot(demo_obj, group.by = "sketch_snn_res.0.5") + theme(legend.key.size = unit(3, 'pt'))
-DimPlot(demo_obj, group.by = "sketch_snn_res.1") + theme(legend.key.size = unit(3, 'pt'))
+DimPlot(demo_obj, group.by = "sketch_snn_res.0.5", label = T) + theme(legend.position = "none")
+DimPlot(demo_obj, group.by = "sketch_snn_res.0.8", label = T) + theme(legend.position = "none")
+DimPlot(demo_obj, group.by = "sketch_snn_res.1", label = T) + theme(legend.position = "none")
 ```
 
-We recommend to over-cluster the data to 
+  
+We recommend to over-cluster the data to ensure the detection of small populations, including cellular interactions. So if you expect roughly 20 different cell types based on the flow cytometry panel, aim for a cluster resolution that provides you with more than 20 clusters. Subsequently, during annotation, clusters representing the same cell type can be merged. Alternatively, for clusters that represent populations of interest that require higher resolutions, sub-clustering can be performed (`FindSubCluster()`). Different resolutions might be tested before deciding for the best fit.
+  
+It can also be helpful to compare your cluster boundaries to feature plots of the markers used for annotation to see if you capture all relevant patterns. For our demo data set, a resolution of 0.5 seems to be sufficient:
 
 ```{r feature_plots, include=FALSE}
-features <- c("CD3", "CD4", "CD8", "CD19", "CD90.1", "CD45.1", "CD11b", "ratio")
+features <- c("CD3", "MHCII", "CD11c", "CD11b", 
+              "CD45_2", "CD19", "Ly6G", 
+              "CD90_1", "CD4", "CD8", "ratio")
 plots = vector('list', length(features))
 for(i in seq_along(features)){
-  plots[[i]] = FeaturePlot(demo_obj, features = features[i]) + labs(title = features[i]) & scale_color_viridis_c()
+  plots[[i]] = FeaturePlot(demo_obj, features = features[i]) + 
+    labs(title = features[i]) + 
+    theme(legend.position = "none", axis.text = element_blank()) & scale_color_viridis_c()
 }
 ```
 
-```{r, echo=F, fig.show='hold'}
+```{r feature_plots_code, eval=F}
+FeaturePlot(demo_obj, features = c("CD3", "MHCII", "CD11c", "CD11b", 
+                                   "CD45_2", "CD19", "Ly6G", 
+                                   "CD90_1", "CD4", "CD8", "ratio"))
+```
+
+```{r feature_plots_fig, echo=F, fig.show='hold', fig.height=2, fig.width=2}
+for (p in plots) {print(p)}
+```
+  
+  
+The [Seurat tutorials](https://satijalab.org/seurat/) and [Heumos, Schaar, Lance et al. (2023)](https://doi.org/10.1038/s41576-023-00586-w) provide excellent guidance on clustering of single-cell data sets. 
+
+## Predict Labels for the full Data Set
+
+Currently, our cluster labels only exist for the sketched subset of cells, but we can predict the labels for the entire data set using linear discriminant analysis (LDA) as implemented in the `predict_data()` function:
+```{r predict}
+demo_obj <- predict_data(obj = demo_obj, 
+                      data_query = demo_obj, 
+                      ref_clusters = "sketch_snn_res.0.5",
+                      pred_name = "clusters_predicted",
+                      assay_ref = "sketch", 
+                      assay_query = "FACS")
+```
+
+## Selecting Interacting Populations
+
+Now we can select the clusters that represent interacting cells. For each cluster, we determine the proportion of cells above and below the FSC ratio threshold that we calculated earlier:
+
+```{r ratio_cluster_plot, fig.show='hold', fig.width=7}
+ratio_cluster_plot(demo_obj, clusters = "clusters_predicted")
+```
+
+  
+As seen from the bar plot, clusters 3, 7, 10, 11, and 13 predominantly contain cells that exceed the FSC ratio threshold. In most cases, we can automatically select the top 20 % of clusters that contain most FSC ratio-high cells using the `select_dbt()` function. However, for small data sets like our demo data set, this might not be appropriate. We recommend to look at the `ratio_cluster_plot()` to confirm any selection you make. 
+  
+  
+## Singlet Annotation 
+
+Based on the previous analysis, clusters 3, 7, 10, 11 and 13 have been identified as representing interacting cells. Now, we can annotate the remaining clusters with the help of the feature plots (see above) or ridge plots: 
+
+```{r ridge plots, fig.width=7, fig.height=10}
+Idents(demo_obj) <- "clusters_predicted"
+RidgePlot(demo_obj, features = Features(demo_obj)) & theme(axis.text = element_text(size = 7))
+```
+  
+Based on the marker expression, we can annotate all clusters as follows: 
+```{r annotation, fig.show='hold', fig.width=7, fig.height=5}
+demo_obj@meta.data <- demo_obj@meta.data %>% 
+  mutate(celltype = case_when(clusters_predicted == "0" ~ "B cells", 
+                              clusters_predicted == "1" ~ "CD8 T cells", 
+                              clusters_predicted == "2" ~ "DCs", 
+                              clusters_predicted == "3" ~ "interacting cells", 
+                              clusters_predicted == "4" ~ "LCMV-spec CD4 T cells", 
+                              clusters_predicted == "5" ~ "Myeloid cells", 
+                              clusters_predicted == "6" ~ "CD4 T cells", 
+                              clusters_predicted == "7" ~ "interacting cells", 
+                              clusters_predicted == "8" ~ "Myeloid cells", 
+                              clusters_predicted == "9" ~ "Neutrophils",
+                              clusters_predicted == "10" ~ "interacting cells", 
+                              clusters_predicted == "11" ~ "interacting cells", 
+                              clusters_predicted == "12" ~ "DCs", 
+                              clusters_predicted == "13" ~ "interacting cells"))
+
+DimPlot(demo_obj, group.by = "celltype", label =T)
+```
+
+## Annotation of Interacting Populations 
+  
+Annotating the interacting cells is easier if we subset and re-cluster them: 
+```{r interacting_analysis, fig.show='hold', results='hold', collapse=T}
+# subset interacting cells
+DefaultAssay(demo_obj) <- "FACS"
+Idents(demo_obj) <- "celltype"
+interact_obj <- subset(demo_obj, idents = "interacting cells")
+
+# repeat the Seurat workflow 
+n_dims <- length(Features(demo_obj))
+interact_obj <- interact_obj %>%
+  FindVariableFeatures() %>%
+  ScaleData() %>%
+  RunPCA(npcs=n_dims, approx=F) %>%
+  FindNeighbors(dims = 1:n_dims) %>% 
+  FindClusters(resolution = c(0.5, 0.8, 1)) %>% 
+  RunUMAP(dims = 1:n_dims, return.model = T)
+
+# plot the different clustering resolutions
+DimPlot(interact_obj, group.by = "FACS_snn_res.0.5", label = T) + theme(legend.position = "none")
+DimPlot(interact_obj, group.by = "FACS_snn_res.0.8", label = T) + theme(legend.position = "none")
+DimPlot(interact_obj, group.by = "FACS_snn_res.1", label = T) + theme(legend.position = "none")
+```
+
+
+```{r feature_plots_interacting, include=FALSE}
+features <- c("CD3", "MHCII", "CD11c", "CD11b", 
+              "CD45_2", "CD19", "Ly6G", 
+              "CD90_1", "CD4", "CD8", "ratio")
+plots = vector('list', length(features))
+for(i in seq_along(features)){
+  plots[[i]] = FeaturePlot(interact_obj, features = features[i]) + 
+    labs(title = features[i]) + 
+    theme(legend.position = "none", axis.text = element_blank()) & scale_color_viridis_c()
+}
+```
+
+```{r feature_plots_code_interacting, eval=F}
+FeaturePlot(interact_obj, features = c("CD3", "MHCII", "CD11c", "CD11b", 
+                                   "CD45_2", "CD19", "Ly6G", 
+                                   "CD90_1", "CD4", "CD8", "ratio"))
+```
+
+```{r feature_plots_fig_interacting, echo=F, fig.show='hold', fig.height=2, fig.width=2}
 for (p in plots) {print(p)}
 ```
 
 
   
-The [Seurat tutorials](https://satijalab.org/seurat/) and [Heumos, Schaar, Lance et al. (2023)](https://doi.org/10.1038/s41576-023-00586-w) provide excellent guidance on clustering of single-cell data sets. 
+We can move forward with a resolution of 0.5, but there is a pattern of CD8 within cluster 4 that is not well represented in this clustering resolution. We can sub-cluster this population on the same shared-nearest-neighbor graph (`FACS_snn`) using `FindSubCluster()` with a low resolution: 
 
-## Selecting Interacting Populations 
+```{r subcluster, fig.show='hold', results='hold'}
+Idents(interact_obj) <- "FACS_snn_res.0.5"
+interact_obj <- FindSubCluster(interact_obj, cluster = "4", 
+                               graph.name = "FACS_snn", resolution = 0.25)
 
-```{r, eval = F}
-ratio_cluster_plot(demo_obj, clusters = "clusters_predicted_obj")
-
-demo_obj <- select_dbt(demo_obj, clusters = "clusters_predicted_obj", quantile = 0.85)
+# plot 
+DimPlot(interact_obj, group.by = "sub.cluster", label = T)
 ```
 
-## Annotation 
+  
+Now we can annotate the interacting cells based on mutually exclusive marker expression. CD19 for example is only expressed on B cells, while CD3 and CD4 expression is found on CD4+ T cells. When CD19, CD3 and CD4 are simultaneously expressed within an interacting cluster, we know that the interaction partners are B cells and CD4+ T cells. We will label interactions with an asterisk (*): 
 
-## Predict Labels for the full Data Set
-
-```{r, eval = F}
-demo_obj <- predict_data(obj = demo_obj, 
-                      data_query = demo_obj, 
-                      ref_clusters = "sketch_snn_res.0.8",
-                      pred_name = "clusters_predicted_obj",
-                      assay_ref = "sketch", 
-                      assay_query = "FACS")
+```{r ridge_plots_interacting, fig.width=7, fig.height=10}
+Idents(interact_obj) <- "sub.cluster"
+RidgePlot(interact_obj, features = Features(interact_obj)) & 
+  theme(axis.text = element_text(size = 7))
 ```
 
+
+```{r anno_interacting, include=F}
+interact_obj@meta.data <- interact_obj@meta.data %>% 
+  mutate(interact_type = case_when(sub.cluster == "0" ~ "B cells only", 
+                              sub.cluster == "1" ~ "B cells only", 
+                              sub.cluster == "2" ~ "B*DC", 
+                              sub.cluster == "3" ~ "B*CD4 T", 
+                              sub.cluster == "4_0" ~ "DC*LCMV-spec CD4 T", 
+                              sub.cluster == "4_1" ~ "B*LCMV-spec CD4 T", 
+                              sub.cluster == "4_2" ~ "B*DC*LCMV-spec CD4 T", 
+                              sub.cluster == "5" ~ "CD4 T*DC", 
+                              sub.cluster == "6" ~ "B*CD8 T", 
+                              sub.cluster == "7" ~ "B*Neutrophils", 
+                              sub.cluster == "8" ~ "CD4*CD8", 
+                              sub.cluster == "9" ~ "B*Myeloid",
+                              sub.cluster == "10" ~ "remove"))
+
+DimPlot(interact_obj, group.by = "interact_type", label =T)
+```
+
+  
+Cluster 10 has a lower CD45_2 expression and a low ratio, so we will remove it from the interacting landscape. Clusters 0 and 1 do not exhibit mutually exclusive marker expression - both populations only express B cell markers. It is likely that they represent homotypic B cell interactions, but we cannot rule out alternative explanations such as preceding cytokinesis or interactions with cells that we do not have a marker for. So we will exclude these populations: 
+
+```{r interacting_umap, fig.show='hold', results='hold', fig.width=7, fig.height=5, collapse=T}
+keep <- interact_obj@meta.data %>% 
+  dplyr::filter(interact_type %in% c("B*Neutrophils", 
+                                     "CD4*CD8", 
+                                     "B*CD4 T",             
+                                     "B*Myeloid",
+                                     "B*DC",
+                                     "DC*LCMV-spec CD4 T",
+                                     "B*LCMV-spec CD4 T",
+                                     "B*DC*LCMV-spec CD4 T",
+                                     "B*CD8 T",
+                                     "CD4 T*DC"))
+interact_obj <- subset(interact_obj, cells = rownames(keep))
+
+interact_obj <- interact_obj %>% 
+  RunUMAP(dims = 1:n_dims, return.model = T)
+
+# plot 
+DimPlot(interact_obj, group.by = "interact_type", label = T)
+```
+
+
+## Downstream Analysis
+
+After annotating the singlet and interacting landscapes, you can continue with downstream analyses according to your experimental setup. Often, this will involve the quantification of interactions in the case and control conditions to test for significant differences.  
+  
+  
 # Citing PICtR 
 
 If you are using PICtR in your research, please consider citing:  
@@ -169,66 +366,4 @@ If you are using PICtR in your research, please consider citing:
 - Hao, Y., Stuart, T., Kowalski, M.H. et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nat Biotechnol 42, 293–304 (2024). <https://doi.org/10.1038/s41587-023-01767-y>  
 - Heumos, L., Schaar, A.C., Lance, C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). <https://doi.org/10.1038/s41576-023-00586-w>  
 - Parks B (2024). BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0, https://github.com/bnprks/BPCells, <https://bnprks.github.io/BPCells> 
-
-```{r}
-dbt=c("B*cDC1"="#573B88",
-                   "B*cDC2"="#744598",
-                   "B*Granulo"="#9151A4",
-                   "B*Macro" ="#AD5FAD",
-                   "B*Mono" ="#C36FB1",
-                   "B*pDC"= "#E597B9",
-                   "B_IgD+*Granulo"="#F4C5CB",
-                   "B_IgD+*B"="#DDBFEE",
-                   "B_IgD+*NK" = "#C19FE0" ,
-                   "B*Prog" = "plum4",
-                   "Plasmablast*Granulo" = "#C42B79", 
-                   "Plasmablast*Macro"= "#A42276",
-                  
-                   "CD4_Ag_spec*B"= "#004529",
-                   "CD4_Ag_spec*CD4_Ag_spec/CD4"="#006837",
-                   "CD4_Ag_spec*CD8_Ag_spec" = "#238443" ,
-                   "CD4_Ag_spec*CD8_Ag_spec*B"= "#41AB5D",
-                   "CD4_Ag_spec*DC"="#78C679",
-                   "CD4_Ag_spec*Granulo"="#ADDD8E",        
-                   "CD4_Ag_spec*NK"="#D9F0A3",
-                   "CD4_Ag_spec*Plasmablast" ="#F7FCB9",
-                   "CD4_Ag_spec*CD24_hi" ="#CCCC8F",
-                   
-                   "CD4_pDC" ="#D7F9D0",                    
-                   "CD4*B" ="#BCE6B1",
-                   "CD4*B*Macro" ="#A0D494",
-                   "CD4*CD8"  ="#3BA455",
-                   "CD4*CD8*Myeloid"="#31BD67",
-                   "CD4*CD8*TCRgd"  ="#0D804A",
-                   "CD4*Plasmablast"="#18482F",
-                   
-                   "CD8_Ag_spec*B" ="#1D536A",
-                   "CD8_Ag_spec*CD24_hi"="#2A6779",
-                   "CD8_Ag_spec*CD4"="#3A7C89",
-                   "CD8_Ag_spec*CD8"="#4B9197",
-                   "CD8_Ag_spec*Granulo"="#61A6A4",
-                   "CD8_Ag_spec*Myeloid" ="#7BBCB0",
-                   "CD8_Ag_spec*CD4*Myeloid"= "#97D0BB",
-                   "CD8_Ag_spec*NK"= "#B4E5C8",
-                   "CD8_Ag_spec*Plasmablast"=  "#D2FBD4",
-                   "CD8*B"="#81BADA" ,  
-                   "CD8*CD4*B"="#084D96", 
-                   "CD8*Plasmablast"="#3787C0",
-                   "TCRgd*B"="#08306B",
-                  
-                   "NK*B*CD4" = "#FBE6C5",
-                   
-                   "NK*B*Macro" ="#F3B093",
-                   "NK*B*Myeloid" ="#EF9386",
-                   "NK*Myeloid" = "#BF5268",
-                   "NK*CD4" = "#DC7176",
-                   "NK*My_Prog"= "#D06170",
-                   "B*NK"="#A4435F",
-                   
-                   "B_IgD+*pDC"="#8A3555",
-                   "NK*Plasmablast"= "#70284A",
-                   "Granulo*CD4"  =  "#FAB782",
-                   "Granulo*CD8"  =  "#FCDE9C"
-                    )
-```
 

@@ -5,21 +5,21 @@
 \alias{demo_lcmv}
 \title{Demo data set}
 \format{
-161287 observations (cells) and 15 variables (markers, scaled to 0-1023).
+72620 observations (cells) and 14 variables (markers, scaled to 0-1023).
 \describe{
   \item{FSC.A}{Forward scatter area}
   \item{FSC.H}{Forward scatter height}
   \item{SSC.A}{Side scatter area}
   \item{SSC.H}{Side scatter height}
-  \item{fluorescence markers}{CD3, MHCII, CD11c, CD11b, CD45.1, CD45.2, CD19, Ly6G, CD90.1, CD4, CD8}
+  \item{fluorescence markers}{CD3, MHCII, CD11c, CD11b, CD45_2, CD19, Ly6G, CD90_1, CD4, CD8}
 }
 }
 \usage{
 data(demo_lcmv)
 }
 \description{
-Demo data set for the PICtR workflow containing 10 percent randomly sampled cells from the spleen of one LCMV infected mouse (day 7, Figure 5 and 6).
-For demonstration purposes, only CD3, MHCII, CD11c, CD11b, CD45.1, CD45.2, CD19, Ly6G, CD90.1, CD4, and CD8 are included as cell type markers.
+Demo data set for the PICtR workflow containing sampled cells from the spleens of LCMV infected mice (day 7) and control.
+For demonstration purposes, only CD3, MHCII, CD11c, CD11b, CD45_2, CD19, Ly6G, CD90_1, CD4, and CD8 are included as cell type markers.
 }
 \references{
 Vonficht, Jopp-Saile, Yousefian, Flore et al. (2024). Ultra-high scale cytometry-based cellular interaction mapping.
