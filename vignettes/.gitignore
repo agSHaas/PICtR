@@ -1,2 +1,4 @@
 *.html
 *.R
+counts/
+obj_sketched_non_projected.rds

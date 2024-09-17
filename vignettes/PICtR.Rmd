@@ -202,7 +202,7 @@ ratio_cluster_plot(demo_obj, clusters = "clusters_predicted")
 ```
 
   
-As seen from the bar plot, clusters 3, 7, 10, 11, and 13 predominantly contain cells that exceed the FSC ratio threshold. In most cases, we can automatically select the top 20 % of clusters that contain most FSC ratio-high cells using the `select_dbt()` function. However, for small data sets like our demo data set, this might not be appropriate. We recommend to look at the `ratio_cluster_plot()` to confirm any selection you make. 
+As seen from the bar plot, clusters 3, 7, 10, 11, and 13 predominantly contain cells that exceed the FSC ratio threshold. The `select_dbt()` function can be used to select these clusters. We recommend investigating  the `ratio_cluster_plot()` to confirm any selection you make.
   
   
 ## Singlet Annotation 
