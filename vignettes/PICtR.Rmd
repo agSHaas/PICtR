@@ -51,7 +51,7 @@ if (!require("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
 
-remotes::install_local("path_to_file", dependencies = T)
+remotes::install_local("path_to_file", dependencies = T, build_vignettes = T)
 ```
 
 Or, upon publication, install PICtR from GitHub:
@@ -297,16 +297,15 @@ DimPlot(interact_obj, group.by = "sub.cluster", label = T)
 ```
 
   
-Now we can annotate the interacting cells based on mutually exclusive marker expression. CD19 for example is only expressed on B cells, while CD3 and CD4 expression is found on CD4+ T cells. When CD19, CD3 and CD4 are simultaneously expressed within an interacting cluster, we know that the interaction partners are B cells and CD4+ T cells. We will label interactions with an asterisk (*): 
+Now we can annotate the interacting cells based on mutually exclusive marker expression. CD19 for example is only expressed on B cells, while CD3 and CD4 expression is found on CD4+ T cells. When CD19, CD3 and CD4 are simultaneously expressed within an interacting cluster, we know that the interaction partners are B cells and CD4+ T cells. We will label interactions with an asterisk (*):
 
 ```{r ridge_plots_interacting, fig.width=7, fig.height=10}
 Idents(interact_obj) <- "sub.cluster"
 RidgePlot(interact_obj, features = Features(interact_obj)) & 
   theme(axis.text = element_text(size = 7))
 ```
-
-
-```{r anno_interacting, include=F}
+  
+```{r anno_interacting, collapse=T}
 interact_obj@meta.data <- interact_obj@meta.data %>% 
   mutate(interact_type = case_when(sub.cluster == "0" ~ "B cells only", 
                               sub.cluster == "1" ~ "B cells only", 
@@ -321,11 +320,8 @@ interact_obj@meta.data <- interact_obj@meta.data %>%
                               sub.cluster == "8" ~ "CD4*CD8", 
                               sub.cluster == "9" ~ "B*Myeloid",
                               sub.cluster == "10" ~ "remove"))
+```  
 
-DimPlot(interact_obj, group.by = "interact_type", label =T)
-```
-
-  
 Cluster 10 has a lower CD45_2 expression and a low ratio, so we will remove it from the interacting landscape. Clusters 0 and 1 do not exhibit mutually exclusive marker expression - both populations only express B cell markers. It is likely that they represent homotypic B cell interactions, but we cannot rule out alternative explanations such as preceding cytokinesis or interactions with cells that we do not have a marker for. So we will exclude these populations: 
 
 ```{r interacting_umap, fig.show='hold', results='hold', fig.width=7, fig.height=5, collapse=T}

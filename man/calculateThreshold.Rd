@@ -19,7 +19,7 @@ calculateThreshold(data, method = "otsu", breaks = 2000, seed = 42)
 Numerical threshold value
 }
 \description{
-Calculates a threshold based on  method for a given histogram.
+Calculates a threshold based on different methods.
 }
 \examples{
 data("demo_lcmv")

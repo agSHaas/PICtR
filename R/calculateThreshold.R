@@ -1,6 +1,6 @@
 #' Threshold calculation
 #'
-#' Calculates a threshold based on  method for a given histogram.
+#' Calculates a threshold based on different methods.
 #'
 #' @param data The data to calculate a threshold for. Must be non-negative integers for autothresholdr methods, see below.
 #' @param method The method used for thresholding. One of: "otsu", "triangle", "kmeans" or methods from the autothresholdr package, see \code{\link[autothresholdr]{auto_thresh}} ("IJDefault", "Huang", "Huang2", "Intermodes", "IsoData", "Li", "MaxEntropy", "Mean", "MinErrorI", "Minimum", "Moments", "Otsu", "Percentile", "RenyiEntropy", "Shanbhag", "Triangle" and "Yen"). For autothresholdr methods, the data will be forced to integers (Default: "otsu").
