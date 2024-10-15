@@ -1,7 +1,7 @@
 ---
 title: "PICtR: Physically Interacting Cell toolkit for R"
 author: "Viktoria Flore"
-date: "09/2024"
+date: "last updated 10/2024"
 output: 
   rmarkdown::html_vignette:
     toc: true
@@ -29,7 +29,7 @@ Many fundamental processes in life are shaped by physical interactions between c
 - The data stems from a case-control setting
 - All samples were treated the same during sample processing and acquisition, e.g. regarding equal cell concentrations, incubation times, and flow rates 
 - Pooling across conditions, organs or donors should be avoided
-- For *in vivo* experiments, cells with a strong affinity to interact can artificially interact if they are brought into proximity during sample preparation, even if they were physically separated *in vivo*. These interactions may still be biologically meaningful, but this should be taken into account when interpreting the results.  
+- For *in vivo* experiments, cells with a strong affinity to interact can artificially interact if they are brought into proximity during sample preparation, even if they were physically separated *in vivo*. These interactions may still reflect biological effects, but this should be taken into account when interpreting the results.  
 
 
 # Installation
@@ -72,7 +72,9 @@ Some other packages are not necessarily required, but expand the functionality o
 - [ComplexHeatmap](https://www.bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html)  
 - [cytoMEM](https://www.bioconductor.org/packages/release/bioc/html/cytoMEM.html)  
 - [autothresholdr](https://github.com/rorynolan/autothresholdr)
-
+  
+  
+  
 
 # PICtR Pipeline
 
@@ -142,7 +144,7 @@ demo_obj <- sketch_wrapper(demo_lcmv,
 
 ### Guidelines for Clustering 
 
-Finding a good clustering resolution is critical to detecting and annotating interacting populations. PICtR provides several different options for clustering: In addition to [Louvain](10.1088/1742-5468/2008/10/P10008), [SLM](https://doi.org/10.1140/epjb/e2013-40829-0), and [Leiden](https://doi.org/10.1038/s41598-019-41695-z) algorithms, which are implemented in the Seurat framework, [FlowSOM](https://doi.org/10.1002/cyto.a.22625), [flowMeans](https://doi.org/10.1002/cyto.a.21007) and [HDBSCAN]( https://doi.org/10.1007/978-3-642-37456-2_14) (Hierarchical Density-Based Spatial Clustering of Applications with Noise) are available. We recommend using Louvain or Leiden due to their successful identification of interaction populations, fast run times, and easy customization of the resolution parameter. Note that Leiden requires the leidenalg python package.    
+Finding a good clustering resolution is critical to detecting and annotating interacting populations. PICtR provides several different options for clustering: In addition to [Louvain](10.1088/1742-5468/2008/10/P10008), [SLM](https://doi.org/10.1140/epjb/e2013-40829-0), and [Leiden](https://doi.org/10.1038/s41598-019-41695-z) algorithms, which are implemented in the Seurat framework, [FlowSOM](https://doi.org/10.1002/cyto.a.22625), [flowMeans](https://doi.org/10.1002/cyto.a.21007) and [HDBSCAN]( https://doi.org/10.1007/978-3-642-37456-2_14) (Hierarchical Density-Based Spatial Clustering of Applications with Noise) are available. We recommend using Louvain or Leiden due to their successful identification of interacting populations, fast run times, and easy customization of the resolution parameter (note that Leiden requires the leidenalg python package).    
 
 The effect of the resolution parameter can be seen when comparing a resolution of 0.5, 0.8 and 1 (Louvain clustering) for the demo data set:
 ```{r clustering_resolution, fig.show='hold'}
@@ -152,7 +154,7 @@ DimPlot(demo_obj, group.by = "sketch_snn_res.1", label = T) + theme(legend.posit
 ```
 
   
-We recommend to over-cluster the data to ensure the detection of small populations, including cellular interactions. So if you expect roughly 20 different cell types based on the flow cytometry panel, aim for a cluster resolution that provides you with more than 20 clusters. Subsequently, during annotation, clusters representing the same cell type can be merged. Alternatively, for clusters that represent populations of interest that require higher resolutions, sub-clustering can be performed (`FindSubCluster()`). Different resolutions might be tested before deciding for the best fit.
+We recommend to over-cluster the data to ensure the detection of small populations, including cellular interactions. So if you expect roughly 20 different cell types based on your flow cytometry panel, aim for a cluster resolution that provides you with more than 20 clusters. Subsequently, during annotation, clusters representing the same cell type can be merged. Alternatively, for clusters that represent populations of interest that require higher resolutions, sub-clustering can be performed (`FindSubCluster()`). Different resolutions might be tested before deciding for the best fit.
   
 It can also be helpful to compare your cluster boundaries to feature plots of the markers used for annotation to see if you capture all relevant patterns. For our demo data set, a resolution of 0.5 seems to be sufficient:
 
@@ -305,7 +307,7 @@ RidgePlot(interact_obj, features = Features(interact_obj)) &
   theme(axis.text = element_text(size = 7))
 ```
   
-```{r anno_interacting, collapse=T}
+```{r anno_interacting, collapse=F}
 interact_obj@meta.data <- interact_obj@meta.data %>% 
   mutate(interact_type = case_when(sub.cluster == "0" ~ "B cells only", 
                               sub.cluster == "1" ~ "B cells only", 
@@ -322,7 +324,7 @@ interact_obj@meta.data <- interact_obj@meta.data %>%
                               sub.cluster == "10" ~ "remove"))
 ```  
 
-Cluster 10 has a lower CD45_2 expression and a low ratio, so we will remove it from the interacting landscape. Clusters 0 and 1 do not exhibit mutually exclusive marker expression - both populations only express B cell markers. It is likely that they represent homotypic B cell interactions, but we cannot rule out alternative explanations such as preceding cytokinesis or interactions with cells that we do not have a marker for. So we will exclude these populations: 
+Cluster 10 has a lower CD45_2 expression and a low ratio, so we will remove it from the interacting landscape. Clusters 0 and 1 do not exhibit mutually exclusive marker expression - both populations only express B cell markers. It is likely that they represent homotypic B cell interactions, but we cannot rule out alternative explanations such as preceding cytokinesis or interactions with cells that we do not have a marker for. So we will exclude these populations and recalculate the UMAP embedding: 
 
 ```{r interacting_umap, fig.show='hold', results='hold', fig.width=7, fig.height=5, collapse=T}
 keep <- interact_obj@meta.data %>% 
@@ -349,6 +351,7 @@ DimPlot(interact_obj, group.by = "interact_type", label = T)
 ## Downstream Analysis
 
 After annotating the singlet and interacting landscapes, you can continue with downstream analyses according to your experimental setup. Often, this will involve the quantification of interactions in the case and control conditions to test for significant differences.  
+  
   
   
 # Citing PICtR 
