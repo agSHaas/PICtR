@@ -1,0 +1,7 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+inst/doc
+counts/
+obj_sketched_non_projected.rds
