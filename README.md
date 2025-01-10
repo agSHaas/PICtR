@@ -15,16 +15,7 @@ if (!require("BPCells", quietly = TRUE)) {
 }
 ```
 
-To install PICtR please download the source package from Zenodo and use (installation < 1 minute): 
-```R
-if (!require("remotes", quietly = TRUE)) {
-  install.packages("remotes")
-}
-
-remotes::install_local("path_to_file/PICtR_0.2.1.tar.gz", dependencies = T, build_vignettes = T)
-```
-
-Or, upon publication, install PICtR from GitHub:
+To install PICtR please use:
 ```R
 if (!require("remotes", quietly = TRUE)) {
   install.packages("remotes")
@@ -44,7 +35,7 @@ remotes::install_github("agSHaas/PICtR")
 3. Interacting cell clusters can be annotated using cell type exclusive markers. 
 4. `plot_functions` contains a selection of helpful wrapper functions for plots.
 
-Please refer to the Vignette (`browseVignettes("PICtR")`) and the Method section of the manuscript for a comprehensive description of the analysis pipeline. 
+Please refer to the Vignette (`browseVignettes("PICtR")`) and the Method section of our manuscript for a comprehensive description of the analysis pipeline. 
 
 ## Demo Data
 
@@ -64,6 +55,13 @@ Some packages are not necessarily required, but expand the functionality of PICt
 - [cytoMEM](https://www.bioconductor.org/packages/release/bioc/html/cytoMEM.html)  
 - [autothresholdr](https://github.com/rorynolan/autothresholdr)
 
+## Citation
+
+If you use PICtR in your work, please cite
+
+> Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025)
+
+
 ## Version 
 
-Current version 0.2.1
+Current version 1.0.0

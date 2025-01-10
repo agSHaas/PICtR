@@ -1,7 +1,7 @@
 ---
 title: "PICtR: Physically Interacting Cell toolkit for R"
 author: "Viktoria Flore"
-date: "last updated 10/2024"
+date: "last updated 01/2025"
 output: 
   rmarkdown::html_vignette:
     toc: true
@@ -45,16 +45,8 @@ if (!require("BPCells", quietly = TRUE)) {
 }
 ```
 
-To install PICtR please download the source package and use: 
-```{r, eval=FALSE}
-if (!require("remotes", quietly = TRUE)) {
-  install.packages("remotes")
-}
+To install PICtR please use: 
 
-remotes::install_local("path_to_file", dependencies = T, build_vignettes = T)
-```
-
-Or, upon publication, install PICtR from GitHub:
 ```{r, eval=FALSE}
 if (!require("remotes", quietly = TRUE)) {
   install.packages("remotes")
@@ -64,7 +56,7 @@ remotes::install_github("agSHaas/PICtR")
 ```
 
 
-Some other packages are not necessarily required, but expand the functionality of PICtR. Consider installing  
+Some other packages are not necessarily required, but expand the functionality of PICtR. Consider installing:  
 
 - [flowMeans](https://www.bioconductor.org/packages/release/bioc/html/flowMeans.html)  
 - [dbscan](https://github.com/mhahsler/dbscan)  
@@ -181,7 +173,7 @@ for (p in plots) {print(p)}
 ```
   
   
-The [Seurat tutorials](https://satijalab.org/seurat/) and [Heumos, Schaar, Lance et al. (2023)](https://doi.org/10.1038/s41576-023-00586-w) provide excellent guidance on clustering of single-cell data sets. 
+The [Seurat tutorials](https://satijalab.org/seurat/) and [Heumos et al. (2023)](https://doi.org/10.1038/s41576-023-00586-w) provide excellent guidance on clustering of single-cell data sets. 
 
 ## Predict Labels for the full Data Set
 
@@ -204,7 +196,7 @@ ratio_cluster_plot(demo_obj, clusters = "clusters_predicted")
 ```
 
   
-As seen from the bar plot, clusters 3, 7, 10, 11, and 13 predominantly contain cells that exceed the FSC ratio threshold. The `select_dbt()` function can be used to select these clusters. We recommend investigating  the `ratio_cluster_plot()` to confirm any selection you make.
+As seen from the bar plot, clusters 3, 7, 10, 11, and 13 predominantly contain cells that exceed the FSC ratio threshold. The `select_dbt()` function can be used to pick these clusters. We recommend investigating  the `ratio_cluster_plot()` to confirm any selection you make.
   
   
 ## Singlet Annotation 
@@ -358,11 +350,12 @@ After annotating the singlet and interacting landscapes, you can continue with d
 
 If you are using PICtR in your research, please consider citing:  
 
-- Vonficht D, Jopp-Saile L, Yousefian S, Flore V et al. "Ultra-high scale cytometry-based cellular interaction mapping.", unpublished.
+- Vonficht D, Jopp-Saile L, Yousefian S, Flore V et al. "Ultra-high scale cytometry-based cellular interaction mapping", Nature Methods (2025)
 
 # References  
   
-- Hao, Y., Stuart, T., Kowalski, M.H. et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nat Biotechnol 42, 293–304 (2024). <https://doi.org/10.1038/s41587-023-01767-y>  
-- Heumos, L., Schaar, A.C., Lance, C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). <https://doi.org/10.1038/s41576-023-00586-w>  
-- Parks B (2024). BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0, https://github.com/bnprks/BPCells, <https://bnprks.github.io/BPCells> 
+- Vonficht D, Jopp-Saile L, Yousefian S, Flore V et al. Ultra-high scale cytometry-based cellular interaction mapping. Nature Methods (2025).
+- Hao Y et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nat Biotechnol 42, 293–304 (2024). <https://doi.org/10.1038/s41587-023-01767-y>  
+- Heumos L, Schaar A.C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). <https://doi.org/10.1038/s41576-023-00586-w>  
+- Parks B & Abdi I. BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0 (2024) <https://bnprks.github.io/BPCells> 
 
