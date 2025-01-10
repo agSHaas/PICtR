@@ -6,3 +6,6 @@ inst/doc
 counts/
 obj_sketched_non_projected.rds
 PICtR.Rproj
+.DS_Store
+.httr-oauth
+.quarto
