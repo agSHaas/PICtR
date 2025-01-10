@@ -22,6 +22,6 @@ Demo data set for the PICtR workflow containing sampled cells from the spleens o
 For demonstration purposes, only CD3, MHCII, CD11c, CD11b, CD45_2, CD19, Ly6G, CD90_1, CD4, and CD8 are included as cell type markers.
 }
 \references{
-Vonficht, Jopp-Saile, Yousefian, Flore et al. (2024). Ultra-high scale cytometry-based cellular interaction mapping.
+Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high scale cytometry-based cellular interaction mapping. Nature Methods (2025)
 }
 \keyword{datasets}

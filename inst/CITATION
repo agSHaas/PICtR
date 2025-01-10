@@ -36,6 +36,6 @@ bibentry(bibtype = "article",
   ),
   title = "Ultra-high scale cytometry-based cellular interaction mapping",
   year = "2025",
-  journal: "Nature Methods",
+  journal = "Nature Methods",
   textVersion = "Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high scale cytometry-based cellular interaction mapping. Nature Methods (2025)"
 )

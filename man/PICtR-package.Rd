@@ -8,6 +8,14 @@
 \description{
 This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/agSHaas/PICtR}
+  \item Report bugs at \url{https://github.com/agSHaas/PICtR/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Viktoria Flore \email{viktoria.flore@bih-charite.de} (\href{https://orcid.org/0009-0001-3023-433X}{ORCID})
 
