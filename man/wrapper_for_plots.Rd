@@ -52,6 +52,6 @@ Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class chara
 A list with the requested plots.
 }
 \description{
-A wrapper function for plots that are often used during exploratory analysis within the \link[=https://satijalab.org/seurat/]{Seurat framework}.
+A wrapper function for plots that are often used during exploratory analysis within the Seurat framework (\url{https://satijalab.org/seurat/}).
 Includes \code{\link[Seurat]{FeaturePlot}}, \code{\link[Seurat]{DimPlot}} for different parameters, and \code{\link{ratio_cluster_plot}}.
 }
