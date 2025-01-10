@@ -15,5 +15,5 @@
 #'   \item{SSC.H}{Side scatter height}
 #'   \item{fluorescence markers}{CD3, MHCII, CD11c, CD11b, CD45_2, CD19, Ly6G, CD90_1, CD4, CD8}
 #' }
-#' @references Vonficht, Jopp-Saile, Yousefian, Flore et al. (2024). Ultra-high scale cytometry-based cellular interaction mapping.
+#' @references Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high scale cytometry-based cellular interaction mapping. Nature Methods (2025)
 "demo_lcmv"
