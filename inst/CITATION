@@ -1,6 +1,7 @@
 citHeader("To cite PICtR in publications, please use:")
 
-bibentry(bibtype = "Unpublished",
+
+bibentry(bibtype = "article",
   author = c(
   as.person("Dominik Vonficht"),
   as.person("Lea Jopp-Saile"),
@@ -19,6 +20,7 @@ bibentry(bibtype = "Unpublished",
   as.person("Luca Deininger"),
   as.person("Angelo Jovin Yamachui Sitcheu"),
   as.person("Zuguang Gu"),
+  as.person("Maja C. Funk"),
   as.person("Ralf Mikut"),
   as.person("Mathias Heikenwaelder"),
   as.person("Angelika Eggert"),
@@ -33,6 +35,7 @@ bibentry(bibtype = "Unpublished",
   as.person("Simon Haas")
   ),
   title = "Ultra-high scale cytometry-based cellular interaction mapping",
-  year = "2024",
-  note = "Manuscript under review"
+  year = "2025",
+  journal: "Nature Methods",
+  textVersion = "Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high scale cytometry-based cellular interaction mapping. Nature Methods (2025)"
 )
