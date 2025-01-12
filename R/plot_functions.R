@@ -311,7 +311,7 @@ umap_rasterized <- function(data=obj,
 #' Marker Enrichment Modeling (MEM) Heatmap.
 #'
 #' @param obj The Seurat object.
-#' @param markers Meta.data columns with features that should be plotted in the heat map and the clustering resolution.
+#' @param markers Meta.data columns with features that should be plotted in the heatmap and the clustering resolution.
 #' @param cluster_col Character string specifying the column that contains the clustering solution.
 #' @param cols Color palette.
 #' @param heatmap_name Title of the heatmap.

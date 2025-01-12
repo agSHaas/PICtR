@@ -21,7 +21,7 @@ select_dbt(
 
 \item{ratio}{The meta.data column with the classification of cells into ratio_high and ratio_low using the FSC ratio (FSC.A/FSC.H) and a thresholding method.}
 
-\item{ratio_high}{The character string that indicates cells with a FSC ratio (FSC.A/FSC.H) above the threshold determined with `calculateThreshold()` within the meta.data column.}
+\item{ratio_high}{The character string that indicates cells with a FSC ratio (FSC.A/FSC.H) above the threshold determined with \code{\link{calculateThreshold}} within the meta.data column.}
 
 \item{assay}{The Seurat assay containing FACS data.}
 
@@ -33,5 +33,6 @@ select_dbt(
 Seurat object
 }
 \description{
-Selects the clusters that belong to a given percentile of the clusters with the largest physically interacting cells proportion based on FSC ratio thresholding.
+Selects the clusters that belong to a given percentile of the clusters with the largest physically interacting cells proportion based on FSC ratio thresholding. 
+By default, the top 20 percent of clusters are chosen. Consider using \code{\link{ratio_cluster_plot}} to evaluate the choice of percentile cutoff.
 }

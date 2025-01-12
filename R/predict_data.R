@@ -17,7 +17,11 @@
 #'
 #' @importFrom MASS lda
 #' @importFrom data.table is.data.table
-#'
+#' 
+#' @references Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
+#' @references Ripley, B. D. (1996) Pattern Recognition and Neural Networks. Cambridge University Press.
+#' 
+#' 
 #' @export
 predict_data <- project_data <- function(obj=obj,
                          data_query=query,

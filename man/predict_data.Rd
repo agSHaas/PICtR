@@ -44,3 +44,8 @@ Seurat object or data frame containing the predicted cluster labels.
 \description{
 Predicts the cluster labels for a reference data set to a query data set using \code{\link[MASS]{lda}}.
 }
+\references{
+Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
+
+Ripley, B. D. (1996) Pattern Recognition and Neural Networks. Cambridge University Press.
+}
