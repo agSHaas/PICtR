@@ -4,18 +4,9 @@ This is the computational workflow to analyse physically interacting cells (PICs
 
 ## Installation
 
-PICtR requires R version 4.3 or later. Before installing PICtR, please ensure that [BPCells](https://github.com/bnprks/BPCells) is installed: 
+PICtR requires R version 4.3 or later. First, please install [BPCells](https://github.com/bnprks/BPCells). Next, PICtR can be installed using:
 
-```R
-if (!require("BPCells", quietly = TRUE)) {
-  if (!require("remotes", quietly = TRUE)) {
-    install.packages("remotes")
-  }
-  remotes::install_github("bnprks/BPCells/r")
-}
-```
 
-To install PICtR please use:
 ```R
 if (!require("remotes", quietly = TRUE)) {
   install.packages("remotes")

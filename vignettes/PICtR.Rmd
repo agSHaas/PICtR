@@ -34,18 +34,7 @@ Many fundamental processes in life are shaped by physical interactions between c
 
 # Installation
 
-PICtR requires R version 4.3 or later. Before installing PICtR, please ensure that [BPCells](https://github.com/bnprks/BPCells) is installed: 
-
-```{r, eval=FALSE}
-if (!require("BPCells", quietly = TRUE)) {
-  if (!require("remotes", quietly = TRUE)) {
-    install.packages("remotes")
-  }
-  remotes::install_github("bnprks/BPCells/r")
-}
-```
-
-To install PICtR please use: 
+PICtR requires R version 4.3 or later. First, please install [BPCells](https://github.com/bnprks/BPCells). Next, PICtR can be installed using:
 
 ```{r, eval=FALSE}
 if (!require("remotes", quietly = TRUE)) {
@@ -100,6 +89,7 @@ The pipeline starts with a data frame with the dimensionality cells x flow cytom
 
 ```{r lib, results='hide', message=F, warning=F, error=F}
 library(PICtR)
+data("demo_lcmv")
 ```
 
 
@@ -117,8 +107,6 @@ In addition, we sample a representative subset of cells using atomic sketching a
 
 PICtR provides a convenient wrapper function for these steps, including calculation of the FSC ratio threshold: 
 ```{r wrapper, warning=F}
-data(demo_lcmv)
-
 demo_obj <- sketch_wrapper(demo_lcmv,
                        meta_data = demo_lcmv,
                        assay = "FACS",
