@@ -112,7 +112,7 @@ demo_obj <- sketch_wrapper(demo_lcmv,
                        assay = "FACS",
                        FSC.A = "FSC.A", 
                        FSC.H = "FSC.H", 
-                       working_dir = getwd(),
+                       working_dir = tempdir(),
                        resolution = c(0.5, 0.8, 1),
                        clst_algorithm = 1,
                        n_sketch_cells = 5000,
@@ -345,5 +345,4 @@ If you are using PICtR in your research, please consider citing:
 - Vonficht D, Jopp-Saile L, Yousefian S, Flore V et al. Ultra-high scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025).
 - Hao Y et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. _Nat Biotechnol_ 42, 293–304 (2024). <https://doi.org/10.1038/s41587-023-01767-y>  
 - Heumos L, Schaar A.C. et al. Best practices for single-cell analysis across modalities. _Nat Rev Genet_ (2023). <https://doi.org/10.1038/s41576-023-00586-w>  
-- Parks B & Abdi I. BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0 (2024) <https://bnprks.github.io/BPCells> 
-
+- Parks B & Abdi I. BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0 (2024) <https://github.com/bnprks/BPCells> 

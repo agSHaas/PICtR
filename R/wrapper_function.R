@@ -33,14 +33,15 @@
 #'                       n_sketch_cells = 5000,
 #'                       clst_algorithm = 1,
 #'                       ratio = TRUE,
-#'                       thresholding_method = "otsu")
+#'                       thresholding_method = "otsu", 
+#'                       working_dir = tempdir())
 #'
 #' @return Seurat object.
 #'
-#' @references Hao et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nature Biotechnology (2023). doi: \url{https://doi.org/10.1038/s41587-023-01767-y}.
-#' @references Van Gassen S et al. (2015) FlowSOM: Using self-organizing maps for visualization and interpretation of cytometry data. Cytom Part J Int Soc Anal Cytol 87: 636-645. \url{https://onlinelibrary.wiley.com/doi/full/10.1002/cyto.a.22625}.
-#' @references Aghaeepour, N., Nikolic, R., Hoos, H.H. and Brinkman, R.R. (2011), Rapid cell population identification in flow cytometry data. Cytometry, 79A: 6-13. \url{https://doi.org/10.1002/cyto.a.21007}.
-#' @references Campello, R.J.G.B., Moulavi, D., Sander, J. (2013). Density-Based Clustering Based on Hierarchical Density Estimates. In: Pei, J., Tseng, V.S., Cao, L., Motoda, H., Xu, G. (eds) Advances in Knowledge Discovery and Data Mining. PAKDD 2013. Lecture Notes in Computer Science(), vol 7819. Springer, Berlin, Heidelberg. \url{https://doi.org/10.1007/978-3-642-37456-2_14}
+#' @references Hao et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nature Biotechnology (2023). \doi{10.1038/s41587-023-01767-y}
+#' @references Van Gassen S et al. (2015) FlowSOM: Using self-organizing maps for visualization and interpretation of cytometry data. Cytom Part J Int Soc Anal Cytol 87: 636-645. \doi{10.1002/cyto.a.22625}.
+#' @references Aghaeepour, N., Nikolic, R., Hoos, H.H. and Brinkman, R.R. (2011), Rapid cell population identification in flow cytometry data. Cytometry, 79A: 6-13. \doi{10.1002/cyto.a.21007}.
+#' @references Campello, R.J.G.B., Moulavi, D., Sander, J. (2013). Density-Based Clustering Based on Hierarchical Density Estimates. In: Pei, J., Tseng, V.S., Cao, L., Motoda, H., Xu, G. (eds) Advances in Knowledge Discovery and Data Mining. PAKDD 2013. Lecture Notes in Computer Science(), vol 7819. Springer, Berlin, Heidelberg. \doi{10.1007/978-3-642-37456-2_14}
 #'
 #' @import Seurat
 #' @import dplyr

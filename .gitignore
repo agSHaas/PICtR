@@ -4,7 +4,9 @@
 .Ruserdata
 inst/doc
 counts/
+vignettes/counts/
 obj_sketched_non_projected.rds
+vignettes/obj_sketched_non_projected.rds
 PICtR.Rproj
 .DS_Store
 .httr-oauth

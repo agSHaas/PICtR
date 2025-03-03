@@ -14,11 +14,11 @@
 #'
 #' @return Numerical threshold value
 #'
-#' @references N. Otsu, "A Threshold Selection Method from Gray-Level Histograms," in IEEE Transactions on Systems, Man, and Cybernetics, vol. 9, no. 1, pp. 62-66, Jan. 1979, doi: \url{10.1109/TSMC.1979.4310076}.
-#' @references Zack GW, Rogers WE, Latt SA. Automatic measurement of sister chromatid exchange frequency. Journal of Histochemistry & Cytochemistry. 1977;25(7):741-753. doi: \url{10.1177/25.7.70454}.
-#' @references Hartigan, J. A., & Wong, M. A. (1979). Algorithm AS 136: A K-Means Clustering Algorithm. Journal of the Royal Statistical Society. Series C (Applied Statistics), 28(1), 100–108. \url{https://doi.org/10.2307/2346830}.
+#' @references N. Otsu, "A Threshold Selection Method from Gray-Level Histograms," in IEEE Transactions on Systems, Man, and Cybernetics, vol. 9, no. 1, pp. 62-66, Jan. 1979, \doi{10.1109/TSMC.1979.4310076}.
+#' @references Zack GW, Rogers WE, Latt SA. Automatic measurement of sister chromatid exchange frequency. Journal of Histochemistry & Cytochemistry. 1977;25(7):741-753. \doi{10.1177/25.7.70454}.
+#' @references Hartigan, J. A., & Wong, M. A. (1979). Algorithm AS 136: A K-Means Clustering Algorithm. Journal of the Royal Statistical Society. Series C (Applied Statistics), 28(1), 100–108. \doi{10.2307/2346830}.
 #' @references G. Landini, D.A. Randell, S. Fouad, and A. Galton. Automatic thresholding from the gradients of region boundaries. Journal of Microscopy, 265(2), 185-195.
-#'
+#' 
 #'
 #' @export
 calculateThreshold <- function(data,
@@ -30,7 +30,7 @@ calculateThreshold <- function(data,
   if (method == "otsu") {
 
     # for backwards compatibility
-    if (class(data) == "histogram") {
+    if (is(hist, "histogram")) {
       hist <- data
     } else {
       hist <- hist(data, breaks = breaks, plot = F)
@@ -75,7 +75,8 @@ calculateThreshold <- function(data,
 
   # TRIANGLE ALGORITHM ----
   } else if (method == "triangle") {
-    # code ported from ImageJ's implementation of the triangle algorithm in java
+    # code ported from ImageJ's implementation of the triangle algorithm in java (https://github.com/imagej/ImageJ/blob/07d7d6fcfc87cc4c1ff8419002dc31785cb6ccc8/ij/process/AutoThresholder.java#L1090)
+    # Ref Zack, G. W., Rogers, W. E. and Latt, S. A., 1977, Automatic Measurement of Sister Chromatid Exchange Frequency, Journal of Histochemistry and Cytochemistry 25 (7), pp. 741-753
     # initialise variables
     min <- 0
     max <- 0

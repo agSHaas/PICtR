@@ -4,7 +4,7 @@
 \name{PICtR-package}
 \alias{PICtR}
 \alias{PICtR-package}
-\title{PICtR: Physically Interacting Cell (PIC) toolkit for R}
+\title{PICtR: Physically Interacting Cell (PIC) Toolkit for R}
 \description{
 This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.
 }
