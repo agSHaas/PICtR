@@ -23,7 +23,7 @@ select_dbt <- function(obj,
                        selected_clusters="doublet_clusters"){
 
   # pick clusters with a doublet content in the given percentile
-  message("Choosing top 20 % of clusters...")
+  message(paste0("Choosing top ", (1-quantile)*100 , " % of clusters..."))
   dist <- obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>% ungroup() %>%
     group_by(.data[[clusters]]) %>% mutate(ratio_ratio = n/sum(n)) %>% dplyr::filter(.data[[ratio]]==ratio_high)
 
