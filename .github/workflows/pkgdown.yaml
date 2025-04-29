@@ -38,8 +38,7 @@ jobs:
         run: |
           install.packages("pak")  
           pak::pkg_install("github::immunedynamics/spectre") 
-          pak::pkg_install("github::bnprks/BPCells/r") 
-          pak::install_dependencies(clear_cache = TRUE)
+          pak::pkg_install("github::bnprks/BPCells/r")
         shell: Rscript {0}  
 
       - uses: r-lib/actions/setup-r-dependencies@v2
