@@ -11,7 +11,7 @@ Authors@R: c(
   )
 Description: This is the computational workflow to analyse physically
     interacting cells (PICs) in flow cytometry data using R.
-URL: https://github.com/agSHaas/PICtR
+URL: https://github.com/agSHaas/PICtR, https://agshaas.github.io/PICtR/
 BugReports: https://github.com/agSHaas/PICtR/issues
 License: file LICENSE
 Depends: 
