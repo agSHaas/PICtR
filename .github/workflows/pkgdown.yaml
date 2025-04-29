@@ -24,6 +24,9 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Install system dependencies
+        run: sudo apt-get install libhdf5-dev
 
       - uses: r-lib/actions/setup-pandoc@v2
 
