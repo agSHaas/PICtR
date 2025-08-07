@@ -50,7 +50,7 @@ Some packages are not necessarily required, but expand the functionality of PICt
 
 If you use PICtR in your work, please cite
 
-> Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025). https://doi.org/10.1038/s41592-025-02744-w (_accepted_)
+> Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025). https://doi.org/10.1038/s41592-025-02744-w
 
 
 ## Version 
