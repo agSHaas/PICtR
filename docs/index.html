@@ -64,21 +64,7 @@
 <div class="section level2">
 <h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h2>
-<ol style="list-style-type: decimal">
-<li>In brief, the <code>sketch_wrapper</code> function is used to
-<ol style="list-style-type: lower-alpha">
-<li>classify cellular events according to their FSC-area to FSC-height ratio</li>
-<li>select a representative subset using Seurat’s sketch functionality, and</li>
-<li>run the standard Seurat workflow. It expects a data frame with the dimensionality cells x flow cytometry parameters.<br>
-</li>
-</ol>
-</li>
-<li>After selecting an appropriate clustering solution in the subset, the results can be predicted for the full dataset with <code>predict_data</code>, using Linear Discriminant Analysis as implemented in the MASS package. The overall cellular landscape can be annotated as usual, and clusters representing interacting cells can be selected using <code>ratio_cluster_plot</code> and <code>select_dbt</code>.</li>
-<li>Interacting cell clusters can be annotated using cell type exclusive markers.</li>
-<li>
-<code>plot_functions</code> contains a selection of helpful wrapper functions for plots.</li>
-</ol>
-<p>Please refer to the Vignette (<code>browseVignettes("PICtR")</code>) and the Method section of our manuscript for a comprehensive description of the analysis pipeline.</p>
+<p>Please refer to the <a href="https://agshaas.github.io/PICtR/articles/PICtR.html">Vignette</a> and the Method section of our manuscript for a comprehensive description of the analysis pipeline.</p>
 </div>
 <div class="section level2">
 <h2 id="demo-data">Demo Data<a class="anchor" aria-label="anchor" href="#demo-data"></a>
@@ -88,7 +74,7 @@
 <div class="section level2">
 <h2 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
 </h2>
-<p>The core of this framework relies on <a href="https://github.com/satijalab/seurat" class="external-link">Seurat version 5</a>, <a href="https://github.com/bnprks/BPCells" class="external-link">BPCells</a>, <a href="https://cran.r-project.org/web/packages/MASS/index.html" class="external-link">MASS</a>, and the <a href="https://www.tidyverse.org/" class="external-link">tidyverse</a>. The full list of dependencies are listed in the DESCRIPTION file. The package has been tested on the indicated dependency versions. Please make sure that R is operating in version 4.3 or higher.</p>
+<p>The core of this framework relies on <a href="https://github.com/satijalab/seurat" class="external-link">Seurat version 5</a>, <a href="https://github.com/bnprks/BPCells" class="external-link">BPCells</a>, <a href="https://cran.r-project.org/web/packages/MASS/index.html" class="external-link">MASS</a>, and the <a href="https://www.tidyverse.org/" class="external-link">tidyverse</a>. Please make sure that R is operating in version 4.3 or higher.</p>
 <p>Some packages are not necessarily required, but expand the functionality of PICtR. Consider installing:</p>
 <ul>
 <li>
