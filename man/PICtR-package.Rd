@@ -11,7 +11,7 @@ This is the computational workflow to analyse physically interacting cells (PICs
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/agSHaas/PICtR}
+  \item \url{https://agshaas.github.io/PICtR/}
   \item Report bugs at \url{https://github.com/agSHaas/PICtR/issues}
 }
 
