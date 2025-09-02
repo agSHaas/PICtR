@@ -45,7 +45,7 @@ Suggests:
     rmarkdown,
     testthat
 Remotes: 
-    github::immunedynamics/spectre,
+    github::immunedynamics/Spectre,
     github::bnprks/BPCells/r
 VignetteBuilder: 
     knitr
