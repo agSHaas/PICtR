@@ -17,16 +17,7 @@ remotes::install_github("agSHaas/PICtR")
 
 ## Workflow  
   
-1. In brief, the `sketch_wrapper` function is used to
-   a) classify cellular events according to their FSC-area to FSC-height ratio
-   b) select a representative subset using Seurat's sketch functionality, and
-   c) run the standard Seurat workflow.
-   It expects a data frame with the dimensionality cells x flow cytometry parameters.  
-2. After selecting an appropriate clustering solution in the subset, the results can be predicted for the full dataset with `predict_data`, using Linear Discriminant Analysis as implemented in the MASS package. The overall cellular landscape can be annotated as usual, and clusters representing interacting cells can be selected using `ratio_cluster_plot` and `select_dbt`.
-3. Interacting cell clusters can be annotated using cell type exclusive markers. 
-4. `plot_functions` contains a selection of helpful wrapper functions for plots.
-
-Please refer to the Vignette (`browseVignettes("PICtR")`) and the Method section of our manuscript for a comprehensive description of the analysis pipeline. 
+Please refer to the [Vignette](https://agshaas.github.io/PICtR/articles/PICtR.html) and the Method section of our manuscript for a comprehensive description of the analysis pipeline. 
 
 ## Demo Data
 
@@ -35,7 +26,7 @@ The package comprises a demo data set from LCMV infected mice. Data was analysed
 
 ## Dependencies
 
-The core of this framework relies on [Seurat version 5](https://github.com/satijalab/seurat), [BPCells](https://github.com/bnprks/BPCells), [MASS](https://cran.r-project.org/web/packages/MASS/index.html), and the [tidyverse](https://www.tidyverse.org/). The full list of dependencies are listed in the DESCRIPTION file. The package has been tested on the indicated dependency versions. Please make sure that R is operating in version 4.3 or higher.
+The core of this framework relies on [Seurat version 5](https://github.com/satijalab/seurat), [BPCells](https://github.com/bnprks/BPCells), [MASS](https://cran.r-project.org/web/packages/MASS/index.html), and the [tidyverse](https://www.tidyverse.org/). Please make sure that R is operating in version 4.3 or higher.
 
 Some packages are not necessarily required, but expand the functionality of PICtR. Consider installing:
 
