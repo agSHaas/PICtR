@@ -1,0 +1,9 @@
+pandoc: 3.6.2
+pkgdown: 2.1.3
+pkgdown_sha: ~
+articles:
+  PICtR: PICtR.html
+last_built: 2025-09-02T12:54Z
+urls:
+  reference: https://agshaas.github.io/PICtR/reference
+  article: https://agshaas.github.io/PICtR/articles
