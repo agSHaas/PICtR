@@ -338,11 +338,11 @@ After annotating the singlet and interacting landscapes, you can continue with d
 
 If you are using PICtR in your research, please consider citing:  
 
-- Vonficht D, Jopp-Saile L, Yousefian S, Flore V et al. "Ultra-high scale cytometry-based cellular interaction mapping", _Nature Methods_ (2025)
+- Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high-scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025). <https://doi.org/10.1038/s41592-025-02744-w>
 
 # References  
   
-- Vonficht D, Jopp-Saile L, Yousefian S, Flore V et al. Ultra-high scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025).
+- Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high-scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025). <https://doi.org/10.1038/s41592-025-02744-w>
 - Hao Y et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. _Nat Biotechnol_ 42, 293–304 (2024). <https://doi.org/10.1038/s41587-023-01767-y>  
 - Heumos L, Schaar A.C. et al. Best practices for single-cell analysis across modalities. _Nat Rev Genet_ (2023). <https://doi.org/10.1038/s41576-023-00586-w>  
 - Parks B & Abdi I. BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0 (2024) <https://bnprks.github.io/BPCells> 
