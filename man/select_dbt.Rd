@@ -33,6 +33,6 @@ select_dbt(
 Seurat object
 }
 \description{
-Selects the clusters that belong to a given percentile of the clusters with the largest physically interacting cells proportion based on FSC ratio thresholding. 
+Selects the clusters that belong to a given percentile of the clusters with the largest physically interacting cells proportion based on FSC ratio thresholding.
 By default, the top 20 percent of clusters are chosen. Consider using \code{\link{ratio_cluster_plot}} to evaluate the choice of percentile cutoff.
 }

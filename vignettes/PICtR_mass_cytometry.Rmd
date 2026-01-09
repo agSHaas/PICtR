@@ -1,0 +1,83 @@
+---
+title: "PICtR for Mass Cytometry"
+author: "Viktoria Flore"
+date: "last updated 01/2026"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    highlight: tango
+vignette: >
+  %\VignetteIndexEntry{PICtR for Mass Cytometry}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  warning = FALSE
+)
+```
+
+```{r}
+library(PICtR)
+```
+
+# PICtR Pipeline
+
+## Pre-Processing of Mass Cytometry Data 
+
+Data from FCS files should be transformed (for example using the Arcsinh transformation of FlowJo from BD) and debris should be removed. Export the populations of interest using channel values defined by the inbuilt export function of FlowJo or use [flowWorkspace](https://github.com/RGLab/flowWorkspace). PICtR requires the DNA probe parameter(s) to be exported.
+
+In addition to all relevant antibody-targeted parameters, we recommend using the event length parameter and all available DNA probe parameters as features during the workflow  
+
+
+## Example Data
+
+tbd
+
+## Subsampling, Dimensional Reduction and Clustering 
+
+tbd
+
+### Guidelines for Clustering 
+
+tbd
+
+## Predict Labels for the full Data Set
+
+tbd
+
+## Selecting Interacting Populations
+
+tbd
+
+## Singlet Annotation 
+
+tbd
+
+## Annotation of Interacting Populations 
+  
+tbd
+
+## Downstream Analysis
+
+After annotating the singlet and interacting landscapes, you can continue with downstream analyses according to your experimental setup. Often, this will involve the quantification of interactions in the case and control conditions to test for significant differences.  
+  
+
+# Citing PICtR 
+
+If you are using PICtR in your research, please consider citing:  
+
+- Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high-scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025). <https://doi.org/10.1038/s41592-025-02744-w>
+
+# References  
+  
+- Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high-scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025). <https://doi.org/10.1038/s41592-025-02744-w>
+- Hao Y et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. _Nat Biotechnol_ 42, 293–304 (2024). <https://doi.org/10.1038/s41587-023-01767-y>  
+- Heumos L, Schaar A.C. et al. Best practices for single-cell analysis across modalities. _Nat Rev Genet_ (2023). <https://doi.org/10.1038/s41576-023-00586-w>  
+- Parks B & Abdi I. BPCells: Single Cell Counts Matrices to PCA. R package version 0.2.0 (2024) <https://bnprks.github.io/BPCells> 
+

@@ -4,14 +4,14 @@
 \alias{split_plot_sketch}
 \title{Split plot wrapper.}
 \usage{
-split_plot_sketch(obj, group_by = "seurat_clusters", split_by = "ratio_anno")
+split_plot_sketch(obj, split_by, group_by = "seurat_clusters")
 }
 \arguments{
 \item{obj}{The Seurat object.}
 
-\item{group_by}{Parameter to group the plot by.}
+\item{split_by}{Parameter to split the plot by (string).}
 
-\item{split_by}{Parameter to split the plot by.}
+\item{group_by}{Parameter to group the plot by (string).}
 }
 \value{
 ggplot object

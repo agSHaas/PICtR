@@ -19,6 +19,11 @@ samples a representative subset of cells using SketchData and runs the standard 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/PICtR.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/PICtR_flow_cytometry.html">PICtR for Flow Cytometry</a></li>
+    <li><a class="dropdown-item" href="../articles/PICtR_mass_cytometry.html">PICtR for Mass Cytometry</a></li>
+  </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/agSHaas/PICtR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -184,7 +189,7 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Warning: Matrix compression performs poorly with non-integers.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Consider calling convert_matrix_type if a compressed integer matrix is intended.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This message is displayed once every 8 hours.</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Your newly generated object will be saved under: /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpD9jdFT/obj_sketched_non_projected.rds</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Your newly generated object will be saved under: /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpBTD7RU/obj_sketched_non_projected.rds</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Sketching started...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Finding variable features for layer counts</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
@@ -268,10 +273,10 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> This message will be shown once per session</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> UMAP will return its model</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:19 UMAP embedding parameters a = 0.9922 b = 1.112</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:19 Read 5000 rows and found 15 numeric columns</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:19 Using Annoy for neighbor search, n_neighbors = 30</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:19 Building Annoy index with metric = cosine, n_trees = 50</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 UMAP embedding parameters a = 0.9922 b = 1.112</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Read 5000 rows and found 15 numeric columns</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Using Annoy for neighbor search, n_neighbors = 30</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Building Annoy index with metric = cosine, n_trees = 50</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 0%   10   20   30   40   50   60   70   80   90   100%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [----|----|----|----|----|----|----|----|----|----|</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
@@ -325,15 +330,15 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> |</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:20 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpD9jdFT/file6da85cd8e101</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:20 Searching Annoy index using 1 thread, search_k = 3000</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:21 Annoy recall = 100%</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:21 Commencing smooth kNN distance calibration using 1 thread</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpBTD7RU/file393a13c358f6</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Searching Annoy index using 1 thread, search_k = 3000</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Annoy recall = 100%</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Commencing smooth kNN distance calibration using 1 thread</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  with target n_neighbors = 30</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:21 Initializing from normalized Laplacian + noise (using RSpectra)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:21 Commencing optimization for 500 epochs, with 202814 positive edges</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:21 Using rng type: pcg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 15:36:26 Optimization finished</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Initializing from normalized Laplacian + noise (using RSpectra)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Commencing optimization for 500 epochs, with 202814 positive edges</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Using rng type: pcg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:23:01 Optimization finished</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The object will be updated and saved</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

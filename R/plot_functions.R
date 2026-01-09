@@ -10,7 +10,8 @@
 #' Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class character or factor for \code{\link[Seurat]{DimPlot}}.
 #' @param cluster_handle Prefix for the clustering solutions in the meta.data slot.
 #' @param feature_plot_colors Color palette for \code{\link[Seurat]{FeaturePlot}}.
-#' @param ratio_plot_color Color palette for \code{\link{ratio_cluster_plot}}.
+#' @param ratio_plot_color Color palette for \code{\link{ratio_cluster_plot}} when used with flow cytometry data.
+#' @param event_type_color Color pallete for \code{\link{ratio_cluster_plot}} when used with mass cytometry data.
 #' @param reduction Reduction to use for plotting, for example UMAP.
 #' @param alpha Alpha value for plotting.
 #' @param raster Convert points to raster format. If TRUE plot is rasterized to raster.dpi=c(512, 512). Requires ggrastr.
@@ -29,10 +30,11 @@
 wrapper_for_plots <- function(obj=obj,
                               feature_plot=TRUE,
                               cluster_plot=TRUE,
-                              meta_list=list("ratio_anno"),
+                              meta_list=list(),
                               cluster_handle="sketch_snn_res",
                               feature_plot_colors=pals::parula(1000),
-                              ratio_plot_color=c(Ratio_low="dodgerblue2", Ratio_high="gold2"),
+                              ratio_plot_color=c(Ratio_low="dodgerblue2", Ratio_high="orange2"),
+                              event_type_color=c(singlet="#2E86AB", doublet="#A23B72", triplet="#F18F01", multiplet = "#9BC53D"), 
                               reduction="umap",
                               alpha=1,
                               raster=F,
@@ -74,15 +76,22 @@ wrapper_for_plots <- function(obj=obj,
     cluster_plot <- "not caluculated"
   }
 
-  # Ratio_Plot
+  # categorisation plot 
   if(any(meta_list=="ratio_anno")){
-    ratio_plots <- DimPlot(object = obj,
+    cat_plot <- DimPlot(object = obj,
                            group.by = "ratio_anno",
                            cols = ratio_plot_color,
                            alpha = alpha, raster=raster,
                            label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
-  }else{
-    ratio_plots <- NULL
+  }else if(any(meta_list=="event_type")){
+    cat_plot <- DimPlot(object = obj,
+                           group.by = "event_type",
+                           cols = event_type_color,
+                           alpha = alpha, raster=raster,
+                           label = TRUE, label.box = label_box, label.size = label_size, repel = FALSE, reduction = reduction)
+    
+  } else {
+    cat_plot <- NULL
   }
 
   if(length(meta_list) > 0){
@@ -137,7 +146,7 @@ wrapper_for_plots <- function(obj=obj,
   }
   return(list(feature_plots= cowplot::plot_grid(plotlist = Feature_Plot, nrow = f_nrow),
               cluster_plots=cowplot::plot_grid(plotlist = cluster_plots, nrow = c_nrow),
-              ratio_plots=ratio_plots,
+              cat_plot=cat_plot,
               meta_plots_grid=cowplot::plot_grid(plotlist = meta_plots, nrow = m_nrow),
               meta_plot_list=meta_plots))
 }
@@ -148,8 +157,8 @@ wrapper_for_plots <- function(obj=obj,
 #' Per default the returned split plots are rasterized using \code{\link[ggrastr]{geom_point_rast}}. Requires ggrastr.
 #'
 #' @param obj The Seurat object.
-#' @param group_by Parameter to group the plot by.
-#' @param split_by Parameter to split the plot by.
+#' @param split_by Parameter to split the plot by (string).
+#' @param group_by Parameter to group the plot by (string).
 #'
 #' @return ggplot object
 #'
@@ -158,20 +167,19 @@ wrapper_for_plots <- function(obj=obj,
 #'
 #' @export
 split_plot_sketch <- function(obj,
-                              group_by="seurat_clusters",
-                              split_by="ratio_anno"){
+                              split_by,
+                              group_by="seurat_clusters"){ 
 
   if (!requireNamespace("ggrastr", quietly = TRUE)) {
     stop("Package \"ggrastr\" must be installed to rasterize the plots.")
   }
-
 
   cells <- rownames(obj@meta.data)[!is.na(obj$seurat_clusters)]
   meta <- obj@meta.data[cells,]
   meta <- cbind(meta, obj@reductions$umap@cell.embeddings[cells,])
 
   smooth_rainbow <- khroma::colour("smooth rainbow")
-  p <- meta %>% ggplot(aes(umap_1, umap_2, color=meta[[group_by]]))+ggrastr::geom_point_rast(aes(alpha=0.1), size=0.3)+
+  p <- meta %>% ggplot(aes(umap_1, umap_2, color=.data[[group_by]]))+ggrastr::geom_point_rast(aes(alpha=0.1), size=0.3)+
     facet_wrap(~meta[[split_by]])+
     theme_classic()+
     guides(alpha = "none")+
@@ -179,7 +187,7 @@ split_plot_sketch <- function(obj,
     {if(length(unique(meta[[group_by]]))<=12){
       scale_color_manual(values = pals::tol(12))}
       else{
-        scale_color_manual(values = smooth_rainbow(max(discard(as.numeric(as.character(obj@meta.data[,group_by])), is.na))+1,
+        scale_color_manual(values = smooth_rainbow(max(purrr::discard(as.numeric(as.character(obj@meta.data[,group_by])), is.na))+1,
                                                    range = c(0.01, 0.99)))
       }}
   return(p)
@@ -187,12 +195,14 @@ split_plot_sketch <- function(obj,
 
 #' Ratio cluster plot.
 #'
-#' Stacked bar plot of each cluster with the proportion of cells below/above the threshold determined with Otsu's method using the FSC.A/FSC.H ratio.
+#' Stacked bar plot of each cluster with the proportion of cells below/above the threshold determined using the FSC.A/FSC.H ratio (flow cytometry) or the event type as categorised based on the DNA probe content (mass cytometry).
 #'
 #' @param obj The Seurat object.
 #' @param clusters The string of the meta.data column with the clustering resolution to plot.
-#' @param ratio The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio and the determined threshold using Otsu's method.
-#' @param assay The Seurat assay to use (default FACS).
+#' @param ratio `r lifecycle::badge("deprecated")` The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio. Please use `categorisation` instead. 
+#' @param categorisation The meta.data column with the categorisation of cells (ratio_high/ratio_low or event type) determined using the FSC.A/FSC.H ratio or the DNA probe content. Default is ratio_anno for flow cytometry or event_type for mass_cytometry.    
+#' @param assay The Seurat assay to use (default FACS for flow cytometry or MC for mass cytometry).
+#' @param colors Plot colors. 
 #'
 #' @return None
 #'
@@ -200,24 +210,43 @@ split_plot_sketch <- function(obj,
 #' @export
 ratio_cluster_plot <- function(obj,
                                clusters="seurat_clusters",
-                               ratio="ratio_anno",
-                               assay="FACS"){
+                               ratio=deprecated(),
+                               categorisation=NULL,
+                               assay=NULL, 
+                               colors = c("#2E86AB", "#F18F01", "#A23B72", "#9BC53D")){
   # load dependencies
   pkg <- c("ggplot2")
   invisible(lapply(pkg, library, character.only = TRUE))
 
   # switch to specified assay
-  DefaultAssay(obj) <- assay
+  if(is.null(assay) & "MC" %in% names(obj@assays)) {
+    DefaultAssay(obj) <- "MC"
+  } else if(is.null(assay) & "FACS" %in% names(obj@assays)){
+    DefaultAssay(obj) <- "FACS"
+  } else if(!is.null(assay)) {
+    DefaultAssay(obj) <- assay
+  }
+  
   # number of clusters
   max_i <- max(as.numeric(as.vector(obj@meta.data[,clusters])), na.rm = T)
   original_warning <- options(warn = -1)
-  # plot
-  obj@meta.data %>%  group_by(.data[[clusters]], .data[[ratio]]) %>% count(.data[[ratio]]) %>%
-    ggplot(aes(x = reorder(.data[[clusters]], as.numeric(.data[[clusters]]), FUN = max), y = n, fill = .data[[ratio]])) +
+  
+  # plot 
+  if(lifecycle::is_present(ratio)){
+    lifecycle::deprecate_warn("1.1.0", "PICtR::ratio_cluster_plot(ratio = )", "PICtR::ratio_cluster_plot(categorisation = )")
+    categorisation <- ratio
+  } else if(is.null(categorisation) & "ratio_anno" %in% colnames(obj@meta.data)) {
+    categorisation <- "ratio_anno"
+  } else if(is.null(categorisation) & "event_type" %in% colnames(obj@meta.data)) {
+    categorisation <- "event_type"
+  }
+  
+  obj@meta.data %>%  group_by(.data[[clusters]], .data[[categorisation]]) %>% count(.data[[categorisation]]) %>%
+    ggplot(aes(x = reorder(.data[[clusters]], as.numeric(.data[[clusters]]), FUN = max), y = n, fill = .data[[categorisation]])) +
     geom_bar(stat = "identity", position = "fill") +
-    scale_fill_manual(values = rev(c("orange2", "dodgerblue2"))) +
-    scale_x_discrete(limits = as.character(0:max_i)) +  # Reorder levels within the range of 1 to i
+    scale_x_discrete(limits = as.character(0:max_i)) +  # reorder levels within the range of 1 to i
     xlab("Clusters") +
+    scale_fill_manual(values = colors) +
     labs(y = "Count") +
     ggtitle("Cluster Analysis") +
     theme_minimal()

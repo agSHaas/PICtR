@@ -1,6 +1,6 @@
 # PICtR
 
-This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.  
+This is the computational workflow to analyse physically interacting cells (PICs) in flow and mass cytometry data using R.  
 
 ## Installation
 
@@ -17,16 +17,16 @@ remotes::install_github("agSHaas/PICtR")
 
 ## Workflow  
   
-Please refer to the [Vignette](https://agshaas.github.io/PICtR/articles/PICtR.html) and the Method section of our manuscript for a comprehensive description of the analysis pipeline. 
+Please refer to the Vignettes and the Method section of our manuscript for a comprehensive description of the analysis pipeline. 
 
 ## Demo Data
 
-The package comprises a demo data set from LCMV infected mice. Data was analysed using high parametric spectral flow cytometry and can be loaded with `data(demo_lcmv)`. See `?demo_lcmv` for details. 
+The package comprises a flow cytometry demo data set from LCMV infected mice. Data was analysed using high parametric spectral flow cytometry and can be loaded with `data(demo_lcmv)`. See `?demo_lcmv` for details. 
 
 
 ## Dependencies
 
-The core of this framework relies on [Seurat version 5](https://github.com/satijalab/seurat), [BPCells](https://github.com/bnprks/BPCells), [MASS](https://cran.r-project.org/web/packages/MASS/index.html), and the [tidyverse](https://www.tidyverse.org/). Please make sure that R is operating in version 4.3 or higher.
+The core of this framework builds on [Seurat version 5](https://github.com/satijalab/seurat) and [BPCells](https://github.com/bnprks/BPCells). Please make sure that R is operating in version 4.3 or higher.
 
 Some packages are not necessarily required, but expand the functionality of PICtR. Consider installing:
 

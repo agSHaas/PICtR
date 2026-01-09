@@ -7,8 +7,10 @@
 ratio_cluster_plot(
   obj,
   clusters = "seurat_clusters",
-  ratio = "ratio_anno",
-  assay = "FACS"
+  ratio = deprecated(),
+  categorisation = NULL,
+  assay = NULL,
+  colors = c("#2E86AB", "#F18F01", "#A23B72", "#9BC53D")
 )
 }
 \arguments{
@@ -16,13 +18,17 @@ ratio_cluster_plot(
 
 \item{clusters}{The string of the meta.data column with the clustering resolution to plot.}
 
-\item{ratio}{The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio and the determined threshold using Otsu's method.}
+\item{ratio}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio. Please use \code{categorisation} instead.}
 
-\item{assay}{The Seurat assay to use (default FACS).}
+\item{categorisation}{The meta.data column with the categorisation of cells (ratio_high/ratio_low or event type) determined using the FSC.A/FSC.H ratio or the DNA probe content. Default is ratio_anno for flow cytometry or event_type for mass_cytometry.}
+
+\item{assay}{The Seurat assay to use (default FACS for flow cytometry or MC for mass cytometry).}
+
+\item{colors}{Plot colors.}
 }
 \value{
 None
 }
 \description{
-Stacked bar plot of each cluster with the proportion of cells below/above the threshold determined with Otsu's method using the FSC.A/FSC.H ratio.
+Stacked bar plot of each cluster with the proportion of cells below/above the threshold determined using the FSC.A/FSC.H ratio (flow cytometry) or the event type as categorised based on the DNA probe content (mass cytometry).
 }

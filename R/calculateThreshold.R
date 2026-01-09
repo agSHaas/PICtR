@@ -39,13 +39,13 @@ calculateThreshold <- function(data,
     hn = hist$counts
     wB = 0
     wF = 0
-    mB =0
-    mF =0
+    mB = 0
+    mF = 0
     total =sum(hist$counts)
-    sumB =0
+    sumB = 0
     sum = 0
-    between=0
-    maxi =0
+    between = 0
+    maxi = 0
     for (i in 1:(length(hist$breaks)-1)){
       sum = sum + ( i * hn[i])
     }

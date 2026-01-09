@@ -3,11 +3,13 @@
 #' Characterizes cells into ratio_high and ratio_low cells for physically interacting cell analysis,
 #' samples a representative subset of cells using \code{\link[Seurat]{SketchData}} and runs the standard Seurat analysis workflow.
 #'
-#' @param channel A data frame with the dimensionality cells x flow cytometry parameters.
-#' @param meta_data A data frame with meta_data for every cell (Default=NULL).
-#' @param assay A character string with the name of the assay to be created (Default="FACS").
-#' @param FSC.A The name (string) of the column containing the FSC.A scatter parameter (Default="FACS.A").
-#' @param FSC.H The name (string) of the column containing the FSC.H scatter parameter (Default="FACS.H").
+#' @param channel A data frame with the dimensionality cells x cytometry parameters.
+#' @param meta_data A data frame with meta_data for every event (Default=NULL).
+#' @param technology Flow cytometry ("flow") or mass cytometry ("mass"). Default is flow cytometry. 
+#' @param assay A character string with the name of the assay to be created. Default is "FACS" for flow cytometry data or "MC" for mass cytometry data. 
+#' @param FSC.A The name (string) of the column containing the FSC.A scatter parameter. Only relevant for flow cytometry data. (Default="FACS.A").
+#' @param FSC.H The name (string) of the column containing the FSC.H scatter parameter Only relevant for flow cytometry data. (Default="FACS.H").
+#' @param DNA The name (string) of the column containing the DNA parameter. Only relevant for mass cytometry data.
 #' @param n_sketch_cells The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000).
 #' @param n_components The number of components computed and used during analysis. "all" or given as an integer (Default="all").
 #' @param resolution A numerical vector with the desired resolutions for clustering (Default: c(0.5,1,2,3,4)). Only used for Louvain, SLM, and Leiden clustering.
@@ -18,10 +20,11 @@
 #' @param min_clst_size minimum cluster size for HDBSCAN. See details at \code{\link[dbscan]{hdbscan}} (Default: 100).
 #' @param meta.k meta k for FlowSOM clustering, see \code{\link[Spectre]{run.flowsom}} (Default: "auto").
 #' @param obj_name The name used for storing the Seurat object (character).
-#' @param ratio Boolean variable. If TRUE the FSC ratio (FSC.A/FSC.H) will be calculated.
+#' @param ratio `r lifecycle::badge("deprecated")` Boolean variable. If TRUE the FSC ratio (FSC.A/FSC.H) will be calculated. Only relevant for flow cytometry, please use `categorisation` instead. 
+#' @param categorisation Boolean variable. If TRUE the events will be categorised as likely singlets or multiplets. For mass cytometry data, multiplets can be categorised as doublets, triplets or higher order multiplets. 
 #' @param thresholding_method Method for thresholding. One of "otsu", "triangle", "kmeans", or any method from the autothresholdr package. For details see ?calculateThreshold() (Default = "otsu").
 #' @param hist_breaks Number of histogram breaks for methods that rely on histograms. Should be >100 (Default: 2000).
-#' @param group_by Optional grouping parameter to calculate the FSC ratio (FSC.A/FSC.H) thresholding method for.
+#' @param group_by Optional grouping parameter to calculate the thresholding method for.
 #' @param verbose Verbosity (Boolean).
 #' @param BPcell_dir Optional directory with the counts matrix for \code{\link[BPCells]{open_matrix_dir}}.
 #' @param overwrite Overwrite existing BPCells directory? (Default: FALSE)
@@ -30,12 +33,13 @@
 #'
 #' @examples obj <- sketch_wrapper(channel = demo_lcmv,
 #'                       meta_data = demo_lcmv,
+#'                       technology = "flow",
 #'                       n_sketch_cells = 5000,
 #'                       clst_algorithm = 1,
-#'                       ratio = TRUE,
+#'                       classification = TRUE,
 #'                       thresholding_method = "otsu", 
 #'                       working_dir = tempdir())
-#'
+#'                       
 #' @return Seurat object.
 #'
 #' @references Hao et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nature Biotechnology (2023). doi: \url{https://doi.org/10.1038/s41587-023-01767-y}.
@@ -50,9 +54,11 @@
 #' @export
 sketch_wrapper <- function(channel=channel,
                            meta_data=NULL,
-                           assay="FACS",
+                           technology="flow",
+                           assay="",
                            FSC.A="FSC.A",
                            FSC.H="FSC.H",
+                           DNA=NULL,
                            n_sketch_cells=50000,
                            n_components="all",
                            clst_algorithm=1,
@@ -60,7 +66,8 @@ sketch_wrapper <- function(channel=channel,
                            min_clst_size=100,
                            meta.k="auto",
                            obj_name="obj_sketched_non_projected",
-                           ratio=TRUE,
+                           ratio=deprecated(),
+                           categorisation=TRUE,
                            thresholding_method="otsu",
                            hist_breaks = 2000,
                            group_by=NULL,
@@ -76,11 +83,23 @@ sketch_wrapper <- function(channel=channel,
     options(future.globals.maxSize = 1e9)
     options(Seurat.object.assay.version = "v5")
   }
+  
+  # check provided technology 
+  if(!technology %in% c("flow", "mass")) {
+    stop("Please provide if the data stems from flow cytometry (technology = 'flow') or mass cytometry ('mass')")
+  }
+  
+  # set default assay name according to the technology if not provided 
+  if(assay == "" & technology == "flow"){
+    assay = "FACS"
+  } else if(assay == "" & technology == "mass"){
+    assay = "MC"
+  }
 
   # check if BP cells was already run
   if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir) & overwrite == F){
     stop("Seems like BPcells was already run, either remove the folder containing compressed data, define a path (BPcell_dir) to read in compressed files, or specify overwrite = TRUE")
-  }else if(!is.null(BPcell_dir) & dir.exists(paste0(working_dir, "/counts"))){
+  } else if(!is.null(BPcell_dir) & dir.exists(paste0(working_dir, "/counts"))){
     message("The pre-exisiting compressed data generated with BPCells will be used")
   } else if(dir.exists(paste0(working_dir, "/counts")) & is.null(BPcell_dir) & overwrite == T) {
     message("The BPCells directory will be overwritten")
@@ -88,9 +107,15 @@ sketch_wrapper <- function(channel=channel,
 
   channel <- as.data.frame(channel)
   meta_data <- as.data.frame(meta_data)
-  # calculate FSC area to height ratio
-  if(ratio){
-    message("Calculation of Ratio")
+  
+  # for flow cytometry data, calculate FSC area to height ratio
+  if(lifecycle::is_present(ratio)){
+    lifecycle::deprecate_warn("1.1.0", "PICtR::sketch_wrapper(ratio = )", "PICtR::sketch_wrapper(categorisation = )")
+    categorisation <- ratio
+  }
+  
+  if(technology == "flow" & categorisation){
+    message("Calculation of FSC.A/FSC.H ratio")
     channel["ratio"] <- channel[FSC.A]/channel[FSC.H]
     channel$ratio <- scales::rescale(as.numeric(channel$ratio), to = c(0, 1023))
   }
@@ -129,13 +154,12 @@ sketch_wrapper <- function(channel=channel,
   if(!is.null(meta_data)){
     meta_data <- meta_data %>% dplyr::select(-(intersect(colnames(channel), colnames(meta_data)))) # remove cols present in both meta_data and channel
     obj@meta.data <- cbind(obj@meta.data, meta_data, channel) # add provided meta_data and all channel values to meta.data
-    obj$ratio <- channel$ratio
   }else{
     obj@meta.data <- cbind(obj@meta.data, channel)
   }
 
-  # calculate threshold and divide cells accordingly
-  if(ratio){
+  # calculate threshold(s) and divide events accordingly
+  if(categorisation & technology == "flow"){
     cutoff <- calculateThreshold(data = obj$ratio, method = thresholding_method, breaks = hist_breaks, seed = seed)
     obj$ratio_anno <- ifelse(obj$ratio>=cutoff, "Ratio_high", "Ratio_low")
     obj$ratio_anno <- factor(obj$ratio_anno, levels = c("Ratio_low", "Ratio_high"))
@@ -158,7 +182,57 @@ sketch_wrapper <- function(channel=channel,
       obj@meta.data <- meta
       obj$ratio_anno_group <- factor(obj$ratio_anno_group, levels = c("Ratio_low", "Ratio_high"))
     }
-  }
+  } else if(categorisation & technology == "mass"){
+    if(is.null(DNA)){
+      stop("Please provide the name of the column that contains the DNA probe data.")
+    }
+    
+    # categorize
+    if(is.null(group_by)){
+      data = obj@meta.data
+      cutoff <- calculateThreshold(data = data[[DNA]], method = thresholding_method, breaks = hist_breaks, seed = seed) # for singlets vs multiplets
+      
+      # iteratively threshold multiplets  
+      cutoff2 <- calculateThreshold(data %>% filter(.data[[DNA]] >= cutoff) %>% pull(.data[[DNA]]), method = thresholding_method, breaks = hist_breaks, seed = seed) # should this be hardcoded?
+      cutoff3 <- calculateThreshold(data %>% filter(.data[[DNA]] >= cutoff2) %>% pull(.data[[DNA]]), method = thresholding_method, breaks = hist_breaks, seed = seed)
+      
+      # assign 
+      data <- data %>% 
+        mutate(event_type = case_when(cutoff <= .data[[DNA]] & .data[[DNA]] < cutoff2 ~ "doublet", 
+                                      cutoff2 <= .data[[DNA]] & .data[[DNA]] < cutoff3 ~ "triplet", 
+                                      .data[[DNA]] >= cutoff3 ~ "multiplet", 
+                                      .default = "singlet"))
+      
+      # safety for Seurat objects 
+      rownames(data) = rownames(obj@meta.data)
+      # re-assign
+      obj@meta.data <- data 
+  
+    } else {
+      category_list <-  split(obj@meta.data, f=obj@meta.data[,group_by])
+      events <- lapply(category_list, function(list){
+        cutoff <- calculateThreshold(data = list[[DNA]], method = thresholding_method, breaks = hist_breaks, seed = seed)
+        cutoff2 <- calculateThreshold(list %>% filter(list[[DNA]] >= cutoff) %>% pull(DNA))
+        cutoff3 <- calculateThreshold(list %>% filter(list[[DNA]] >= cutoff2) %>% pull(DNA))
+        list <- list %>% 
+          mutate(event_type = case_when(cutoff <= list[[DNA]] & list[[DNA]] < cutoff2 ~ "doublet", 
+                                        cutoff2 <= list[[DNA]] & list[[DNA]] < cutoff3 ~ "triplet", 
+                                        list[[DNA]] >= cutoff3 ~ "multiplet", 
+                                        .default = "singlet"))
+        return(list)
+      })
+      
+      names(events) <- NULL
+      ratio.df <- do.call(rbind, events)
+      
+      
+      meta <- dplyr::left_join(tibble::rownames_to_column(obj@meta.data),
+                               dplyr::select(rownames_to_column(ratio.df), rowname, event_type),
+                               by=c("rowname"="rowname")) %>% tibble::column_to_rownames()
+      obj@meta.data <- meta
+      obj$event_type <- factor(obj$event_type, levels = c("singlet", "doublet", "triplet", "multiplet")) 
+    }
+ }
 
   # sketching workflow
   message("Sketching started...")

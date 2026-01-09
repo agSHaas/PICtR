@@ -7,9 +7,11 @@
 sketch_wrapper(
   channel = channel,
   meta_data = NULL,
-  assay = "FACS",
+  technology = "flow",
+  assay = "",
   FSC.A = "FSC.A",
   FSC.H = "FSC.H",
+  DNA = NULL,
   n_sketch_cells = 50000,
   n_components = "all",
   clst_algorithm = 1,
@@ -17,7 +19,8 @@ sketch_wrapper(
   min_clst_size = 100,
   meta.k = "auto",
   obj_name = "obj_sketched_non_projected",
-  ratio = TRUE,
+  ratio = deprecated(),
+  categorisation = TRUE,
   thresholding_method = "otsu",
   hist_breaks = 2000,
   group_by = NULL,
@@ -29,15 +32,19 @@ sketch_wrapper(
 )
 }
 \arguments{
-\item{channel}{A data frame with the dimensionality cells x flow cytometry parameters.}
+\item{channel}{A data frame with the dimensionality cells x cytometry parameters.}
 
-\item{meta_data}{A data frame with meta_data for every cell (Default=NULL).}
+\item{meta_data}{A data frame with meta_data for every event (Default=NULL).}
 
-\item{assay}{A character string with the name of the assay to be created (Default="FACS").}
+\item{technology}{Flow cytometry ("flow") or mass cytometry ("mass"). Default is flow cytometry.}
 
-\item{FSC.A}{The name (string) of the column containing the FSC.A scatter parameter (Default="FACS.A").}
+\item{assay}{A character string with the name of the assay to be created. Default is "FACS" for flow cytometry data or "MC" for mass cytometry data.}
 
-\item{FSC.H}{The name (string) of the column containing the FSC.H scatter parameter (Default="FACS.H").}
+\item{FSC.A}{The name (string) of the column containing the FSC.A scatter parameter. Only relevant for flow cytometry data. (Default="FACS.A").}
+
+\item{FSC.H}{The name (string) of the column containing the FSC.H scatter parameter Only relevant for flow cytometry data. (Default="FACS.H").}
+
+\item{DNA}{The name (string) of the column containing the DNA parameter. Only relevant for mass cytometry data.}
 
 \item{n_sketch_cells}{The number of cells to be subsampled by \code{\link[Seurat]{SketchData}} (Default=50000).}
 
@@ -56,13 +63,15 @@ or "flowSOM" for self-organizing maps, see \code{\link[Spectre]{run.flowsom}}, (
 
 \item{obj_name}{The name used for storing the Seurat object (character).}
 
-\item{ratio}{Boolean variable. If TRUE the FSC ratio (FSC.A/FSC.H) will be calculated.}
+\item{ratio}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Boolean variable. If TRUE the FSC ratio (FSC.A/FSC.H) will be calculated. Only relevant for flow cytometry, please use \code{categorisation} instead.}
+
+\item{categorisation}{Boolean variable. If TRUE the events will be categorised as likely singlets or multiplets. For mass cytometry data, multiplets can be categorised as doublets, triplets or higher order multiplets.}
 
 \item{thresholding_method}{Method for thresholding. One of "otsu", "triangle", "kmeans", or any method from the autothresholdr package. For details see ?calculateThreshold() (Default = "otsu").}
 
 \item{hist_breaks}{Number of histogram breaks for methods that rely on histograms. Should be >100 (Default: 2000).}
 
-\item{group_by}{Optional grouping parameter to calculate the FSC ratio (FSC.A/FSC.H) thresholding method for.}
+\item{group_by}{Optional grouping parameter to calculate the thresholding method for.}
 
 \item{verbose}{Verbosity (Boolean).}
 
@@ -84,12 +93,13 @@ samples a representative subset of cells using \code{\link[Seurat]{SketchData}} 
 \examples{
 obj <- sketch_wrapper(channel = demo_lcmv,
                       meta_data = demo_lcmv,
+                      technology = "flow",
                       n_sketch_cells = 5000,
                       clst_algorithm = 1,
-                      ratio = TRUE,
+                      classification = TRUE,
                       thresholding_method = "otsu", 
                       working_dir = tempdir())
-
+                      
 }
 \references{
 Hao et al. Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nature Biotechnology (2023). doi: \url{https://doi.org/10.1038/s41587-023-01767-y}.

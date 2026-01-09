@@ -8,10 +8,12 @@ wrapper_for_plots(
   obj = obj,
   feature_plot = TRUE,
   cluster_plot = TRUE,
-  meta_list = list("ratio_anno"),
+  meta_list = list(),
   cluster_handle = "sketch_snn_res",
   feature_plot_colors = pals::parula(1000),
-  ratio_plot_color = c(Ratio_low = "dodgerblue2", Ratio_high = "gold2"),
+  ratio_plot_color = c(Ratio_low = "dodgerblue2", Ratio_high = "orange2"),
+  event_type_color = c(singlet = "#2E86AB", doublet = "#A23B72", triplet = "#F18F01",
+    multiplet = "#9BC53D"),
   reduction = "umap",
   alpha = 1,
   raster = F,
@@ -34,7 +36,9 @@ Can be both numeric to generate \code{\link[Seurat]{FeaturePlot}} or class chara
 
 \item{feature_plot_colors}{Color palette for \code{\link[Seurat]{FeaturePlot}}.}
 
-\item{ratio_plot_color}{Color palette for \code{\link{ratio_cluster_plot}}.}
+\item{ratio_plot_color}{Color palette for \code{\link{ratio_cluster_plot}} when used with flow cytometry data.}
+
+\item{event_type_color}{Color pallete for \code{\link{ratio_cluster_plot}} when used with mass cytometry data.}
 
 \item{reduction}{Reduction to use for plotting, for example UMAP.}
 
