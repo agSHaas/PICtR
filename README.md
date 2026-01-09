@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/671548322.svg)](https://doi.org/10.5281/zenodo.18201450)
+[![DOI](https://zenodo.org/badge/671548322.svg)](https://doi.org/10.5281/zenodo.18201450) [![PICtR status badge](https://agshaas.r-universe.dev/PICtR/badges/version)](https://agshaas.r-universe.dev/PICtR)
 
 # PICtR
 
