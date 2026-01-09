@@ -16,7 +16,7 @@ ratio_cluster_plot(
 
 \item{clusters}{The string of the meta.data column with the clustering resolution to plot.}
 
-\item{ratio}{The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio and the determined threshold using Otsu's method.}
+\item{ratio}{The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio and the determined threshold.}
 
 \item{assay}{The Seurat assay to use (default FACS).}
 }
@@ -24,5 +24,5 @@ ratio_cluster_plot(
 None
 }
 \description{
-Stacked bar plot of each cluster with the proportion of cells below/above the threshold determined with Otsu's method using the FSC.A/FSC.H ratio.
+Stacked bar plot of each cluster with the proportion of cells below/above the determined FSC.A/FSC.H ratio threshold.
 }
