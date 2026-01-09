@@ -36,7 +36,7 @@
 #'                       technology = "flow",
 #'                       n_sketch_cells = 5000,
 #'                       clst_algorithm = 1,
-#'                       classification = TRUE,
+#'                       categorisation = TRUE,
 #'                       thresholding_method = "otsu", 
 #'                       working_dir = tempdir())
 #'                       
