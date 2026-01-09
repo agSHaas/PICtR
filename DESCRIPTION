@@ -1,7 +1,7 @@
 Type: Package
 Package: PICtR
 Title: Physically Interacting Cell (PIC) toolkit for R
-Version: 1.0.0
+Version: 1.0.1
 Date: 2025-01-16
 Authors@R: c(
     person("Lea", "Jopp-Saile", , "jopp-saile@protonmail.com", role = "aut",
