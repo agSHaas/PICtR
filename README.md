@@ -6,8 +6,13 @@ This is the computational workflow to analyse physically interacting cells (PICs
 
 ## Installation
 
-PICtR requires R version 4.3 or later. First, please install [BPCells](https://github.com/bnprks/BPCells). Next, PICtR can be installed using:
+First, please install [BPCells](https://github.com/bnprks/BPCells). Next, PICtR can be installed using:
 
+```R
+install.packages("PICtR", repos = c("https://agshaas.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+or directly from GitHub using:
 
 ```R
 if (!require("remotes", quietly = TRUE)) {
@@ -28,7 +33,7 @@ The package comprises a demo data set from LCMV infected mice. Data was analysed
 
 ## Dependencies
 
-The core of this framework relies on [Seurat version 5](https://github.com/satijalab/seurat), [BPCells](https://github.com/bnprks/BPCells), [MASS](https://cran.r-project.org/web/packages/MASS/index.html), and the [tidyverse](https://www.tidyverse.org/). Please make sure that R is operating in version 4.3 or higher.
+The core of this framework relies on [Seurat version 5](https://github.com/satijalab/seurat) and [BPCells](https://github.com/bnprks/BPCells). Please make sure that R is operating in version 4.3 or higher.
 
 Some packages are not necessarily required, but expand the functionality of PICtR. Consider installing:
 
