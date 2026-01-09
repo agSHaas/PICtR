@@ -46,4 +46,4 @@ If you use PICtR in your work, please cite
 
 ## Version 
 
-Current version 1.0.0
+Current version 1.0.1
