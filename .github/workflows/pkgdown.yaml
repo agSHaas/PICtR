@@ -33,8 +33,7 @@ jobs:
           
       - name: Set repos 
         run: | 
-          cat("options(repos = c('https://agshaas.r-universe.dev', 'https://cloud.r-project.org'))\n",
-              file = "~/.Rprofile", append = TRUE)
+          cat("options(repos = c('https://agshaas.r-universe.dev', 'https://cloud.r-project.org'))\n", file = "~/.Rprofile", append = TRUE)
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
