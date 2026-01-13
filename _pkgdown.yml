@@ -1,4 +1,5 @@
 url: https://agshaas.github.io/PICtR/
 template:
   bootstrap: 5
+  light-switch: true 
 
