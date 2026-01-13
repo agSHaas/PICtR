@@ -44,6 +44,9 @@ Suggests:
     knitr,
     rmarkdown,
     testthat
+Remotes: 
+    github::immunedynamics/Spectre,
+    github::bnprks/BPCells/r
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
