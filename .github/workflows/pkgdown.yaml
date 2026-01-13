@@ -33,12 +33,14 @@ jobs:
           extra-repositories: "https://agshaas.r-universe.dev"
         
       - name: Install system dependencies
-        run: sudo apt-get install -y libcairo2-dev
-  
+        run: sudo apt-get install -y libcairo2-dev libhdf5-dev
+        
+        
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::.
           needs: website
+          cache: false
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
