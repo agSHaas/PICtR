@@ -181,8 +181,8 @@ demo_obj <- sketch_wrapper(demo_lcmv,
 #> Positive:  CD19, CD90-1, CD4, Ly6G, ratio, FSC.A, SSC.A, MHCII 
 #> Negative:  CD11c, CD8, CD45-2, CD11b, CD3, SSC.H, FSC.H 
 #> PC_ 5 
-#> Positive:  CD8, Ly6G, CD19, CD3, FSC.H, FSC.A, ratio, SSC.A 
-#> Negative:  CD11c, MHCII, CD4, CD90-1, CD45-2, SSC.H, CD11b 
+#> Positive:  CD11c, MHCII, CD4, CD90-1, CD45-2, SSC.H, CD11b, SSC.A 
+#> Negative:  CD8, Ly6G, CD19, CD3, FSC.H, FSC.A, ratio 
 #> 
 #> Computing nearest neighbor graph
 #> 
@@ -217,21 +217,21 @@ demo_obj <- sketch_wrapper(demo_lcmv,
 #> Number of communities: 19
 #> Elapsed time: 0 seconds
 #> UMAP will return its model
-#> 17:31:08 UMAP embedding parameters a = 0.9922 b = 1.112
-#> 17:31:08 Read 5000 rows and found 15 numeric columns
-#> 17:31:08 Using Annoy for neighbor search, n_neighbors = 30
-#> 17:31:08 Building Annoy index with metric = cosine, n_trees = 50
+#> 23:11:37 UMAP embedding parameters a = 0.9922 b = 1.112
+#> 23:11:37 Read 5000 rows and found 15 numeric columns
+#> 23:11:37 Using Annoy for neighbor search, n_neighbors = 30
+#> 23:11:37 Building Annoy index with metric = cosine, n_trees = 50
 #> 0%   10   20   30   40   50   60   70   80   90   100%
 #> [----|----|----|----|----|----|----|----|----|----|
 #> **************************************************|
-#> 17:31:08 Writing NN index file to temp file /tmp/Rtmp4yei7z/file9c6bd84345d
-#> 17:31:08 Searching Annoy index using 1 thread, search_k = 3000
-#> 17:31:10 Annoy recall = 100%
-#> 17:31:10 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-#> 17:31:11 Initializing from normalized Laplacian + noise (using RSpectra)
-#> 17:31:11 Commencing optimization for 500 epochs, with 202814 positive edges
-#> 17:31:11 Using rng type: pcg
-#> 17:31:15 Optimization finished
+#> 23:11:37 Writing NN index file to temp file /tmp/Rtmpe3Azmv/file9ea764ce0a3c
+#> 23:11:37 Searching Annoy index using 1 thread, search_k = 3000
+#> 23:11:39 Annoy recall = 100%
+#> 23:11:39 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+#> 23:11:39 Initializing from normalized Laplacian + noise (using RSpectra)
+#> 23:11:39 Commencing optimization for 500 epochs, with 202814 positive edges
+#> 23:11:39 Using rng type: pcg
+#> 23:11:45 Optimization finished
 #> The object will be updated and saved
 ```
 
@@ -423,21 +423,21 @@ interact_obj <- interact_obj %>%
 #> Computing nearest neighbor graph
 #> Computing SNN
 #> UMAP will return its model
-#> 17:31:39 UMAP embedding parameters a = 0.9922 b = 1.112
-#> 17:31:39 Read 9808 rows and found 15 numeric columns
-#> 17:31:39 Using Annoy for neighbor search, n_neighbors = 30
-#> 17:31:39 Building Annoy index with metric = cosine, n_trees = 50
+#> 23:12:07 UMAP embedding parameters a = 0.9922 b = 1.112
+#> 23:12:07 Read 9808 rows and found 15 numeric columns
+#> 23:12:07 Using Annoy for neighbor search, n_neighbors = 30
+#> 23:12:07 Building Annoy index with metric = cosine, n_trees = 50
 #> 0%   10   20   30   40   50   60   70   80   90   100%
 #> [----|----|----|----|----|----|----|----|----|----|
 #> **************************************************|
-#> 17:31:40 Writing NN index file to temp file /tmp/Rtmp4yei7z/file9c6bd2a2c3b
-#> 17:31:40 Searching Annoy index using 1 thread, search_k = 3000
-#> 17:31:43 Annoy recall = 100%
-#> 17:31:44 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-#> 17:31:44 Initializing from normalized Laplacian + noise (using RSpectra)
-#> 17:31:44 Commencing optimization for 500 epochs, with 406056 positive edges
-#> 17:31:44 Using rng type: pcg
-#> 17:31:53 Optimization finished
+#> 23:12:07 Writing NN index file to temp file /tmp/Rtmpe3Azmv/file9ea7124d2e4
+#> 23:12:07 Searching Annoy index using 1 thread, search_k = 3000
+#> 23:12:10 Annoy recall = 100%
+#> 23:12:11 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+#> 23:12:11 Initializing from normalized Laplacian + noise (using RSpectra)
+#> 23:12:11 Commencing optimization for 500 epochs, with 406056 positive edges
+#> 23:12:11 Using rng type: pcg
+#> 23:12:21 Optimization finished
 
 # plot the different clustering resolutions
 DimPlot(interact_obj, group.by = "FACS_snn_res.0.5", label = T) + theme(legend.position = "none")
@@ -451,7 +451,7 @@ DimPlot(interact_obj, group.by = "FACS_snn_res.1", label = T) + theme(legend.pos
 #> Running Louvain algorithm...
 #> Maximum modularity in 10 random starts: 0.8902
 #> Number of communities: 11
-#> Elapsed time: 1 seconds
+#> Elapsed time: 0 seconds
 #> Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 #> 
 #> Number of nodes: 9808
@@ -460,7 +460,7 @@ DimPlot(interact_obj, group.by = "FACS_snn_res.1", label = T) + theme(legend.pos
 #> Running Louvain algorithm...
 #> Maximum modularity in 10 random starts: 0.8573
 #> Number of communities: 15
-#> Elapsed time: 1 seconds
+#> Elapsed time: 0 seconds
 #> Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 #> 
 #> Number of nodes: 9808
@@ -469,7 +469,7 @@ DimPlot(interact_obj, group.by = "FACS_snn_res.1", label = T) + theme(legend.pos
 #> Running Louvain algorithm...
 #> Maximum modularity in 10 random starts: 0.8421
 #> Number of communities: 20
-#> Elapsed time: 1 seconds
+#> Elapsed time: 0 seconds
 ```
 
 ![](PICtR_files/figure-html/interacting_analysis-1.png)![](PICtR_files/figure-html/interacting_analysis-2.png)![](PICtR_files/figure-html/interacting_analysis-3.png)
@@ -582,21 +582,21 @@ interact_obj <- subset(interact_obj, cells = rownames(keep))
 interact_obj <- interact_obj %>% 
   RunUMAP(dims = 1:n_dims, return.model = T)
 #> UMAP will return its model
-#> 17:32:08 UMAP embedding parameters a = 0.9922 b = 1.112
-#> 17:32:08 Read 5482 rows and found 15 numeric columns
-#> 17:32:08 Using Annoy for neighbor search, n_neighbors = 30
-#> 17:32:08 Building Annoy index with metric = cosine, n_trees = 50
+#> 23:12:35 UMAP embedding parameters a = 0.9922 b = 1.112
+#> 23:12:35 Read 5482 rows and found 15 numeric columns
+#> 23:12:35 Using Annoy for neighbor search, n_neighbors = 30
+#> 23:12:35 Building Annoy index with metric = cosine, n_trees = 50
 #> 0%   10   20   30   40   50   60   70   80   90   100%
 #> [----|----|----|----|----|----|----|----|----|----|
 #> **************************************************|
-#> 17:32:09 Writing NN index file to temp file /tmp/Rtmp4yei7z/file9c6b790f02ef
-#> 17:32:09 Searching Annoy index using 1 thread, search_k = 3000
-#> 17:32:10 Annoy recall = 100%
-#> 17:32:11 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-#> 17:32:11 Initializing from normalized Laplacian + noise (using RSpectra)
-#> 17:32:11 Commencing optimization for 500 epochs, with 222518 positive edges
-#> 17:32:11 Using rng type: pcg
-#> 17:32:16 Optimization finished
+#> 23:12:36 Writing NN index file to temp file /tmp/Rtmpe3Azmv/file9ea77243688e
+#> 23:12:36 Searching Annoy index using 1 thread, search_k = 3000
+#> 23:12:37 Annoy recall = 100%
+#> 23:12:38 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+#> 23:12:38 Initializing from normalized Laplacian + noise (using RSpectra)
+#> 23:12:38 Commencing optimization for 500 epochs, with 222518 positive edges
+#> 23:12:38 Using rng type: pcg
+#> 23:12:44 Optimization finished
 
 # plot 
 DimPlot(interact_obj, group.by = "interact_type", label = T)
