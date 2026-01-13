@@ -35,6 +35,13 @@ jobs:
       - name: Install system dependencies
         run: sudo apt-get install -y libcairo2-dev libhdf5-dev
         
+      - name: Install pak 
+        run: install.packages("pak", lib = Sys.getenv("R_LIB_FOR_PAK"))
+        shell: Rscript{0}
+        
+      - name: Install BPCells 
+        run: pak::pak("bnprks/BPCells/r")
+        shell: Rscript {0}
         
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
