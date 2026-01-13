@@ -36,7 +36,7 @@ jobs:
         run: sudo apt-get install -y libcairo2-dev libhdf5-dev
         
       - name: Install pak 
-        run: install.packages("pak", lib = Sys.getenv("R_LIB_FOR_PAK"))
+        run: install.packages("pak")
         shell: Rscript {0}
         
       - name: Install BPCells 
