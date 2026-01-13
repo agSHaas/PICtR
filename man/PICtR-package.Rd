@@ -6,6 +6,8 @@
 \alias{PICtR-package}
 \title{PICtR: Physically Interacting Cell (PIC) toolkit for R}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.
 }
 \seealso{

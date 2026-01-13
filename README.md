@@ -1,6 +1,7 @@
-[![DOI](https://zenodo.org/badge/671548322.svg)](https://doi.org/10.5281/zenodo.18201450) [![PICtR status badge](https://agshaas.r-universe.dev/PICtR/badges/version)](https://agshaas.r-universe.dev/PICtR)
+# PICtR <a href="https://agshaas.github.io/PICtR/"><img src="man/figures/logo.png" align="right" height="139" alt="PICtR website" /></a>
 
-# PICtR
+[![DOI](https://zenodo.org/badge/671548322.svg)](https://doi.org/10.5281/zenodo.18201450) 
+[![PICtR status badge](https://agshaas.r-universe.dev/PICtR/badges/version)](https://agshaas.r-universe.dev/PICtR)
 
 This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.  
 
