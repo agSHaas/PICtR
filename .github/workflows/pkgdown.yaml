@@ -37,7 +37,7 @@ jobs:
         
       - name: Install pak 
         run: install.packages("pak", lib = Sys.getenv("R_LIB_FOR_PAK"))
-        shell: Rscript{0}
+        shell: Rscript {0}
         
       - name: Install BPCells 
         run: pak::pak("bnprks/BPCells/r")
