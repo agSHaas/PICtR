@@ -4,14 +4,14 @@
 \name{PICtR-package}
 \alias{PICtR}
 \alias{PICtR-package}
-\title{PICtR: Physically Interacting Cell (PIC) Toolkit for R}
+\title{PICtR: Physically Interacting Cell (PIC) toolkit for R}
 \description{
 This is the computational workflow to analyse physically interacting cells (PICs) in flow cytometry data using R.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/agSHaas/PICtR}
+  \item \url{https://agshaas.github.io/PICtR/}
   \item Report bugs at \url{https://github.com/agSHaas/PICtR/issues}
 }
 

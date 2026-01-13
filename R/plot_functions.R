@@ -187,11 +187,11 @@ split_plot_sketch <- function(obj,
 
 #' Ratio cluster plot.
 #'
-#' Stacked bar plot of each cluster with the proportion of cells below/above the threshold determined with Otsu's method using the FSC.A/FSC.H ratio.
+#' Stacked bar plot of each cluster with the proportion of cells below/above the determined FSC.A/FSC.H ratio threshold. 
 #'
 #' @param obj The Seurat object.
 #' @param clusters The string of the meta.data column with the clustering resolution to plot.
-#' @param ratio The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio and the determined threshold using Otsu's method.
+#' @param ratio The meta.data column with the classification of cells (ratio_high/ratio_low) determined using the FSC.A/FSC.H ratio and the determined threshold.
 #' @param assay The Seurat assay to use (default FACS).
 #'
 #' @return None

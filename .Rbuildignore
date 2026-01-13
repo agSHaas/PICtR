@@ -4,3 +4,7 @@ vignettes/counts/
 obj_sketched_non_projected.rds
 vignettes/obj_sketched_non_projected.rds
 counts/
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
