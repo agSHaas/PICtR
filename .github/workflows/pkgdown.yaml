@@ -35,6 +35,10 @@ jobs:
         run: | 
           cat("options(repos = c('https://agshaas.r-universe.dev', 'https://cloud.r-project.org'))\n", file = "~/.Rprofile", append = TRUE)
         shell: Rscript {0}
+        
+      - name: Install system dependencies
+        run: sudo apt-get install -y libcairo2-dev
+  
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
