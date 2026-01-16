@@ -1,7 +1,7 @@
 Type: Package
 Package: PICtR
 Title: Physically Interacting Cell (PIC) toolkit for R
-Version: 1.0.1
+Version: 1.0.2
 Date: 2025-01-16
 Authors@R: c(
     person("Lea", "Jopp-Saile", , "jopp-saile@protonmail.com", role = "aut",
@@ -11,45 +11,45 @@ Authors@R: c(
   )
 Description: This is the computational workflow to analyse physically
     interacting cells (PICs) in flow cytometry data using R.
+License: file LICENSE
 URL: https://agshaas.github.io/PICtR/
 BugReports: https://github.com/agSHaas/PICtR/issues
-License: file LICENSE
 Depends: 
-    R (>= 4.3),
-    Seurat (>= 5.0.1),
     dplyr (>= 1.1.4),
-    ggplot2 (>= 3.5.0)
+    ggplot2 (>= 3.5.0),
+    R (>= 4.3),
+    Seurat (>= 5.0.1)
 Imports:
     BPCells (>= 0.1.0),
-    MASS,
-    SeuratObject (>= 5.0.1),
     cowplot,
     data.table,
     ggrepel,
     khroma (>= 1.12.0),
+    MASS,
     pals (>= 1.8),
     pbapply,
     readr (>= 2.1.5),
     scales,
+    SeuratObject (>= 5.0.1),
     tibble,
     tidyr (>= 1.3.1)
 Suggests: 
-    Spectre (>= 1.1.0),
+    autothresholdr (>= 1.4.2),
     ComplexHeatmap (>= 2.16.0),
     cytoMEM (>= 1.4.0),
-    ggrastr,
-    autothresholdr (>= 1.4.2),
     dbscan,
     flowMeans,
+    ggrastr,
     knitr,
     rmarkdown,
+    Spectre (>= 1.1.0),
     testthat
-Remotes: 
-    github::immunedynamics/Spectre,
-    github::bnprks/BPCells/r
 VignetteBuilder: 
     knitr
+Remotes: 
+    github::bnprks/BPCells/r,
+    github::immunedynamics/Spectre
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
-Config/testthat/edition: 3

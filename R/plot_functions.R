@@ -111,7 +111,7 @@ wrapper_for_plots <- function(obj=obj,
           name <- meta_list[[i]]
           plot <- DimPlot(object = obj,
                           group.by = name,
-                          cols = smooth_rainbow(max(discard(as.numeric(as.character(obj@meta.data[,name])), is.na))+1,
+                          cols = smooth_rainbow(max(purrr::discard(as.numeric(as.character(obj@meta.data[,name])), is.na))+1,
                                                 range = c(0.01, 0.99)),
                           label = TRUE, label.box = label_box,
                           label.size = label_size, repel = FALSE,
@@ -346,8 +346,8 @@ MEM_heatmap <- function(obj,
   # select markers and cluster annotations
   MEM <- obj@meta.data %>%
     dplyr::select(markers) %>%
-    rename(cluster = .data[[cluster_col]]) %>%
-    mutate(cluster = as.numeric(as.character(cluster)))
+    dplyr::rename(cluster = .data[[cluster_col]]) %>%
+    dplyr::mutate(cluster = as.numeric(as.character(cluster)))
 
   # calculate MEM scores
   MEM_values <- cytoMEM::MEM(MEM,
