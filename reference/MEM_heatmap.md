@@ -26,8 +26,8 @@ MEM_heatmap(
 
 - markers:
 
-  Meta.data columns with features that should be plotted in the heatmap
-  and the clustering resolution.
+  Vector of meta.data columns with features that should be plotted in
+  the heatmap.
 
 - cluster_col:
 
