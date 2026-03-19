@@ -19,18 +19,18 @@ import_cytometry_data <- function(path,
   
   # read values and save in list
   n <- length(files)
-  file_list <- lapply(files, function(csv) {
+  file_list <- lapply(files, function(file) {
     # read
-    tab <- data.table::fread(paste0(path, csv), header = T, sep = sep)
+    tab <- data.table::fread(paste0(path, "/", file), header = T, sep = sep)
     # extract meta data from file name 
-    tab$sample <- csv
+    tab$sample <- file
     
     if(!is.null(downsample)){
       tab <- dplyr::slice_sample(tab, prop = downsample)
     }
     
     if(verbose){
-      message(paste("import", which(files == csv), "of", n, "done!\n")) 
+      message(paste("import", which(files == file), "of", n, "done!\n")) 
     }
     return(tab)
   })
