@@ -19,7 +19,7 @@ MEM_heatmap(
 \arguments{
 \item{obj}{The Seurat object.}
 
-\item{markers}{Meta.data columns with features that should be plotted in the heatmap and the clustering resolution.}
+\item{markers}{Vector of meta.data columns with features that should be plotted in the heatmap.}
 
 \item{cluster_col}{Character string specifying the column that contains the clustering solution.}
 

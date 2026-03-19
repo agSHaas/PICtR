@@ -311,7 +311,7 @@ umap_rasterized <- function(data=obj,
 #' Marker Enrichment Modeling (MEM) Heatmap.
 #'
 #' @param obj The Seurat object.
-#' @param markers Meta.data columns with features that should be plotted in the heatmap and the clustering resolution.
+#' @param markers Vector of meta.data columns with features that should be plotted in the heatmap. 
 #' @param cluster_col Character string specifying the column that contains the clustering solution.
 #' @param cols Color palette.
 #' @param heatmap_name Title of the heatmap.
@@ -345,7 +345,7 @@ MEM_heatmap <- function(obj,
 
   # select markers and cluster annotations
   MEM <- obj@meta.data %>%
-    dplyr::select(markers) %>%
+    dplyr::select(all_of(markers), cluster_col) %>%
     rename(cluster = .data[[cluster_col]]) %>%
     mutate(cluster = as.numeric(as.character(cluster)))
 
@@ -369,8 +369,8 @@ MEM_heatmap <- function(obj,
                 clustering_method_rows = "ward.D2",
                 column_title = "marker",
                 row_title = "cluster",
-                row_names_gp = gpar(fontsize = 9),
-                column_names_gp = gpar(fontsize = 9),
+                row_names_gp = grid::gpar(fontsize = 9),
+                column_names_gp = grid::gpar(fontsize = 9),
                 show_row_names = T,
                 cluster_rows = T,
                 cluster_columns = T,
