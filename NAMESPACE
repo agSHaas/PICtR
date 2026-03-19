@@ -2,6 +2,7 @@
 
 export(MEM_heatmap)
 export(calculateThreshold)
+export(import_cytometry_data)
 export(predict_data)
 export(ratio_cluster_plot)
 export(save.obj)
