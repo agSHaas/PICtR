@@ -193,7 +193,7 @@ obj <- sketch_wrapper(channel = demo_lcmv,
 #> Warning: Matrix compression performs poorly with non-integers.
 #> • Consider calling convert_matrix_type if a compressed integer matrix is intended.
 #> This message is displayed once every 8 hours.
-#> Your newly generated object will be saved under: /tmp/RtmpcIOod5/obj_sketched_non_projected.rds
+#> Your newly generated object will be saved under: /tmp/RtmpuDXgFw/obj_sketched_non_projected.rds
 #> Sketching started...
 #> Finding variable features for layer counts
 #> Warning: Chernobyl! trL>n 15
@@ -279,10 +279,10 @@ obj <- sketch_wrapper(channel = demo_lcmv,
 #> To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
 #> This message will be shown once per session
 #> UMAP will return its model
-#> 17:20:19 UMAP embedding parameters a = 0.9922 b = 1.112
-#> 17:20:19 Read 5000 rows and found 15 numeric columns
-#> 17:20:19 Using Annoy for neighbor search, n_neighbors = 30
-#> 17:20:19 Building Annoy index with metric = cosine, n_trees = 50
+#> 17:53:40 UMAP embedding parameters a = 0.9922 b = 1.112
+#> 17:53:40 Read 5000 rows and found 15 numeric columns
+#> 17:53:40 Using Annoy for neighbor search, n_neighbors = 30
+#> 17:53:40 Building Annoy index with metric = cosine, n_trees = 50
 #> 0%   10   20   30   40   50   60   70   80   90   100%
 #> [----|----|----|----|----|----|----|----|----|----|
 #> *
@@ -336,14 +336,14 @@ obj <- sketch_wrapper(channel = demo_lcmv,
 #> *
 #> *
 #> |
-#> 17:20:20 Writing NN index file to temp file /tmp/RtmpcIOod5/file9bd36256ef72
-#> 17:20:20 Searching Annoy index using 1 thread, search_k = 3000
-#> 17:20:21 Annoy recall = 100%
-#> 17:20:22 Commencing smooth kNN distance calibration using 1 thread
+#> 17:53:41 Writing NN index file to temp file /tmp/RtmpuDXgFw/file9c0e65ef1dfa
+#> 17:53:41 Searching Annoy index using 1 thread, search_k = 3000
+#> 17:53:42 Annoy recall = 100%
+#> 17:53:43 Commencing smooth kNN distance calibration using 1 thread
 #>  with target n_neighbors = 30
-#> 17:20:22 Initializing from normalized Laplacian + noise (using RSpectra)
-#> 17:20:22 Commencing optimization for 500 epochs, with 202814 positive edges
-#> 17:20:22 Using rng type: pcg
-#> 17:20:27 Optimization finished
+#> 17:53:43 Initializing from normalized Laplacian + noise (using RSpectra)
+#> 17:53:43 Commencing optimization for 500 epochs, with 202814 positive edges
+#> 17:53:43 Using rng type: pcg
+#> 17:53:48 Optimization finished
 #> The object will be updated and saved
 ```

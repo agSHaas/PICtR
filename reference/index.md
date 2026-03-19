@@ -8,6 +8,8 @@
   : Threshold calculation
 - [`demo_lcmv`](https://agshaas.github.io/PICtR/reference/demo_lcmv.md)
   : Demo data set
+- [`import_cytometry_data()`](https://agshaas.github.io/PICtR/reference/import_cytometry_data.md)
+  : Data Import Helper
 - [`predict_data()`](https://agshaas.github.io/PICtR/reference/predict_data.md)
   : Cluster label prediction
 - [`ratio_cluster_plot()`](https://agshaas.github.io/PICtR/reference/ratio_cluster_plot.md)
