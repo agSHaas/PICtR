@@ -51,7 +51,3 @@ If you use PICtR in your work, please cite
 
 > Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high-scale cytometry-based cellular interaction mapping. _Nature Methods_ (2025). https://doi.org/10.1038/s41592-025-02744-w
 
-
-## Version 
-
-Current version 1.0.1
