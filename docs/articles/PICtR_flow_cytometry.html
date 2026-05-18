@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PICtR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
     <li><a class="dropdown-item" href="../articles/PICtR_mass_cytometry.html">PICtR for Mass Cytometry</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -175,7 +176,7 @@ including calculation of the FSC ratio threshold:</p>
 <span>                       thresholding_method <span class="op">=</span> <span class="st">"otsu"</span>, </span>
 <span>                       overwrite <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="co">#&gt; The BPCells directory will be overwritten</span></span>
-<span><span class="co">#&gt; Calculation of Ratio</span></span>
+<span><span class="co">#&gt; Calculation of FSC.A/FSC.H ratio</span></span>
 <span><span class="co">#&gt; Warning: Matrix compression performs poorly with non-integers.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Consider calling convert_matrix_type if a compressed integer matrix is intended.</span></span>
 <span><span class="co">#&gt; Your newly generated object will be saved under: /Users/nflore/Documents/01_PICtR/PICtR/vignettes/obj_sketched_non_projected.rds</span></span>
@@ -245,21 +246,21 @@ including calculation of the FSC ratio threshold:</p>
 <span><span class="co">#&gt; Number of communities: 19</span></span>
 <span><span class="co">#&gt; Elapsed time: 0 seconds</span></span>
 <span><span class="co">#&gt; UMAP will return its model</span></span>
-<span><span class="co">#&gt; 17:23:12 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
-<span><span class="co">#&gt; 17:23:12 Read 5000 rows and found 15 numeric columns</span></span>
-<span><span class="co">#&gt; 17:23:12 Using Annoy for neighbor search, n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 17:23:12 Building Annoy index with metric = cosine, n_trees = 50</span></span>
+<span><span class="co">#&gt; 14:02:09 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
+<span><span class="co">#&gt; 14:02:09 Read 5000 rows and found 15 numeric columns</span></span>
+<span><span class="co">#&gt; 14:02:09 Using Annoy for neighbor search, n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 14:02:09 Building Annoy index with metric = cosine, n_trees = 50</span></span>
 <span><span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
 <span><span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span></span>
 <span><span class="co">#&gt; **************************************************|</span></span>
-<span><span class="co">#&gt; 17:23:13 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpPEIu6r/file399a73aba478</span></span>
-<span><span class="co">#&gt; 17:23:13 Searching Annoy index using 1 thread, search_k = 3000</span></span>
-<span><span class="co">#&gt; 17:23:14 Annoy recall = 100%</span></span>
-<span><span class="co">#&gt; 17:23:14 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 17:23:14 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
-<span><span class="co">#&gt; 17:23:14 Commencing optimization for 500 epochs, with 202814 positive edges</span></span>
-<span><span class="co">#&gt; 17:23:14 Using rng type: pcg</span></span>
-<span><span class="co">#&gt; 17:23:18 Optimization finished</span></span>
+<span><span class="co">#&gt; 14:02:10 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpJuotDk/file172f728ec7d8d</span></span>
+<span><span class="co">#&gt; 14:02:10 Searching Annoy index using 1 thread, search_k = 3000</span></span>
+<span><span class="co">#&gt; 14:02:11 Annoy recall = 100%</span></span>
+<span><span class="co">#&gt; 14:02:11 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 14:02:11 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
+<span><span class="co">#&gt; 14:02:11 Commencing optimization for 500 epochs, with 202814 positive edges</span></span>
+<span><span class="co">#&gt; 14:02:11 Using rng type: pcg</span></span>
+<span><span class="co">#&gt; 14:02:15 Optimization finished</span></span>
 <span><span class="co">#&gt; The object will be updated and saved</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="guidelines-for-clustering">Guidelines for Clustering<a class="anchor" aria-label="anchor" href="#guidelines-for-clustering"></a>
@@ -424,21 +425,21 @@ re-cluster them:</p>
 <span><span class="co">#&gt; Computing nearest neighbor graph</span></span>
 <span><span class="co">#&gt; Computing SNN</span></span>
 <span><span class="co">#&gt; UMAP will return its model</span></span>
-<span><span class="co">#&gt; 17:23:33 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
-<span><span class="co">#&gt; 17:23:33 Read 9808 rows and found 15 numeric columns</span></span>
-<span><span class="co">#&gt; 17:23:33 Using Annoy for neighbor search, n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 17:23:33 Building Annoy index with metric = cosine, n_trees = 50</span></span>
+<span><span class="co">#&gt; 14:02:31 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
+<span><span class="co">#&gt; 14:02:31 Read 9808 rows and found 15 numeric columns</span></span>
+<span><span class="co">#&gt; 14:02:31 Using Annoy for neighbor search, n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 14:02:31 Building Annoy index with metric = cosine, n_trees = 50</span></span>
 <span><span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
 <span><span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span></span>
 <span><span class="co">#&gt; **************************************************|</span></span>
-<span><span class="co">#&gt; 17:23:33 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpPEIu6r/file399a2a2c58b0</span></span>
-<span><span class="co">#&gt; 17:23:33 Searching Annoy index using 1 thread, search_k = 3000</span></span>
-<span><span class="co">#&gt; 17:23:35 Annoy recall = 100%</span></span>
-<span><span class="co">#&gt; 17:23:35 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 17:23:35 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
-<span><span class="co">#&gt; 17:23:35 Commencing optimization for 500 epochs, with 406056 positive edges</span></span>
-<span><span class="co">#&gt; 17:23:35 Using rng type: pcg</span></span>
-<span><span class="co">#&gt; 17:23:43 Optimization finished</span></span>
+<span><span class="co">#&gt; 14:02:31 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpJuotDk/file172f75ab1c9c1</span></span>
+<span><span class="co">#&gt; 14:02:31 Searching Annoy index using 1 thread, search_k = 3000</span></span>
+<span><span class="co">#&gt; 14:02:33 Annoy recall = 100%</span></span>
+<span><span class="co">#&gt; 14:02:33 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 14:02:34 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
+<span><span class="co">#&gt; 14:02:34 Commencing optimization for 500 epochs, with 406056 positive edges</span></span>
+<span><span class="co">#&gt; 14:02:34 Using rng type: pcg</span></span>
+<span><span class="co">#&gt; 14:02:41 Optimization finished</span></span>
 <span></span>
 <span><span class="co"># plot the different clustering resolutions</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">interact_obj</span>, group.by <span class="op">=</span> <span class="st">"FACS_snn_res.0.5"</span>, label <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
@@ -565,21 +566,21 @@ UMAP embedding:</p>
 <span><span class="va">interact_obj</span> <span class="op">&lt;-</span> <span class="va">interact_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_dims</span>, return.model <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="co">#&gt; UMAP will return its model</span></span>
-<span><span class="co">#&gt; 17:23:49 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
-<span><span class="co">#&gt; 17:23:49 Read 5482 rows and found 15 numeric columns</span></span>
-<span><span class="co">#&gt; 17:23:49 Using Annoy for neighbor search, n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 17:23:49 Building Annoy index with metric = cosine, n_trees = 50</span></span>
+<span><span class="co">#&gt; 14:02:49 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
+<span><span class="co">#&gt; 14:02:49 Read 5482 rows and found 15 numeric columns</span></span>
+<span><span class="co">#&gt; 14:02:49 Using Annoy for neighbor search, n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 14:02:49 Building Annoy index with metric = cosine, n_trees = 50</span></span>
 <span><span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
 <span><span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span></span>
 <span><span class="co">#&gt; **************************************************|</span></span>
-<span><span class="co">#&gt; 17:23:49 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpPEIu6r/file399a56ba1c02</span></span>
-<span><span class="co">#&gt; 17:23:49 Searching Annoy index using 1 thread, search_k = 3000</span></span>
-<span><span class="co">#&gt; 17:23:50 Annoy recall = 100%</span></span>
-<span><span class="co">#&gt; 17:23:51 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 17:23:51 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
-<span><span class="co">#&gt; 17:23:51 Commencing optimization for 500 epochs, with 222518 positive edges</span></span>
-<span><span class="co">#&gt; 17:23:51 Using rng type: pcg</span></span>
-<span><span class="co">#&gt; 17:23:55 Optimization finished</span></span>
+<span><span class="co">#&gt; 14:02:49 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpJuotDk/file172f74d1ae77e</span></span>
+<span><span class="co">#&gt; 14:02:49 Searching Annoy index using 1 thread, search_k = 3000</span></span>
+<span><span class="co">#&gt; 14:02:50 Annoy recall = 100%</span></span>
+<span><span class="co">#&gt; 14:02:50 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 14:02:50 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
+<span><span class="co">#&gt; 14:02:51 Commencing optimization for 500 epochs, with 222518 positive edges</span></span>
+<span><span class="co">#&gt; 14:02:51 Using rng type: pcg</span></span>
+<span><span class="co">#&gt; 14:02:55 Optimization finished</span></span>
 <span></span>
 <span><span class="co"># plot </span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">interact_obj</span>, group.by <span class="op">=</span> <span class="st">"interact_type"</span>, label <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>

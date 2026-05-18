@@ -9,7 +9,7 @@ Includes FeaturePlot, DimPlot for different parameters, and ratio_cluster_plot."
 
     <a class="navbar-brand me-2" href="../index.html">PICtR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,7 @@ Includes FeaturePlot, DimPlot for different parameters, and ratio_cluster_plot."
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/PICtR_flow_cytometry.html">PICtR for Flow Cytometry</a></li>
     <li><a class="dropdown-item" href="../articles/PICtR_mass_cytometry.html">PICtR for Mass Cytometry</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/agSHaas/PICtR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -51,10 +52,12 @@ Includes <code><a href="https://satijalab.org/seurat/reference/FeaturePlot.html"
 <span>  obj <span class="op">=</span> <span class="va">obj</span>,</span>
 <span>  feature_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cluster_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  meta_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ratio_anno"</span><span class="op">)</span>,</span>
+<span>  meta_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  cluster_handle <span class="op">=</span> <span class="st">"sketch_snn_res"</span>,</span>
 <span>  feature_plot_colors <span class="op">=</span> <span class="fu">pals</span><span class="fu">::</span><span class="fu"><a href="https://kwstat.github.io/pals/reference/continuous.html" class="external-link">parula</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>,</span>
-<span>  ratio_plot_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Ratio_low <span class="op">=</span> <span class="st">"dodgerblue2"</span>, Ratio_high <span class="op">=</span> <span class="st">"gold2"</span><span class="op">)</span>,</span>
+<span>  ratio_plot_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Ratio_low <span class="op">=</span> <span class="st">"dodgerblue2"</span>, Ratio_high <span class="op">=</span> <span class="st">"orange2"</span><span class="op">)</span>,</span>
+<span>  event_type_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>singlet <span class="op">=</span> <span class="st">"#2E86AB"</span>, doublet <span class="op">=</span> <span class="st">"#A23B72"</span>, triplet <span class="op">=</span> <span class="st">"#F18F01"</span>,</span>
+<span>    multiplet <span class="op">=</span> <span class="st">"#9BC53D"</span><span class="op">)</span>,</span>
 <span>  reduction <span class="op">=</span> <span class="st">"umap"</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  raster <span class="op">=</span> <span class="cn">F</span>,</span>
@@ -94,7 +97,11 @@ Can be both numeric to generate <code><a href="https://satijalab.org/seurat/refe
 
 
 <dt id="arg-ratio-plot-color">ratio_plot_color<a class="anchor" aria-label="anchor" href="#arg-ratio-plot-color"></a></dt>
-<dd><p>Color palette for <code><a href="ratio_cluster_plot.html">ratio_cluster_plot</a></code>.</p></dd>
+<dd><p>Color palette for <code><a href="ratio_cluster_plot.html">ratio_cluster_plot</a></code> when used with flow cytometry data.</p></dd>
+
+
+<dt id="arg-event-type-color">event_type_color<a class="anchor" aria-label="anchor" href="#arg-event-type-color"></a></dt>
+<dd><p>Color pallete for <code><a href="ratio_cluster_plot.html">ratio_cluster_plot</a></code> when used with mass cytometry data.</p></dd>
 
 
 <dt id="arg-reduction">reduction<a class="anchor" aria-label="anchor" href="#arg-reduction"></a></dt>

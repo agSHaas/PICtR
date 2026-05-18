@@ -9,7 +9,7 @@ samples a representative subset of cells using SketchData and runs the standard 
 
     <a class="navbar-brand me-2" href="../index.html">PICtR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,7 @@ samples a representative subset of cells using SketchData and runs the standard 
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/PICtR_flow_cytometry.html">PICtR for Flow Cytometry</a></li>
     <li><a class="dropdown-item" href="../articles/PICtR_mass_cytometry.html">PICtR for Mass Cytometry</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/agSHaas/PICtR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -50,9 +51,11 @@ samples a representative subset of cells using <code><a href="https://satijalab.
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sketch_wrapper</span><span class="op">(</span></span>
 <span>  channel <span class="op">=</span> <span class="va">channel</span>,</span>
 <span>  meta_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  assay <span class="op">=</span> <span class="st">"FACS"</span>,</span>
+<span>  technology <span class="op">=</span> <span class="st">"flow"</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  FSC.A <span class="op">=</span> <span class="st">"FSC.A"</span>,</span>
 <span>  FSC.H <span class="op">=</span> <span class="st">"FSC.H"</span>,</span>
+<span>  DNA <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_sketch_cells <span class="op">=</span> <span class="fl">50000</span>,</span>
 <span>  n_components <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  clst_algorithm <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -60,7 +63,8 @@ samples a representative subset of cells using <code><a href="https://satijalab.
 <span>  min_clst_size <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  meta.k <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  obj_name <span class="op">=</span> <span class="st">"obj_sketched_non_projected"</span>,</span>
-<span>  ratio <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ratio <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  categorisation <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  thresholding_method <span class="op">=</span> <span class="st">"otsu"</span>,</span>
 <span>  hist_breaks <span class="op">=</span> <span class="fl">2000</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -77,23 +81,31 @@ samples a representative subset of cells using <code><a href="https://satijalab.
 
 
 <dl><dt id="arg-channel">channel<a class="anchor" aria-label="anchor" href="#arg-channel"></a></dt>
-<dd><p>A data frame with the dimensionality cells x flow cytometry parameters.</p></dd>
+<dd><p>A data frame with the dimensionality cells x cytometry parameters.</p></dd>
 
 
 <dt id="arg-meta-data">meta_data<a class="anchor" aria-label="anchor" href="#arg-meta-data"></a></dt>
-<dd><p>A data frame with meta_data for every cell (Default=NULL).</p></dd>
+<dd><p>A data frame with meta_data for every event (Default=NULL).</p></dd>
+
+
+<dt id="arg-technology">technology<a class="anchor" aria-label="anchor" href="#arg-technology"></a></dt>
+<dd><p>Flow cytometry ("flow") or mass cytometry ("mass"). Default is flow cytometry.</p></dd>
 
 
 <dt id="arg-assay">assay<a class="anchor" aria-label="anchor" href="#arg-assay"></a></dt>
-<dd><p>A character string with the name of the assay to be created (Default="FACS").</p></dd>
+<dd><p>A character string with the name of the assay to be created. Default is "FACS" for flow cytometry data or "MC" for mass cytometry data.</p></dd>
 
 
 <dt id="arg-fsc-a">FSC.A<a class="anchor" aria-label="anchor" href="#arg-fsc-a"></a></dt>
-<dd><p>The name (string) of the column containing the FSC.A scatter parameter (Default="FACS.A").</p></dd>
+<dd><p>The name (string) of the column containing the FSC.A scatter parameter. Only relevant for flow cytometry data. (Default="FACS.A").</p></dd>
 
 
 <dt id="arg-fsc-h">FSC.H<a class="anchor" aria-label="anchor" href="#arg-fsc-h"></a></dt>
-<dd><p>The name (string) of the column containing the FSC.H scatter parameter (Default="FACS.H").</p></dd>
+<dd><p>The name (string) of the column containing the FSC.H scatter parameter Only relevant for flow cytometry data. (Default="FACS.H").</p></dd>
+
+
+<dt id="arg-dna">DNA<a class="anchor" aria-label="anchor" href="#arg-dna"></a></dt>
+<dd><p>The name (string) of the column containing the DNA parameter. Only relevant for mass cytometry data.</p></dd>
 
 
 <dt id="arg-n-sketch-cells">n_sketch_cells<a class="anchor" aria-label="anchor" href="#arg-n-sketch-cells"></a></dt>
@@ -106,9 +118,9 @@ samples a representative subset of cells using <code><a href="https://satijalab.
 
 <dt id="arg-clst-algorithm">clst_algorithm<a class="anchor" aria-label="anchor" href="#arg-clst-algorithm"></a></dt>
 <dd><p>Algorithm used for clustering. For Seurat's <code><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></code>: 1 = original Louvain algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM algorithm; 4 = Leiden algorithm). Leiden requires the leidenalg python.
-Alternatively, "hdbscan" for Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) on the UMAP embedding, see <code>hdbscan</code>),
+Alternatively, "hdbscan" for Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) on the UMAP embedding, see <code><a href="https://rdrr.io/pkg/dbscan/man/hdbscan.html" class="external-link">hdbscan</a></code>),
 "flowMeans" for non-parametric clustering and segmented-regression-based change point detection, see <code>flowMeans</code>,
-or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: Louvain, 1)</p></dd>
+or "flowSOM" for self-organizing maps, see <code><a href="http://immunedynamics.io/spectre/reference/run.flowsom.html" class="external-link">run.flowsom</a></code>, (Default: Louvain, 1)</p></dd>
 
 
 <dt id="arg-resolution">resolution<a class="anchor" aria-label="anchor" href="#arg-resolution"></a></dt>
@@ -116,11 +128,11 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
 
 
 <dt id="arg-min-clst-size">min_clst_size<a class="anchor" aria-label="anchor" href="#arg-min-clst-size"></a></dt>
-<dd><p>minimum cluster size for HDBSCAN. See details at <code>hdbscan</code> (Default: 100).</p></dd>
+<dd><p>minimum cluster size for HDBSCAN. See details at <code><a href="https://rdrr.io/pkg/dbscan/man/hdbscan.html" class="external-link">hdbscan</a></code> (Default: 100).</p></dd>
 
 
 <dt id="arg-meta-k">meta.k<a class="anchor" aria-label="anchor" href="#arg-meta-k"></a></dt>
-<dd><p>meta k for FlowSOM clustering, see <code>run.flowsom</code> (Default: "auto").</p></dd>
+<dd><p>meta k for FlowSOM clustering, see <code><a href="http://immunedynamics.io/spectre/reference/run.flowsom.html" class="external-link">run.flowsom</a></code> (Default: "auto").</p></dd>
 
 
 <dt id="arg-obj-name">obj_name<a class="anchor" aria-label="anchor" href="#arg-obj-name"></a></dt>
@@ -128,7 +140,11 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
 
 
 <dt id="arg-ratio">ratio<a class="anchor" aria-label="anchor" href="#arg-ratio"></a></dt>
-<dd><p>Boolean variable. If TRUE the FSC ratio (FSC.A/FSC.H) will be calculated.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Boolean variable. If TRUE the FSC ratio (FSC.A/FSC.H) will be calculated. Only relevant for flow cytometry, please use <code>categorisation</code> instead.</p></dd>
+
+
+<dt id="arg-categorisation">categorisation<a class="anchor" aria-label="anchor" href="#arg-categorisation"></a></dt>
+<dd><p>Boolean variable. If TRUE the events will be categorised as likely singlets or multiplets. For mass cytometry data, multiplets can be categorised as doublets, triplets or higher order multiplets.</p></dd>
 
 
 <dt id="arg-thresholding-method">thresholding_method<a class="anchor" aria-label="anchor" href="#arg-thresholding-method"></a></dt>
@@ -140,7 +156,7 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
 
 
 <dt id="arg-group-by">group_by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
-<dd><p>Optional grouping parameter to calculate the FSC ratio (FSC.A/FSC.H) thresholding method for.</p></dd>
+<dd><p>Optional grouping parameter to calculate the thresholding method for.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -179,17 +195,18 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu">sketch_wrapper</span><span class="op">(</span>channel <span class="op">=</span> <span class="va">demo_lcmv</span>,</span></span>
 <span class="r-in"><span>                      meta_data <span class="op">=</span> <span class="va">demo_lcmv</span>,</span></span>
+<span class="r-in"><span>                      technology <span class="op">=</span> <span class="st">"flow"</span>,</span></span>
 <span class="r-in"><span>                      n_sketch_cells <span class="op">=</span> <span class="fl">5000</span>,</span></span>
 <span class="r-in"><span>                      clst_algorithm <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                      ratio <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                      categorisation <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      thresholding_method <span class="op">=</span> <span class="st">"otsu"</span>, </span></span>
 <span class="r-in"><span>                      working_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculation of Ratio</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculation of FSC.A/FSC.H ratio</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Feature names cannot have underscores ('_'), replacing with dashes ('-')</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Warning: Matrix compression performs poorly with non-integers.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Consider calling convert_matrix_type if a compressed integer matrix is intended.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This message is displayed once every 8 hours.</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Your newly generated object will be saved under: /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpBTD7RU/obj_sketched_non_projected.rds</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Your newly generated object will be saved under: /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpHzBAL2/obj_sketched_non_projected.rds</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Sketching started...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Finding variable features for layer counts</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
@@ -273,10 +290,10 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> This message will be shown once per session</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> UMAP will return its model</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 UMAP embedding parameters a = 0.9922 b = 1.112</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Read 5000 rows and found 15 numeric columns</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Using Annoy for neighbor search, n_neighbors = 30</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Building Annoy index with metric = cosine, n_trees = 50</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:49 UMAP embedding parameters a = 0.9922 b = 1.112</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:49 Read 5000 rows and found 15 numeric columns</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:49 Using Annoy for neighbor search, n_neighbors = 30</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:49 Building Annoy index with metric = cosine, n_trees = 50</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 0%   10   20   30   40   50   60   70   80   90   100%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [----|----|----|----|----|----|----|----|----|----|</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
@@ -330,17 +347,17 @@ or "flowSOM" for self-organizing maps, see <code>run.flowsom</code>, (Default: L
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> |</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpBTD7RU/file393a13c358f6</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:56 Searching Annoy index using 1 thread, search_k = 3000</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Annoy recall = 100%</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Commencing smooth kNN distance calibration using 1 thread</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:50 Writing NN index file to temp file /var/folders/zq/k957_k5s79v97_ptgc729fm1yy94mx/T//RtmpHzBAL2/file1727e32e094f5</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:50 Searching Annoy index using 1 thread, search_k = 3000</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:51 Annoy recall = 100%</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:51 Commencing smooth kNN distance calibration using 1 thread</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  with target n_neighbors = 30</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Initializing from normalized Laplacian + noise (using RSpectra)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Commencing optimization for 500 epochs, with 202814 positive edges</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:22:57 Using rng type: pcg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 17:23:01 Optimization finished</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:51 Initializing from normalized Laplacian + noise (using RSpectra)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:51 Commencing optimization for 500 epochs, with 202814 positive edges</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:51 Using rng type: pcg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 14:01:55 Optimization finished</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The object will be updated and saved</span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span>                      </span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
