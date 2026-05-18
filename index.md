@@ -13,12 +13,14 @@ First, please install [BPCells](https://github.com/bnprks/BPCells).
 Next, PICtR can be installed using:
 
 ``` r
+
 install.packages("PICtR", repos = c("https://agshaas.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 or directly from GitHub using:
 
 ``` r
+
 if (!require("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
@@ -65,7 +67,3 @@ If you use PICtR in your work, please cite
 > Vonficht, Jopp-Saile, Yousefian, Flore et al. Ultra-high-scale
 > cytometry-based cellular interaction mapping. *Nature Methods* (2025).
 > <https://doi.org/10.1038/s41592-025-02744-w>
-
-## Version
-
-Current version 1.0.1

@@ -27,6 +27,7 @@ PICtR requires R version 4.3 or later. First, please install
 installed using:
 
 ``` r
+
 if (!require("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
@@ -99,11 +100,13 @@ low or high FSC ratio using thresholding methods such as Otsu
 thresholding.
 
 ``` r
+
 library(PICtR)
 data("demo_lcmv")
 ```
 
 ``` r
+
 threshold <- calculateThreshold((demo_lcmv$FSC.A/demo_lcmv$FSC.H), method = "otsu")
 
 hist(demo_lcmv$FSC.A/demo_lcmv$FSC.H, breaks = 2000)
@@ -134,6 +137,7 @@ PICtR provides a convenient wrapper function for these steps, including
 calculation of the FSC ratio threshold:
 
 ``` r
+
 demo_obj <- sketch_wrapper(demo_lcmv,
                        meta_data = demo_lcmv,
                        assay = "FACS",
@@ -157,6 +161,16 @@ demo_obj <- sketch_wrapper(demo_lcmv,
 #> Finding variable features for layer counts
 #> 
 #> Calcuating Leverage Score
+#> 
+#> Running LeverageScore for layer data
+#> 
+#> No variable features were found in data. Falling back to variable features from counts
+#> 
+#> sampling 5000 cells for random sketching
+#> 
+#> Performing QR decomposition
+#> 
+#> Performing random projection
 #> 
 #> Attempting to cast layer counts to dgCMatrix
 #> 
@@ -217,21 +231,21 @@ demo_obj <- sketch_wrapper(demo_lcmv,
 #> Number of communities: 19
 #> Elapsed time: 0 seconds
 #> UMAP will return its model
-#> 17:54:07 UMAP embedding parameters a = 0.9922 b = 1.112
-#> 17:54:07 Read 5000 rows and found 15 numeric columns
-#> 17:54:07 Using Annoy for neighbor search, n_neighbors = 30
-#> 17:54:07 Building Annoy index with metric = cosine, n_trees = 50
+#> 15:45:41 UMAP embedding parameters a = 0.9922 b = 1.112
+#> 15:45:41 Read 5000 rows and found 15 numeric columns
+#> 15:45:41 Using Annoy for neighbor search, n_neighbors = 30
+#> 15:45:41 Building Annoy index with metric = cosine, n_trees = 50
 #> 0%   10   20   30   40   50   60   70   80   90   100%
 #> [----|----|----|----|----|----|----|----|----|----|
 #> **************************************************|
-#> 17:54:08 Writing NN index file to temp file /tmp/Rtmp7ZZSag/file9d698e5e5ec
-#> 17:54:08 Searching Annoy index using 1 thread, search_k = 3000
-#> 17:54:09 Annoy recall = 100%
-#> 17:54:09 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-#> 17:54:10 Initializing from normalized Laplacian + noise (using RSpectra)
-#> 17:54:10 Commencing optimization for 500 epochs, with 202814 positive edges
-#> 17:54:10 Using rng type: pcg
-#> 17:54:14 Optimization finished
+#> 15:45:41 Writing NN index file to temp file /tmp/RtmpSMNCIa/file78826d74c8ab
+#> 15:45:41 Searching Annoy index using 1 thread, search_k = 3000
+#> 15:45:43 Annoy recall = 100%
+#> 15:45:43 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+#> 15:45:44 Initializing from normalized Laplacian + noise (using RSpectra)
+#> 15:45:44 Commencing optimization for 500 epochs, with 202814 positive edges
+#> 15:45:44 Using rng type: pcg
+#> 15:45:48 Optimization finished
 #> The object will be updated and saved
 ```
 
@@ -257,6 +271,7 @@ The effect of the resolution parameter can be seen when comparing a
 resolution of 0.5, 0.8 and 1 (Louvain clustering) for the demo data set:
 
 ``` r
+
 DimPlot(demo_obj, group.by = "sketch_snn_res.0.5", label = T) + theme(legend.position = "none")
 DimPlot(demo_obj, group.by = "sketch_snn_res.0.8", label = T) + theme(legend.position = "none")
 DimPlot(demo_obj, group.by = "sketch_snn_res.1", label = T) + theme(legend.position = "none")
@@ -281,6 +296,7 @@ relevant patterns. For our demo data set, a resolution of 0.5 seems to
 be sufficient:
 
 ``` r
+
 FeaturePlot(demo_obj, features = c("CD3", "MHCII", "CD11c", "CD11b", 
                                    "CD45_2", "CD19", "Ly6G", 
                                    "CD90_1", "CD4", "CD8", "ratio"))
@@ -301,6 +317,7 @@ linear discriminant analysis (LDA) as implemented in the
 function:
 
 ``` r
+
 demo_obj <- predict_data(obj = demo_obj, 
                       data_query = demo_obj, 
                       ref_clusters = "sketch_snn_res.0.5",
@@ -318,6 +335,7 @@ each cluster, we determine the proportion of cells above and below the
 FSC ratio threshold that we calculated earlier:
 
 ``` r
+
 ratio_cluster_plot(demo_obj, clusters = "clusters_predicted")
 ```
 
@@ -339,6 +357,7 @@ remaining clusters with the help of the feature plots (see above) or
 ridge plots:
 
 ``` r
+
 Idents(demo_obj) <- "clusters_predicted"
 RidgePlot(demo_obj, features = Features(demo_obj)) & theme(axis.text = element_text(size = 7))
 #> Picking joint bandwidth of 23.7
@@ -363,6 +382,7 @@ RidgePlot(demo_obj, features = Features(demo_obj)) & theme(axis.text = element_t
 Based on the marker expression, we can annotate all clusters as follows:
 
 ``` r
+
 demo_obj@meta.data <- demo_obj@meta.data %>% 
   mutate(celltype = case_when(clusters_predicted == "0" ~ "B cells", 
                               clusters_predicted == "1" ~ "CD8 T cells", 
@@ -390,6 +410,7 @@ Annotating the interacting cells is easier if we subset and re-cluster
 them:
 
 ``` r
+
 # subset interacting cells
 DefaultAssay(demo_obj) <- "FACS"
 Idents(demo_obj) <- "celltype"
@@ -405,6 +426,7 @@ interact_obj <- interact_obj %>%
   FindClusters(resolution = c(0.5, 0.8, 1)) %>% 
   RunUMAP(dims = 1:n_dims, return.model = T)
 #> Finding variable features for layer counts
+#> Centering and scaling data matrix
 #> PC_ 1 
 #> Positive:  MHCII, CD19, CD45-2, CD4, Ly6G, CD8, CD90-1, CD11b 
 #> Negative:  SSC.A, FSC.A, SSC.H, FSC.H, CD3, CD11c, ratio 
@@ -423,21 +445,21 @@ interact_obj <- interact_obj %>%
 #> Computing nearest neighbor graph
 #> Computing SNN
 #> UMAP will return its model
-#> 17:54:39 UMAP embedding parameters a = 0.9922 b = 1.112
-#> 17:54:39 Read 9808 rows and found 15 numeric columns
-#> 17:54:39 Using Annoy for neighbor search, n_neighbors = 30
-#> 17:54:39 Building Annoy index with metric = cosine, n_trees = 50
+#> 15:46:13 UMAP embedding parameters a = 0.9922 b = 1.112
+#> 15:46:13 Read 9808 rows and found 15 numeric columns
+#> 15:46:13 Using Annoy for neighbor search, n_neighbors = 30
+#> 15:46:13 Building Annoy index with metric = cosine, n_trees = 50
 #> 0%   10   20   30   40   50   60   70   80   90   100%
 #> [----|----|----|----|----|----|----|----|----|----|
 #> **************************************************|
-#> 17:54:40 Writing NN index file to temp file /tmp/Rtmp7ZZSag/file9d6913b2125f
-#> 17:54:40 Searching Annoy index using 1 thread, search_k = 3000
-#> 17:54:43 Annoy recall = 100%
-#> 17:54:43 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-#> 17:54:44 Initializing from normalized Laplacian + noise (using RSpectra)
-#> 17:54:44 Commencing optimization for 500 epochs, with 406056 positive edges
-#> 17:54:44 Using rng type: pcg
-#> 17:54:53 Optimization finished
+#> 15:46:14 Writing NN index file to temp file /tmp/RtmpSMNCIa/file78821a3d0ef9
+#> 15:46:14 Searching Annoy index using 1 thread, search_k = 3000
+#> 15:46:17 Annoy recall = 100%
+#> 15:46:18 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+#> 15:46:18 Initializing from normalized Laplacian + noise (using RSpectra)
+#> 15:46:18 Commencing optimization for 500 epochs, with 406056 positive edges
+#> 15:46:18 Using rng type: pcg
+#> 15:46:27 Optimization finished
 
 # plot the different clustering resolutions
 DimPlot(interact_obj, group.by = "FACS_snn_res.0.5", label = T) + theme(legend.position = "none")
@@ -475,6 +497,7 @@ DimPlot(interact_obj, group.by = "FACS_snn_res.1", label = T) + theme(legend.pos
 ![](PICtR_files/figure-html/interacting_analysis-1.png)![](PICtR_files/figure-html/interacting_analysis-2.png)![](PICtR_files/figure-html/interacting_analysis-3.png)
 
 ``` r
+
 FeaturePlot(interact_obj, features = c("CD3", "MHCII", "CD11c", "CD11b", 
                                    "CD45_2", "CD19", "Ly6G", 
                                    "CD90_1", "CD4", "CD8", "ratio"))
@@ -490,6 +513,7 @@ shared-nearest-neighbor graph (`FACS_snn`) using
 with a low resolution:
 
 ``` r
+
 Idents(interact_obj) <- "FACS_snn_res.0.5"
 interact_obj <- FindSubCluster(interact_obj, cluster = "4", 
                                graph.name = "FACS_snn", resolution = 0.25)
@@ -517,6 +541,7 @@ the interaction partners are B cells and CD4+ T cells. We will label
 interactions with an asterisk (\*):
 
 ``` r
+
 Idents(interact_obj) <- "sub.cluster"
 RidgePlot(interact_obj, features = Features(interact_obj)) & 
   theme(axis.text = element_text(size = 7))
@@ -540,6 +565,7 @@ RidgePlot(interact_obj, features = Features(interact_obj)) &
 ![](PICtR_files/figure-html/ridge_plots_interacting-1.png)
 
 ``` r
+
 interact_obj@meta.data <- interact_obj@meta.data %>% 
   mutate(interact_type = case_when(sub.cluster == "0" ~ "B cells only", 
                               sub.cluster == "1" ~ "B cells only", 
@@ -566,6 +592,7 @@ a marker for. So we will exclude these populations and recalculate the
 UMAP embedding:
 
 ``` r
+
 keep <- interact_obj@meta.data %>% 
   dplyr::filter(interact_type %in% c("B*Neutrophils", 
                                      "CD4*CD8", 
@@ -582,21 +609,21 @@ interact_obj <- subset(interact_obj, cells = rownames(keep))
 interact_obj <- interact_obj %>% 
   RunUMAP(dims = 1:n_dims, return.model = T)
 #> UMAP will return its model
-#> 17:55:07 UMAP embedding parameters a = 0.9922 b = 1.112
-#> 17:55:07 Read 5482 rows and found 15 numeric columns
-#> 17:55:07 Using Annoy for neighbor search, n_neighbors = 30
-#> 17:55:07 Building Annoy index with metric = cosine, n_trees = 50
+#> 15:46:42 UMAP embedding parameters a = 0.9922 b = 1.112
+#> 15:46:42 Read 5482 rows and found 15 numeric columns
+#> 15:46:42 Using Annoy for neighbor search, n_neighbors = 30
+#> 15:46:42 Building Annoy index with metric = cosine, n_trees = 50
 #> 0%   10   20   30   40   50   60   70   80   90   100%
 #> [----|----|----|----|----|----|----|----|----|----|
 #> **************************************************|
-#> 17:55:08 Writing NN index file to temp file /tmp/Rtmp7ZZSag/file9d6932f3623d
-#> 17:55:08 Searching Annoy index using 1 thread, search_k = 3000
-#> 17:55:10 Annoy recall = 100%
-#> 17:55:10 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-#> 17:55:11 Initializing from normalized Laplacian + noise (using RSpectra)
-#> 17:55:11 Commencing optimization for 500 epochs, with 222518 positive edges
-#> 17:55:11 Using rng type: pcg
-#> 17:55:16 Optimization finished
+#> 15:46:43 Writing NN index file to temp file /tmp/RtmpSMNCIa/file788279db06ae
+#> 15:46:43 Searching Annoy index using 1 thread, search_k = 3000
+#> 15:46:44 Annoy recall = 100%
+#> 15:46:45 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+#> 15:46:45 Initializing from normalized Laplacian + noise (using RSpectra)
+#> 15:46:45 Commencing optimization for 500 epochs, with 222518 positive edges
+#> 15:46:45 Using rng type: pcg
+#> 15:46:50 Optimization finished
 
 # plot 
 DimPlot(interact_obj, group.by = "interact_type", label = T)

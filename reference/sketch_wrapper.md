@@ -193,13 +193,18 @@ obj <- sketch_wrapper(channel = demo_lcmv,
 #> Warning: Matrix compression performs poorly with non-integers.
 #> • Consider calling convert_matrix_type if a compressed integer matrix is intended.
 #> This message is displayed once every 8 hours.
-#> Your newly generated object will be saved under: /tmp/RtmpuDXgFw/obj_sketched_non_projected.rds
+#> Your newly generated object will be saved under: /tmp/RtmpfZFBjS/obj_sketched_non_projected.rds
 #> Sketching started...
 #> Finding variable features for layer counts
 #> Warning: Chernobyl! trL>n 15
 #> Warning: Chernobyl! trL>n 15
 #> Warning: NaNs produced
 #> Calcuating Leverage Score
+#> Running LeverageScore for layer data
+#> No variable features were found in data. Falling back to variable features from counts
+#> sampling 5000 cells for random sketching
+#> Performing QR decomposition
+#> Performing random projection
 #> Attempting to cast layer counts to dgCMatrix
 #> Attempting to cast layer data to dgCMatrix
 #> Sketching is done
@@ -279,10 +284,10 @@ obj <- sketch_wrapper(channel = demo_lcmv,
 #> To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
 #> This message will be shown once per session
 #> UMAP will return its model
-#> 17:53:40 UMAP embedding parameters a = 0.9922 b = 1.112
-#> 17:53:40 Read 5000 rows and found 15 numeric columns
-#> 17:53:40 Using Annoy for neighbor search, n_neighbors = 30
-#> 17:53:40 Building Annoy index with metric = cosine, n_trees = 50
+#> 15:45:13 UMAP embedding parameters a = 0.9922 b = 1.112
+#> 15:45:13 Read 5000 rows and found 15 numeric columns
+#> 15:45:13 Using Annoy for neighbor search, n_neighbors = 30
+#> 15:45:13 Building Annoy index with metric = cosine, n_trees = 50
 #> 0%   10   20   30   40   50   60   70   80   90   100%
 #> [----|----|----|----|----|----|----|----|----|----|
 #> *
@@ -336,14 +341,14 @@ obj <- sketch_wrapper(channel = demo_lcmv,
 #> *
 #> *
 #> |
-#> 17:53:41 Writing NN index file to temp file /tmp/RtmpuDXgFw/file9c0e65ef1dfa
-#> 17:53:41 Searching Annoy index using 1 thread, search_k = 3000
-#> 17:53:42 Annoy recall = 100%
-#> 17:53:43 Commencing smooth kNN distance calibration using 1 thread
+#> 15:45:13 Writing NN index file to temp file /tmp/RtmpfZFBjS/file7723182d9167
+#> 15:45:13 Searching Annoy index using 1 thread, search_k = 3000
+#> 15:45:15 Annoy recall = 100%
+#> 15:45:15 Commencing smooth kNN distance calibration using 1 thread
 #>  with target n_neighbors = 30
-#> 17:53:43 Initializing from normalized Laplacian + noise (using RSpectra)
-#> 17:53:43 Commencing optimization for 500 epochs, with 202814 positive edges
-#> 17:53:43 Using rng type: pcg
-#> 17:53:48 Optimization finished
+#> 15:45:16 Initializing from normalized Laplacian + noise (using RSpectra)
+#> 15:45:16 Commencing optimization for 500 epochs, with 202814 positive edges
+#> 15:45:16 Using rng type: pcg
+#> 15:45:20 Optimization finished
 #> The object will be updated and saved
 ```
